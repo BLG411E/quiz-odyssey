@@ -20,8 +20,8 @@ class User(Base):
     phone = mapped_column(String, nullable=True, unique=True)
     passwordHash = mapped_column(String, nullable=False)
     registeredAt = mapped_column(DateTime)
-    totalScore = mapped_column(Integer)
-    streakCount = mapped_column(Integer)
+    totalScore = mapped_column(Integer, default=0)
+    streakCount = mapped_column(Integer, default=0)
     lastQuizTakenAt = mapped_column(DateTime)
 
     def to_dict(self):
