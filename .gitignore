@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node,venv,flask,macos,react,python,windows,reactnative,visualstudiocode,dotenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,venv,flask,macos,react,python,windows,reactnative,visualstudiocode,dotenv
 
+/backend/data/
+
 ### dotenv ###
 .env
 

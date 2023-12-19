@@ -90,3 +90,55 @@ def register():
         current_app.secret_key,
     )
     return jsonify({"token": token}), 201
+
+
+@auth.route("/login", methods=["POST"])
+def login():
+    requestParameters = request.get_json()
+
+    username = requestParameters.get("username", None)
+    password = requestParameters.get("password", None)
+
+    if not username or not password:
+        return (
+            jsonify(
+                {
+                    "msg": "Missing required parameters",
+                }
+            ),
+            400,
+        )
+
+    try:
+        passwordHash = (
+            db.session.execute(
+                db.select(models.User).where(models.User.username == username)
+            )
+            .first()[0]
+            .passwordHash
+        )
+    except TypeError:
+        return (
+            jsonify({"msg": "Invalid username"}),
+            400,
+        )
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
+
+    if check_password_hash(passwordHash, password):
+        token = jwt.encode(
+            {
+                "username": username,
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30),
+            },
+            current_app.secret_key,
+        )
+        return jsonify({"token": token}), 200
+
+    return (
+        jsonify({"msg": "Invalid credentials"}),
+        401,
+    )
