@@ -1,9 +1,11 @@
 import os
 
-from flask import Flask 
+from flask import Flask
 
 from .extensions import db
 from .routes.auth import auth
+from .routes.question import question
+
 
 def create_app():
     app = Flask(__name__)
@@ -16,6 +18,7 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(auth, url_prefix="/auth")
+    app.register_blueprint(question, url_prefix="/question")
 
     return app
