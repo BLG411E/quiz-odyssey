@@ -5,8 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SecureStore from 'expo-secure-store';
 
 import AuthContext from './utils/AuthContext';
+import Register from './utils/Register';
 import Login from './utils/Login';
 
+import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
 
@@ -70,7 +72,7 @@ export default function App() {
                 dispatch({ type: "LOGOUT" });
             },
             SignUp: async (data) => {
-                const token = null // await Register(data); // TODO: Register function
+                const token = await Register(data);
                 dispatch({ type: "LOGIN", token: token });
             },
         }),
@@ -101,7 +103,7 @@ export default function App() {
                                 <Stack.Navigator initialRouteName="LoginPage" screenOptions={{
                                     headerShown: false,
                                 }}>
-                                    {/* <Stack.Screen name="RegisterPage" component={RegisterPage} /> */}
+                                    <Stack.Screen name="RegisterPage" component={RegisterPage} />
                                     <Stack.Screen name="LoginPage" component={LoginPage} />
                                 </Stack.Navigator>
                             )}
