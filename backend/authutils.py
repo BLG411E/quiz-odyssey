@@ -16,7 +16,7 @@ def get_userID(db, username: str):
     )
 
 
-def get_staffinfo(db, username: str):
+def get_staffID(db, username: str):
     from . import models
 
     return (
