@@ -1,10 +1,11 @@
 import datetime
+import werkzeug
 
 from flask import Blueprint, jsonify, request
 from sqlalchemy.exc import IntegrityError
 
 from .. import models
-from ..authutils import get_userID, require_token
+from ..authutils import get_userID, require_token, require_moderator
 from ..extensions import db
 
 question = Blueprint("question", __name__)
@@ -83,3 +84,83 @@ def submit_question(username):
         )
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
+
+
+@question.route("/listall", methods=["GET"])
+@require_moderator
+def list_all_questions(username, isStaff):
+    page = int(request.args.get("page", 1))
+    if page < 1:
+        page = 1
+
+    try:
+        question = db.paginate(
+            db.select(models.Question).order_by(models.Question.addedAt),
+            page=page,
+            per_page=20,
+        )
+        return (
+            jsonify(
+                {
+                    "total": question.total,
+                    "page": question.page,
+                    "per_page": 20,
+                    "has_prev": question.has_prev,
+                    "has_next": question.has_next,
+                    "results": [item.to_dict() for item in question.items],
+                }
+            ),
+            200,
+        )
+    except werkzeug.exceptions.NotFound:
+        return (
+            jsonify(
+                {"msg": "Page does not exist"}
+            ),
+            404,
+        )
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
+
+
+@question.route("/list", methods=["GET"])
+@require_moderator
+def list_questions(username, isStaff):
+    page = int(request.args.get("page", 1))
+    if page < 1:
+        page = 1
+
+    try:
+        question = db.paginate(
+            db.select(models.Question).where(models.Question.isValid == False).order_by(models.Question.addedAt),
+            page=page,
+            per_page=20,
+        )
+        return (
+            jsonify(
+                {
+                    "total": question.total,
+                    "page": question.page,
+                    "per_page": 20,
+                    "has_prev": question.has_prev,
+                    "has_next": question.has_next,
+                    "results": [item.to_dict() for item in question.items],
+                }
+            ),
+            200,
+        )
+    except werkzeug.exceptions.NotFound:
+        return (
+            jsonify(
+                {"msg": "Page does not exist"}
+            ),
+            404,
+        )
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
