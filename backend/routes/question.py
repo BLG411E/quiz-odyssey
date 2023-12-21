@@ -195,3 +195,28 @@ def approve_question(username, isStaff, id):
         return jsonify({"msg": "Question approved"}), 200
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
+
+
+@question.route("/<id>", methods=["DELETE"])
+@require_moderator
+def delete_comment(username, isStaff, id):
+    try:
+        db.session.execute(
+            db.select(models.Question).where(models.Question.id == id)
+        ).first()[0]
+    except TypeError:
+        return (
+            jsonify(
+                {
+                    "msg": "Invalid Question ID",
+                }
+            ),
+            400,
+        )
+
+    try:
+        db.session.execute(db.delete(models.Question).where(models.Question.id == id))
+        db.session.commit()
+        return jsonify({"msg": "Question deleted successfully!"}), 200
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
