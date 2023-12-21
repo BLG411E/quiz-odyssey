@@ -16,6 +16,18 @@ def get_userID(db, username: str):
     )
 
 
+def get_staffinfo(db, username: str):
+    from . import models
+
+    return (
+        db.session.execute(
+            db.select(models.Staff).where(models.Staff.username == username)
+        )
+        .first()[0]
+        .id
+    )
+
+
 def require_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -32,5 +44,45 @@ def require_token(f):
             return jsonify({"msg": str(e)}), 401
 
         return f(tokenData["username"], *args, **kwargs)
+
+    return decorated
+
+
+def require_moderator(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not "Token" in request.headers:
+            return (
+                jsonify({"msg": "Token required"}),
+                401,
+            )
+
+        token = request.headers["Token"]
+        try:
+            tokenData = jwt.decode(token, current_app.secret_key, algorithms=["HS256"])
+        except Exception as e:
+            return jsonify({"msg": str(e)}), 401
+
+        return f(tokenData["username"], tokenData["isStaff"], *args, **kwargs)
+
+    return decorated
+
+
+def require_admin(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not "Token" in request.headers:
+            return (
+                jsonify({"msg": "Token required"}),
+                401,
+            )
+
+        token = request.headers["Token"]
+        try:
+            tokenData = jwt.decode(token, current_app.secret_key, algorithms=["HS256"])
+        except Exception as e:
+            return jsonify({"msg": str(e)}), 401
+
+        return f(tokenData["username"], tokenData["isAdmin"], *args, **kwargs)
 
     return decorated
