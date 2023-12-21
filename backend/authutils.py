@@ -63,7 +63,17 @@ def require_moderator(f):
         except Exception as e:
             return jsonify({"msg": str(e)}), 401
 
-        return f(tokenData["username"], tokenData["isStaff"], *args, **kwargs)
+        try:
+            return f(tokenData["username"], tokenData["isStaff"], *args, **kwargs)
+        except KeyError:
+            return (
+                jsonify(
+                    {
+                        "msg": "You do not have permission to access this resource",
+                    }
+                ),
+                403,
+            )
 
     return decorated
 
@@ -83,6 +93,16 @@ def require_admin(f):
         except Exception as e:
             return jsonify({"msg": str(e)}), 401
 
-        return f(tokenData["username"], tokenData["isAdmin"], *args, **kwargs)
+        try:
+            return f(tokenData["username"], tokenData["isAdmin"], *args, **kwargs)
+        except KeyError:
+            return (
+                jsonify(
+                    {
+                        "msg": "You do not have permission to access this resource",
+                    }
+                ),
+                403,
+            )
 
     return decorated
