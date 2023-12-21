@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy.exc import IntegrityError
 
 from .. import models
-from ..authutils import get_userID, require_token, require_moderator
+from ..authutils import get_userID, get_staffID, require_token, require_moderator
 from ..extensions import db
 
 question = Blueprint("question", __name__)
@@ -164,3 +164,34 @@ def list_questions(username, isStaff):
             jsonify({"msg": str(e)}),
             500,
         )
+
+
+@question.route("/approve/<id>", methods=["PATCH"])
+@require_moderator
+def approve_question(username, isStaff, id):
+    approvedBy = get_staffID(db, username)
+
+    try:
+        db.session.execute(
+            db.select(models.Question).where(models.Question.id == id)
+        ).first()[0]
+    except TypeError:
+        return (
+            jsonify(
+                {
+                    "msg": "Invalid Question ID",
+                }
+            ),
+            400,
+        )
+
+    try:
+        db.session.execute(
+            db.update(models.Question)
+            .where(models.Question.id == id)
+            .values(isValid=True, approvedBy=approvedBy)
+        )
+        db.session.commit()
+        return jsonify({"msg": "Question approved"}), 200
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
