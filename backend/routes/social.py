@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify
+import werkzeug
+from flask import Blueprint, jsonify, request
 from sqlalchemy.exc import IntegrityError
 
 from .. import models
@@ -13,16 +14,16 @@ social = Blueprint("social", __name__)
 def follow(username, follow_username):
     user_id = get_userID(db, username)
     follow_id = get_userID(db, follow_username)
-    
+
     if follow_id is None:
         return jsonify({"msg": "User does not exist"}), 404
-    
+
     follow = models.Follow(
         follower=user_id,
         followed=follow_id,
     )
     db.session.add(follow)
-    
+
     try:
         db.session.commit()
     except IntegrityError as e:
@@ -35,3 +36,46 @@ def follow(username, follow_username):
             return jsonify({"msg": errmsg}), 500
 
     return jsonify({"msg": "Followed successfully"}), 200
+
+
+@social.route("/followers", methods=["GET"])
+@require_token
+def followers(username):
+    page = int(request.args.get("page", 1))
+    if page < 1:
+        page = 1
+
+    user_id = get_userID(db, username)
+
+    try:
+        followers = db.paginate(
+            db.select(models.User.username)
+            .join(models.Follow, models.User.id == models.Follow.follower)
+            .where(models.Follow.followed == user_id)
+            .order_by(models.User.username),
+            page=page,
+            per_page=20,
+        )
+        return (
+            jsonify(
+                {
+                    "total": followers.total,
+                    "page": followers.page,
+                    "per_page": 20,
+                    "has_prev": followers.has_prev,
+                    "has_next": followers.has_next,
+                    "results": followers.items,
+                }
+            ),
+            200,
+        )
+    except werkzeug.exceptions.NotFound:
+        return (
+            jsonify({"msg": "Page does not exist"}),
+            404,
+        )
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
