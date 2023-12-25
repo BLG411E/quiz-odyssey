@@ -5,6 +5,7 @@ from flask import Flask
 from .extensions import db
 from .routes.auth import auth
 from .routes.question import question
+from .routes.social import social
 
 
 def create_app():
@@ -20,5 +21,6 @@ def create_app():
 
     app.register_blueprint(auth, url_prefix="/auth")
     app.register_blueprint(question, url_prefix="/question")
+    app.register_blueprint(social, url_prefix="/social")
 
     return app

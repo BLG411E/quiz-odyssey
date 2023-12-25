@@ -7,13 +7,13 @@ from flask import current_app, jsonify, request
 def get_userID(db, username: str):
     from . import models
 
-    return (
-        db.session.execute(
-            db.select(models.User).where(models.User.username == username)
-        )
-        .first()[0]
-        .id
-    )
+    user = db.session.execute(
+        db.select(models.User).where(models.User.username == username)
+    ).first()
+
+    if user is None:
+        return None
+    return user[0].id
 
 
 def get_staffID(db, username: str):
