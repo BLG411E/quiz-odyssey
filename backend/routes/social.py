@@ -79,3 +79,46 @@ def followers(username):
             jsonify({"msg": str(e)}),
             500,
         )
+
+
+@social.route("/following", methods=["GET"])
+@require_token
+def following(username):
+    page = int(request.args.get("page", 1))
+    if page < 1:
+        page = 1
+
+    user_id = get_userID(db, username)
+
+    try:
+        following = db.paginate(
+            db.select(models.User.username)
+            .join(models.Follow, models.User.id == models.Follow.followed)
+            .where(models.Follow.follower == user_id)
+            .order_by(models.User.username),
+            page=page,
+            per_page=20,
+        )
+        return (
+            jsonify(
+                {
+                    "total": following.total,
+                    "page": following.page,
+                    "per_page": 20,
+                    "has_prev": following.has_prev,
+                    "has_next": following.has_next,
+                    "results": following.items,
+                }
+            ),
+            200,
+        )
+    except werkzeug.exceptions.NotFound:
+        return (
+            jsonify({"msg": "Page does not exist"}),
+            404,
+        )
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
