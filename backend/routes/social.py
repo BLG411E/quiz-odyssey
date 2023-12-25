@@ -37,6 +37,7 @@ def follow(username, follow_username):
 
     return jsonify({"msg": "Followed successfully"}), 200
 
+
 @social.route("/follow/<follow_username>", methods=["DELETE"])
 @require_token
 def unfollow(username, follow_username):
@@ -53,7 +54,7 @@ def unfollow(username, follow_username):
     )
 
     if follow.rowcount == 0:
-        return jsonify({"msg": "Not following user"}), 400
+        return jsonify({"msg": "Not following user"}), 404
 
     db.session.commit()
 
@@ -101,6 +102,29 @@ def followers(username):
             jsonify({"msg": str(e)}),
             500,
         )
+
+
+@social.route("/followers/<follower_username>", methods=["DELETE"])
+@require_token
+def remove_follower(username, follower_username):
+    user_id = get_userID(db, username)
+    follow_id = get_userID(db, follower_username)
+
+    if follow_id is None:
+        return jsonify({"msg": "User does not exist"}), 404
+
+    follow = db.session.execute(
+        db.delete(models.Follow)
+        .where(models.Follow.follower == follow_id)
+        .where(models.Follow.followed == user_id)
+    )
+
+    if follow.rowcount == 0:
+        return jsonify({"msg": "Not followed by user"}), 404
+
+    db.session.commit()
+
+    return jsonify({"msg": "Removed follower successfully"}), 200
 
 
 @social.route("/following", methods=["GET"])
