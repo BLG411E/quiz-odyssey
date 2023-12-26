@@ -2,16 +2,9 @@ import datetime
 
 import werkzeug
 from flask import Blueprint, jsonify, request
-from sqlalchemy.exc import IntegrityError
 
 from .. import models
-from ..authutils import (
-    get_staffID,
-    get_userID,
-    require_admin,
-    require_moderator,
-    require_token,
-)
+from ..authutils import require_admin
 from ..extensions import db
 
 users = Blueprint("users", __name__)
@@ -53,3 +46,28 @@ def list_users(username, isAdmin):
             jsonify({"msg": str(e)}),
             500,
         )
+
+
+@users.route("/<id>", methods=["DELETE"])
+@require_admin
+def delete_user(username, isAdmin, id):
+    try:
+        db.session.execute(db.select(models.User).where(models.User.id == id)).first()[
+            0
+        ]
+    except TypeError:
+        return (
+            jsonify(
+                {
+                    "msg": "Invalid User ID",
+                }
+            ),
+            400,
+        )
+
+    try:
+        db.session.execute(db.delete(models.User).where(models.User.id == id))
+        db.session.commit()
+        return jsonify({"msg": "User deleted successfully!"}), 200
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
