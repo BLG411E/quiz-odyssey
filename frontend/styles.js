@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
       },
       row: {
 
-        alignItems: "center", // Center items vertically
+        alignItems: "center", 
         marginVertical: 10,
         
       },
@@ -91,11 +91,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
       },
       textMainMenu: {
-        fontSize: 16,
-        lineHeight: 21,
+        fontSize: 30,
+        lineHeight: 35,
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: 'white',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+         textShadowOffset: {width: -1, height: 1},
+         textShadowRadius: 3
       },
       headerButton: {
         backgroundColor: 'grey',

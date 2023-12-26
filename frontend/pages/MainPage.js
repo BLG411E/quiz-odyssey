@@ -61,14 +61,32 @@ const MainPage = ({navigation}) => {
             <View style={{ "paddingTop": 100, }}>
 
             <View style={styles.row}>
-                <Pressable style={styles.button} onPress={onPress}>
+                <Pressable style={{
+        paddingVertical: 15,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        width:250,
+        height:70,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: '#8ea4d2',
+        boxShadow: '1px 2px 9px #F4AAB9',}} onPress={onPress}>
                     <Text style={styles.textMainMenu}>{'PLAY'}</Text>
                 </Pressable>
 
             </View>
             <View style={styles.row}>
-                <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.textMainMenu}>{'Settings '}</Text>
+                <Pressable style={{
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        width:200,
+        height:60,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: '#8ea4d2',
+        boxShadow: '1px 2px 9px #F4AAB9',}} onPress={onPress}>
+                    <Text style={styles.textMainMenu}>{'SETTINGS '}</Text>
                 </Pressable>
 
 
@@ -76,8 +94,17 @@ const MainPage = ({navigation}) => {
 
             <View style={styles.row}>
 
-                <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.textMainMenu}>{'Quit '}</Text>
+                <Pressable style={{
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        width:150,
+        height:50,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: '#8ea4d2',
+        boxShadow: '1px 2px 9px #F4AAB9',}} onPress={onPress}>
+                    <Text style={styles.textMainMenu}>{'QUIT '}</Text>
                 </Pressable>
 
 
@@ -86,8 +113,13 @@ const MainPage = ({navigation}) => {
             
             </View>
             <View style={styles.footerWrapper}>
-            <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.textMainMenu}>{'Quit '}</Text>
+            <Pressable style={{paddingVertical: 15, borderRadius: 10,width:100,alignItems: "center", backgroundColor: '#55627e',}} onPress={() => { Logout(); }}>
+                    <Text style={{fontSize: 15,
+        lineHeight: 35,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: 'white',
+        }}>{'Log out '}</Text>
                 </Pressable>
 
             
