@@ -11,6 +11,7 @@ import Login from './utils/Login';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
+import ProfilePage from './pages/ProfilePage';
 
 const Stack = createNativeStackNavigator();
 
@@ -98,6 +99,7 @@ export default function App() {
                                     headerShown: false,
                                 }}>
                                     <Stack.Screen name="MainPage" component={MainPage} />
+                                    <Stack.Screen name="ProfilePage" component={ProfilePage} />
                                 </Stack.Navigator>
                             ) : (
                                 <Stack.Navigator initialRouteName="LoginPage" screenOptions={{

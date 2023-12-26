@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import BlueButton from "../components/BlueButton";
 import AuthContext from "../utils/AuthContext";
-import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable } from 'react-native';
+import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image } from 'react-native';
 import styles from '../styles';
 
 
@@ -11,27 +11,48 @@ const MainPage = ({navigation}) => {
     return (
         <View style={styles.container}>
             <View style={styles.headerWrapper}>
-                <Pressable style={styles.buttonMainMenu} onPress={() => {
-                            navigation.navigate('DailyChallengePage');
+            <TouchableOpacity style={styles.headerButton} onPress={() => {
+                            navigation.navigate('MainPage');
                         }}>
-                    <Text style={styles.textMainMenu}>{'Daily odyssey'}</Text>
-                </Pressable>
-                <Pressable style={styles.buttonMainMenu} onPress={() => {
+                <View style={styles.headerButtonContent}>
+                    <Image source={require('../assets/dailychallenge.png')} style={styles.headerImage} />
+                    <Text style={styles.headerButtonText}>{"Daily odyssey"}</Text>
+                </View>
+
+            </TouchableOpacity>
+
+            <TouchableOpacity  style={styles.headerButton} onPress={() => {
                             navigation.navigate('ProfilePage');
                         }}>
-                    <Text style={styles.textMainMenu}> {'Profile'}</Text>
-                </Pressable>
-
-
+                <View style={styles.headerButtonContent}>
+                    <Text style={styles.headerButtonText}>{"Profile"}</Text>
+                    <Image source={require('../assets/profileicon.png')} style={styles.headerImage} />
+                    
+                </View>
+            </TouchableOpacity>
             </View>
-            <View style={styles.headerWrapper}>
-                <Pressable style={styles.buttonMainMenu} onPress={onPress}>
-                    <Text style={styles.textMainMenu}>{'Leaderboards'}</Text>
-                </Pressable>
 
-                <Pressable style={styles.buttonMainMenu} onPress={onPress}>
-                    <Text style={styles.textMainMenu}>{'Submit a '}</Text>
-                </Pressable>
+            
+            <View style={styles.headerWrapper}>
+            <TouchableOpacity style={styles.headerButton} onPress={() => {
+                            navigation.navigate('MainPage');
+                        }}>
+                <View style={styles.headerButtonContent}>
+                    <Image source={require('../assets/stats.png')} style={styles.headerImage} />
+                    <Text style={styles.headerButtonText}>{"Check your score!"}</Text>
+                </View>
+
+            </TouchableOpacity>
+
+            <TouchableOpacity  style={styles.headerButton} onPress={() => {
+                            navigation.navigate('ProfilePage');
+                        }}>
+                <View style={styles.headerButtonContent}>
+                    <Text style={styles.headerButtonText}>{"Submit a question"}</Text>
+                    <Image source={require('../assets/questionmark.png')} style={styles.headerImage} />
+                    
+                </View>
+            </TouchableOpacity>
             </View>
 
             <View style={{ "paddingTop": 100, }}>

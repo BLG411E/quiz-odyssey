@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        backgroundColor: "#3e4c5e",
 
       },
       row: {
@@ -123,6 +124,31 @@ const styles = StyleSheet.create({
         letterSpacing: 0.25,
         color: 'white',
       },
+      headerButton: {
+        backgroundColor: 'grey',
+        padding: 16,
+        borderRadius: 8,
+        width: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      
+      headerImage: {
+        width: 40, // Adjust the width as needed
+        height: 40, // Adjust the height as needed
+        marginRight: 8,
+      },
+      headerButtonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      headerButtonText: {
+        flex: 1, // Allow text to wrap
+        color: 'black',
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
+      
 });
 
 export default styles;
