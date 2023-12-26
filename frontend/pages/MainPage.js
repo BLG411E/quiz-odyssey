@@ -6,16 +6,20 @@ import styles from '../styles';
 
 
 
-const MainPage = () => {
+const MainPage = ({navigation}) => {
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
     return (
         <View style={styles.container}>
             <View style={styles.headerWrapper}>
-                <Pressable style={styles.buttonMainMenu} onPress={onPress}>
+                <Pressable style={styles.buttonMainMenu} onPress={() => {
+                            navigation.navigate('DailyChallengePage');
+                        }}>
                     <Text style={styles.textMainMenu}>{'Daily odyssey'}</Text>
                 </Pressable>
-                <Pressable style={styles.buttonMainMenu} onPress={onPress}>
-                    <Text style={styles.textMainMenu}>{'Profile'}</Text>
+                <Pressable style={styles.buttonMainMenu} onPress={() => {
+                            navigation.navigate('ProfilePage');
+                        }}>
+                    <Text style={styles.textMainMenu}> {'Profile'}</Text>
                 </Pressable>
 
 
