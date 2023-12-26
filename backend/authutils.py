@@ -94,6 +94,8 @@ def require_admin(f):
             return jsonify({"msg": str(e)}), 401
 
         try:
+            if not tokenData["isAdmin"]:
+                raise KeyError
             return f(tokenData["username"], tokenData["isAdmin"], *args, **kwargs)
         except KeyError:
             return (
