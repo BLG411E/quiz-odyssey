@@ -1,13 +1,16 @@
-import React, { useContext } from "react";
+import React, { useState,useContext, useEffect } from "react";
 import BlueButton from "../components/BlueButton";
 import AuthContext from "../utils/AuthContext";
-import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image } from 'react-native';
+import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image,Parse  } from 'react-native';
 import styles from '../styles';
 
 
 
 const MainPage = ({navigation}) => {
+    const [username, setUsername] = useState('');
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
+
+
     return (
         <View style={styles.container}>
             <View style={styles.headerWrapper}>
@@ -59,7 +62,7 @@ const MainPage = ({navigation}) => {
 
             <View style={styles.row}>
                 <Pressable style={styles.button} onPress={onPress}>
-                    <Text style={styles.textMainMenu}>{'PLAY '}</Text>
+                    <Text style={styles.textMainMenu}>{'PLAY'}</Text>
                 </Pressable>
 
             </View>

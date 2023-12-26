@@ -70,34 +70,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
       },
-      playButton: {
-        backgroundColor: "green",
-      },
-      settingsButton: {
-        backgroundColor: "blue",
-      },
-      quitButton: {
-        backgroundColor: "red",
-      },
-      profileButton: {
-        backgroundColor: "purple",
-        position: "absolute",
-        top: -200, // Adjust the top position
-        right: 10, // Adjust the right position
-      },
-      submitButton: {
-        backgroundColor: "orange",
-      },
-      dailyChallengeButton: {
-        backgroundColor: "yellow",
-        marginRight: 10,
-      },
-      leaderboardButton: {
-        backgroundColor: "cyan",
-      },
-      logoutButton: {
-        backgroundColor: "gray",
-      },
+
       headerWrapper:{
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -134,8 +107,8 @@ const styles = StyleSheet.create({
       },
       
       headerImage: {
-        width: 40, // Adjust the width as needed
-        height: 40, // Adjust the height as needed
+        width: 40, 
+        height: 40, 
         marginRight: 8,
       },
       headerButtonContent: {
@@ -143,7 +116,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
       },
       headerButtonText: {
-        flex: 1, // Allow text to wrap
+        flex: 1, 
         color: 'black',
         fontSize: 16,
         fontWeight: 'bold',
