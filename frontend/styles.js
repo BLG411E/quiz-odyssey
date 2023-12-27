@@ -178,6 +178,22 @@ const styles = StyleSheet.create({
         backgroundColor: '#cccccc', // Customize the color of the line
         marginHorizontal: 1, // Adjust the margin as needed
       },
+      answerInputField:{
+        height:40,
+         width:290,
+          padding:10,
+          marginRight: 10,
+           borderRadius:4,
+            backgroundColor: 'white'
+      },
+      selectedAnswerInputField:{
+        height:40,
+         width:290,
+          padding:10,
+          marginRight: 10,
+           borderRadius:4,
+            backgroundColor: '#a9e190'
+      }
       
 });
 
