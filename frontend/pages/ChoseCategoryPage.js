@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import styles from '../styles';
 
+
 const ChoseCategoryPage = () => {
 
       return (

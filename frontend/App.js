@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SecureStore from 'expo-secure-store';
 
+
 import AuthContext from './utils/AuthContext';
 import Register from './utils/Register';
 import Login from './utils/Login';

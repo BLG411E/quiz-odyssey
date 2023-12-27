@@ -5,7 +5,6 @@ import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert,
 import styles from '../styles';
 
 
-
 const MainPage = ({navigation}) => {
     const [username, setUsername] = useState('');
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
