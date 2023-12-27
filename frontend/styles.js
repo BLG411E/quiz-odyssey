@@ -124,6 +124,60 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
       },
+      profileHeader:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 16,
+      },
+      profileHeaderText:{
+        color: 'white',
+        fontSize: 18,
+        flex: 1,
+        textAlign: 'center',
+        marginLeft: -24,
+      },
+      profileSettingsImage:{
+        width: 100, // Adjust the width as needed
+        height: 100, // Adjust the height as needed
+        
+      },
+      settingsPageTitleRow:{
+        height: 50, // Adjust the height as needed
+        backgroundColor: '#8ea4d2',
+        textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'center',
+        padding:10,
+      },
+
+      settingsPageContentRow:{
+        height: 50, // Adjust the height as needed
+        backgroundColor: 'white',
+
+        padding:10,
+
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+
+      },
+
+      settingsPageChangeContentRow:{
+        height: 50, // Adjust the height as needed
+        backgroundColor: 'white',
+
+        padding:15,
+
+        alignItems: 'center',
+
+
+      },
+      separator: {
+        height: 1,
+        backgroundColor: '#cccccc', // Customize the color of the line
+        marginHorizontal: 1, // Adjust the margin as needed
+      },
       
 });
 

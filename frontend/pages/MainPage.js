@@ -25,7 +25,7 @@ const MainPage = ({navigation}) => {
             </TouchableOpacity>
 
             <TouchableOpacity  style={styles.headerButton} onPress={() => {
-                            navigation.navigate('ProfilePage');
+                            navigation.navigate('ProfileSettingsPage');
                         }}>
                 <View style={styles.headerButtonContent}>
                     <Text style={styles.headerButtonText}>{"Profile"}</Text>
