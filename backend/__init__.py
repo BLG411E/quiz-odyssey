@@ -17,5 +17,6 @@ def create_app():
         db.create_all()
 
     app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(stats, url_prefix='/stats')
 
     return app
