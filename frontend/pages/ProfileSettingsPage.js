@@ -7,15 +7,22 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 
 
-const ProfilePage = ({navigation}) => {
+const ProfileSettingsPage = ({navigation}) => {
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
+   
     return (
         <View style={styles.container}>
             <View style={styles.container}>
                 <View style={styles.profileHeader}>
-                    <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
+                <TouchableOpacity  hitSlop={{top: 50, bottom: 50, left: 50, right: 50}} onPress={() => {
+                            navigation.navigate('MainPage');
+                        }}>
+                        <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
                             navigation.navigate('MainPage');
                         }}/>
+                          
+                    </TouchableOpacity>
+                    
                     <Text style={styles.profileHeaderText}>{"Settings"}</Text>
                 </View>
                 <View style={{display: 'flex',justifyContent: 'center', alignItems: 'center',}}>
@@ -42,15 +49,19 @@ const ProfilePage = ({navigation}) => {
                     <Text style={{color:'white',}}>{"ACCOUNT"}</Text>
                 </View>
 
-                <View style={styles.settingsPageChangeContentRow}>
+                <TouchableOpacity  style={styles.settingsPageChangeContentRow} onPress={() => {
+                            navigation.navigate('ProfileChangePage',{type:"username"});
+                        }}>
                     <Text style={{color:'black',fontWeight: 'bold',}}>{"Change username"}</Text>
-                </View>
+                 </TouchableOpacity>
 
                 <View style={styles.separator} />
 
-                <View style={styles.settingsPageChangeContentRow}>
+                <TouchableOpacity  style={styles.settingsPageChangeContentRow} onPress={() => {
+                            navigation.navigate('ProfileChangePage',{type:"password"});
+                        }}>
                     <Text style={{color:'black',fontWeight: 'bold',}}>{"Change password"}</Text>
-                </View>
+                 </TouchableOpacity>
 
                 <View style={{ backgroundColor: '#fd564d', // Customize the background color
                 padding: 10,
@@ -79,5 +90,5 @@ const ProfilePage = ({navigation}) => {
     )
 };
 
-export default ProfilePage;
+export default ProfileSettingsPage;
 {/* <BlueButton onPress={() => { Logout(); }} Text="LOGOUT"  />  */ }
