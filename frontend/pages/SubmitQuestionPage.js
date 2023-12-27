@@ -23,6 +23,11 @@ const SubmitQuestionPage = ({ route, navigation }) => {
             setAnswers(updatedAnswers);
           };
 
+          const handleQuestionInputChange = (text) => {
+            const question = text
+            setQuestion(question);
+          };
+
         const handleCheckmarkPress = (index) => {
             const numberOfCheckedAnswers = checkedAnswers.filter((isChecked) => isChecked).length;
             const updatedCheckedAnswers = [...checkedAnswers];
@@ -75,7 +80,7 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                 placeholder="Enter your question here"
                 multiline
                 numberOfLines={4}
-                onChangeText={handleInputChange}
+                onChangeText={handleQuestionInputChange}
                 value={question}
             />
                 <View style={{paddingTop:15}}>
