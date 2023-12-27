@@ -5,10 +5,12 @@ import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert,
 import styles from '../styles';
 
 
-
 const MainPage = ({navigation}) => {
     const [username, setUsername] = useState('');
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
+    const onPressPlay = () => {
+    navigation.navigate('ChoseCategoryPage');
+    };
 
 
     return (
@@ -70,7 +72,7 @@ const MainPage = ({navigation}) => {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: '#8ea4d2',
-        boxShadow: '1px 2px 9px #F4AAB9',}} onPress={onPress}>
+        boxShadow: '1px 2px 9px #F4AAB9',}} onPress={onPressPlay}>
                     <Text style={styles.textMainMenu}>{'PLAY'}</Text>
                 </Pressable>
 
