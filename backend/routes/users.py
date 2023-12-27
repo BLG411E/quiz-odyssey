@@ -4,7 +4,7 @@ import werkzeug
 from flask import Blueprint, jsonify, request
 
 from .. import models
-from ..authutils import require_admin
+from ..authutils import require_token, require_admin
 from ..extensions import db
 
 users = Blueprint("users", __name__)
@@ -69,5 +69,35 @@ def delete_user(username, isAdmin, id):
         db.session.execute(db.delete(models.User).where(models.User.id == id))
         db.session.commit()
         return jsonify({"msg": "User deleted successfully!"}), 200
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+
+
+@users.route("/info", methods=["GET"])
+@require_token
+def get_user_information(username):
+    try:
+        user = db.session.execute(
+            db.select(
+                models.User.username,
+                models.User.email,
+                models.User.registeredAt,
+                models.User.streakCount,
+                models.User.totalScore,
+            ).where(models.User.username == username)
+        ).first()
+
+        return (
+            jsonify(
+                {
+                    "username": user[0],
+                    "email": user[1],
+                    "registeredAt": user[2],
+                    "streakCount": user[3],
+                    "totalScore": user[4],
+                }
+            ),
+            200,
+        )
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
