@@ -48,7 +48,7 @@ const MainPage = ({navigation}) => {
             </TouchableOpacity>
 
             <TouchableOpacity  style={styles.headerButton} onPress={() => {
-                            navigation.navigate('ProfilePage');
+                            navigation.navigate('SubmitQuestionPage');
                         }}>
                 <View style={styles.headerButtonContent}>
                     <Text style={styles.headerButtonText}>{"Submit a question"}</Text>
