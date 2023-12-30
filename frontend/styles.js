@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
           marginRight: 10,
            borderRadius:4,
             backgroundColor: '#a9e190'
-      }
+      },
       
       categoryButton: {
         alignItems: 'center',
