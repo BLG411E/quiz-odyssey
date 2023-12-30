@@ -6,10 +6,13 @@ import styles from '../styles';
 
 
 
+const MainPage = ({navigation}) => {
 
-const MainPage = ({navigation, route}) => {
     const [username, setUsername] = useState('');
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
+    const onPressPlay = () => {
+    navigation.navigate('ChoseCategoryPage');
+    };
 
 
     
@@ -74,7 +77,7 @@ const MainPage = ({navigation, route}) => {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: '#8ea4d2',
-        boxShadow: '1px 2px 9px #F4AAB9',}} onPress={onPress}>
+        boxShadow: '1px 2px 9px #F4AAB9',}} onPress={onPressPlay}>
                     <Text style={styles.textMainMenu}>{'PLAY'}</Text>
                 </Pressable>
 

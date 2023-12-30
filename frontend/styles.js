@@ -1,5 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
+
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
     containerCenter: {
         flex: 1,
@@ -195,6 +198,27 @@ const styles = StyleSheet.create({
             backgroundColor: '#a9e190'
       }
       
+      categoryButton: {
+        alignItems: 'center',
+        paddingVertical: screenHeight * 73 * 3 / 10000,
+        paddingHorizontal: screenWidth * 25 * 2 / 10000,
+        borderRadius: 10,
+        width: (screenWidth * 73) / 100,
+        height: (screenWidth * 25) / 100,
+        backgroundColor: 'black',
+        flexDirection: 'row', // Arrange children in a row
+      },
+      categoryButtonImage: {
+        width: screenWidth * 25 * 98 / 10000,
+        height: 80,
+        marginRight: 0,
+      },
+      categoryButtonText: {
+        color: "white",
+        fontSize: 30,
+        fontWeight: "bold",
+
+      },
 });
 
 export default styles;
