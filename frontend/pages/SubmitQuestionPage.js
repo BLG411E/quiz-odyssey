@@ -51,14 +51,20 @@ const SubmitQuestionPage = ({ route, navigation }) => {
 
           const handleSubmit = () => {
             const numberOfCheckedAnswers = checkedAnswers.filter((isChecked) => isChecked).length;
-        
-            if (numberOfCheckedAnswers === 1 || numberOfCheckedAnswers === 2) {
+            if(question.length>10){
+                if (numberOfCheckedAnswers === 1 || numberOfCheckedAnswers === 2) {
  
-              Alert.alert('Submission Successful', 'Answers submitted successfully!');
-            } else {
+                    Alert.alert('Submission Successful', 'Answers submitted successfully!');
+                  } else {
+      
+                    Alert.alert('Error', 'Please select 1 or 2 answers before submitting.');
+                  }
 
-              Alert.alert('Error', 'Please select 1 or 2 answers before submitting.');
             }
+            else{
+                Alert.alert('Error', 'Question must be at least 10 characters long');
+            }
+            
           };
 
 
