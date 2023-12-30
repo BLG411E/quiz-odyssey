@@ -1,11 +1,13 @@
 import datetime
 
 import werkzeug
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from .. import models
 from ..authutils import require_token, require_admin
 from ..extensions import db
+import jwt
 
 users = Blueprint("users", __name__)
 
@@ -86,7 +88,6 @@ def get_user_information(username):
                 models.User.totalScore,
             ).where(models.User.username == username)
         ).first()
-
         return (
             jsonify(
                 {
@@ -101,3 +102,92 @@ def get_user_information(username):
         )
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
+    
+
+@users.route("/updateusername", methods=["PUT"])
+@require_token
+def change_username(username):
+    requestParameters = request.get_json()
+    print(username)
+    new_username =str( requestParameters.get("newusername", None))
+
+    try:
+        db.session.execute(
+            db.update(models.User)
+            .where(models.User.username == username)
+            .values(username=new_username)
+        )
+        db.session.commit()
+        
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+    
+    token = jwt.encode(
+        {
+            "username": username,
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30),
+        },
+        current_app.secret_key,
+    )
+    return jsonify({"token": token}), 201
+
+@users.route("/updatepassword", methods=["PUT"])
+@require_token
+def change_password(username):
+    requestParameters = request.get_json()
+
+    current_password =requestParameters.get("oldpassword", None)
+    new_password =requestParameters.get("newpassword", None)
+
+    try:
+        db.session.execute(
+            db.select(models.User).where(models.User.username == username)
+        ).first()[0]
+    except TypeError:
+        return (
+            jsonify(
+                {
+                    "msg": "No user with this name",
+                }
+            ),
+            400,
+        )
+    
+    if current_password is None or new_password is None:
+        return jsonify({"msg": "Both currentpassword and newpassword are required"}), 400
+
+
+
+    passwordHash = (
+        db.session.execute(
+            db.select(models.User).where(models.User.username == username)
+        )
+        .first()[0]
+        .passwordHash
+    )
+
+    if check_password_hash(passwordHash, current_password):
+        
+        
+
+
+        passwordHash = generate_password_hash(new_password)
+
+        try:
+            db.session.execute(
+                db.update(models.User)
+                .where(models.User.username == username)
+                .values(passwordHash=passwordHash)
+            )
+            db.session.commit()
+            return jsonify({"msg": "Password updated successfully!"}), 200
+            
+        except Exception as e:
+            return jsonify({"msg": str(e)}), 500
+    else:
+        return (
+        jsonify({"msg": "Invalid credentials"}),
+        401,
+    )
+    
+   

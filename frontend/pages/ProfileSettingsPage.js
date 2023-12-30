@@ -81,7 +81,7 @@ const ProfileSettingsPage = ({ navigation, route }) => {
                 </View>
 
                 <TouchableOpacity style={styles.settingsPageChangeContentRow} onPress={() => {
-                    navigation.navigate('ProfileChangePage', { type: "username" });
+                    navigation.navigate('ProfileChangePage', { type: "username", token: token });
                 }}>
                     <Text style={{ color: 'black', fontWeight: 'bold', }}>{"Change username"}</Text>
                 </TouchableOpacity>
@@ -89,7 +89,7 @@ const ProfileSettingsPage = ({ navigation, route }) => {
                 <View style={styles.separator} />
 
                 <TouchableOpacity style={styles.settingsPageChangeContentRow} onPress={() => {
-                    navigation.navigate('ProfileChangePage', { type: "password" });
+                    navigation.navigate('ProfileChangePage', { type: "password", token: token });
                 }}>
                     <Text style={{ color: 'black', fontWeight: 'bold', }}>{"Change password"}</Text>
                 </TouchableOpacity>

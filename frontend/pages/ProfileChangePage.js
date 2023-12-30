@@ -5,7 +5,8 @@ import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert,
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
+import ChangeUsername from '../utils/ChangeUsername';
+import ChangePassword from "../utils/ChangePassword";
 
 const ProfileChangePage = ({ route, navigation }) => {
     const [username, setUsername] = useState('');
@@ -13,14 +14,21 @@ const ProfileChangePage = ({ route, navigation }) => {
     const [new_password, setNewPassword] = useState('');
     const [retype_password, setRetypePassword] = useState('');
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
-    const { type } = route.params
+    const { type, token } = route.params
     const [usernameValid, setUsernameValid] = useState(true);
     const [passwordValid, setPasswordValid] = useState(true);
 
     const handleSave = () => {
-        // Implement your save logic here based on the type and newValue
-        // For example, you can make an API call to update the username or password
-        console.log(`Save ${type}: ${old_password}`);
+
+       
+        if(type=='username'){
+            changeusername()
+        }
+        else{
+            changepassword()
+        }
+
+
     };
 
     const validate = () => {
@@ -32,6 +40,31 @@ const ProfileChangePage = ({ route, navigation }) => {
 
         return usernameValid && passwordValid && new_password == retypePassword && emailValid;
     }
+    const changeusername =async () => {
+        try {
+            
+
+            if (token) {
+                const data = await ChangeUsername(token, username);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    const changepassword =async () => {
+
+        try {
+            if (token) {
+                const data = await ChangePassword(token,old_password, new_password);
+                
+                
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        
+
+    };
 
     return (
         <View style={styles.container}>
@@ -68,19 +101,7 @@ const ProfileChangePage = ({ route, navigation }) => {
 
 
 
-
-
-
-
-
-
-
-
-
             </View>
-
-
-
 
 
         </View>
