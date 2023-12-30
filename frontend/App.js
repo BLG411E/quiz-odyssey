@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SecureStore from 'expo-secure-store';
 
-
 import AuthContext from './utils/AuthContext';
 import Register from './utils/Register';
 import Login from './utils/Login';
@@ -15,8 +14,6 @@ import MainPage from './pages/MainPage';
 import ProfileSettingsPage from './pages/ProfileSettingsPage';
 import ProfileChangePage from './pages/ProfileChangePage';
 import SubmitQuestionPage from './pages/SubmitQuestionPage';
-import ChoseCategoryPage from "./pages/ChoseCategoryPage";
-
 
 const Stack = createNativeStackNavigator();
 
@@ -103,11 +100,10 @@ export default function App() {
                                 <Stack.Navigator initialRouteName="MainPage" screenOptions={{
                                     headerShown: false,
                                 }}>
-                                    <Stack.Screen name="MainPage" component={MainPage} />
-                                    <Stack.Screen name="ProfileSettingsPage" component={ProfileSettingsPage} />
+                                    <Stack.Screen name="MainPage" component={MainPage} initialParams={{token: state.userToken}} />
+                                    <Stack.Screen name="ProfileSettingsPage" component={ProfileSettingsPage} initialParams={{token: state.userToken}} />
                                     <Stack.Screen name="ProfileChangePage" component={ProfileChangePage} />
                                     <Stack.Screen name="SubmitQuestionPage" component={SubmitQuestionPage} />
-                                    <Stack.Screen name="ChoseCategoryPage" component={ChoseCategoryPage}/>
                                 </Stack.Navigator>
                             ) : (
                                 <Stack.Navigator initialRouteName="LoginPage" screenOptions={{
