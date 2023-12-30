@@ -7,6 +7,7 @@ from .routes.auth import auth
 from .routes.question import question
 from .routes.social import social
 from .routes.users import users
+from .routes.category import category
 
 
 def create_app():
@@ -24,5 +25,6 @@ def create_app():
     app.register_blueprint(question, url_prefix="/question")
     app.register_blueprint(social, url_prefix="/social")
     app.register_blueprint(users, url_prefix="/users")
+    app.register_blueprint(category, url_prefix="/category")
 
     return app
