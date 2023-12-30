@@ -3,16 +3,47 @@ import BlueButton from "../components/BlueButton";
 import AuthContext from "../utils/AuthContext";
 import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image,Parse  } from 'react-native';
 import styles from '../styles';
+import GetUserInfo from '../utils/GetUserInfo';
 
 
 
-const MainPage = ({navigation}) => {
+const MainPage = ({navigation, route}) => {
 
-    const [username, setUsername] = useState('');
+
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
+    const { token } = route.params
+    const [username, setUsername] = useState(null);
+
     const onPressPlay = () => {
     navigation.navigate('ChoseCategoryPage');
     };
+
+     const [userData, setUserData] = useState(null);
+
+     useEffect(() => {
+        console.log('Token:', token);
+        const fetchData = async () => {
+          try {
+
+            if (token) {
+              // Use the token to fetch user data
+              const data = await GetUserInfo(token);
+              console.log('Data:', data);
+    
+              if (data) {
+                // Handle the user data
+                setUserData(data);
+                setUsername(data["username"])
+              }
+            }
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
+
 
 
     
@@ -35,7 +66,7 @@ const MainPage = ({navigation}) => {
                             navigation.navigate('ProfileSettingsPage');
                         }}>
                 <View style={styles.headerButtonContent}>
-                    <Text style={styles.headerButtonText}>{"Profile"}</Text>
+                    <Text style={styles.headerButtonText}>{"Profile\n"+username}</Text>
                     <Image source={require('../assets/profileicon.png')} style={styles.headerImage} />
                     
                 </View>
