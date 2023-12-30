@@ -5,12 +5,17 @@ import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert,
 import styles from '../styles';
 
 
+
 const MainPage = ({navigation}) => {
+
     const [username, setUsername] = useState('');
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
     const onPressPlay = () => {
     navigation.navigate('ChoseCategoryPage');
     };
+
+
+    
 
 
     return (
@@ -50,7 +55,7 @@ const MainPage = ({navigation}) => {
             </TouchableOpacity>
 
             <TouchableOpacity  style={styles.headerButton} onPress={() => {
-                            navigation.navigate('ProfilePage');
+                            navigation.navigate('SubmitQuestionPage');
                         }}>
                 <View style={styles.headerButtonContent}>
                     <Text style={styles.headerButtonText}>{"Submit a question"}</Text>
