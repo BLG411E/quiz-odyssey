@@ -200,11 +200,11 @@ const styles = StyleSheet.create({
       
       categoryButton: {
         alignItems: 'center',
-        paddingVertical: screenHeight * 73 * 3 / 10000,
-        paddingHorizontal: screenWidth * 25 * 2 / 10000,
+        paddingVertical: 0,//screenHeight * 73 * 3 / 10000,
+        paddingHorizontal: 0,//screenWidth * 25 * 2 / 10000,
         borderRadius: 10,
-        width: (screenWidth * 73) / 100,
-        height: (screenWidth * 25) / 100,
+        width: 250,//(screenWidth * 73) / 100,
+        height: 50,//(screenWidth * 25) / 100,
         backgroundColor: 'black',
         flexDirection: 'row', // Arrange children in a row
       },
