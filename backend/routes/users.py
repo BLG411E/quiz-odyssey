@@ -124,7 +124,7 @@ def change_username(username):
     
     token = jwt.encode(
         {
-            "username": username,
+            "username": new_username,
             "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30),
         },
         current_app.secret_key,
