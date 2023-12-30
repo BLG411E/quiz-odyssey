@@ -22,10 +22,17 @@ const ProfileChangePage = ({ route, navigation }) => {
 
        
         if(type=='username'){
+            
             changeusername()
         }
         else{
-            changepassword()
+            if(new_password.length>0 && new_password==retype_password){
+                changepassword()
+            }
+            else{
+                Alert.alert('Error', 'Invalid password');
+            }
+            
         }
 
 
