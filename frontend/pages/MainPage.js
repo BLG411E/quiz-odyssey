@@ -6,9 +6,13 @@ import styles from '../styles';
 
 
 
-const MainPage = ({navigation}) => {
+
+const MainPage = ({navigation, route}) => {
     const [username, setUsername] = useState('');
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
+
+
+    
 
 
     return (

@@ -4,6 +4,8 @@ import AuthContext from "../utils/AuthContext";
 import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image } from 'react-native';
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
+import DismissKeyboard from '../components/DismissKeyboard';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 
@@ -61,6 +63,11 @@ const SubmitQuestionPage = ({ route, navigation }) => {
 
 
     return (
+        
+        <DismissKeyboard>
+            <View style={styles.containerCenter}>
+                <KeyboardAwareScrollView behavior="position">
+        
         <View style={styles.container}>
             <View style={styles.profileHeader}>
                 <TouchableOpacity hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }} onPress={() => {
@@ -87,6 +94,7 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                     <Text style={{fontSize:15, color:"white"}}>{"Write your question and select one or two answers"}</Text>
                 </View>
             </View>
+            
 
             {answers.map((answer, index) => (
                     <View key={index} style={{    flexDirection: 'row',alignItems: 'center',marginBottom: 20,paddingLeft:15}}>
@@ -111,6 +119,7 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                     )}
                 </View>
             ))}
+            
 
             <View style={{padding:15,alignItems: 'center'}}>
             <TouchableOpacity style={{fontSize:5, backgroundColor:"#8ea4d2", width:200, height:50,alignItems: 'center', justifyContent:'center'}} title="Submit" onPress={handleSubmit}>
@@ -118,12 +127,14 @@ const SubmitQuestionPage = ({ route, navigation }) => {
               
             </TouchableOpacity>
             </View> 
+            </View> 
+           
+
+            </KeyboardAwareScrollView>
+            </View>
+        </DismissKeyboard>
 
 
-
-
-
-        </View>
 
     )
 };
