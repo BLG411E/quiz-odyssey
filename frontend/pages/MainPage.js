@@ -15,7 +15,7 @@ const MainPage = ({ navigation, route }) => {
     const [username, setUsername] = useState(null);
 
     const onPressPlay = () => {
-        navigation.navigate('ChoseCategoryPage');
+        navigation.navigate('ChooseCategoryPage');
     };
 
     const [userData, setUserData] = useState(null);

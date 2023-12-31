@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export const API_URL = "http://erentd.tail3d16d.ts.net:8000"
+export const API_URL = "http://192.168.1.30:8000"
 
 const AuthContext = createContext();
 
