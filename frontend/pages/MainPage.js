@@ -76,7 +76,7 @@ const MainPage = ({ navigation, route }) => {
 
             <View style={styles.headerWrapper}>
                 <TouchableOpacity style={styles.headerButton} onPress={() => {
-                    navigation.navigate('MainPage');
+                    navigation.navigate('LeaderboardPage');
                 }}>
                     <View style={styles.headerButtonContent}>
                         <Image source={require('../assets/stats.png')} style={styles.headerImage} />
