@@ -189,5 +189,43 @@ def change_password(username):
         jsonify({"msg": "Invalid credentials"}),
         401,
     )
+
+
+@users.route("/listscore", methods=["GET"])
+def list_users_score():
+    page = int(request.args.get("page", 0))
+    if page < 1:
+        page = 1
+
+    try:
+        users = db.paginate(
+            db.select(models.User).order_by(models.User.totalScore.desc()),
+            page=page,
+            per_page=20,
+        )
+
+        return (
+            jsonify(
+                {
+                    "total": users.total,
+                    "page": users.page,
+                    "per_page": 20,
+                    "has_prev": users.has_prev,
+                    "has_next": users.has_next,
+                    "results": [{"username": item.username, "score": item.totalScore} for item in users.items],
+                }
+            ),
+            200,
+        )
+    except werkzeug.exceptions.NotFound:
+        return (
+            jsonify({"msg": "Page does not exist"}),
+            404,
+        )
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
     
    
