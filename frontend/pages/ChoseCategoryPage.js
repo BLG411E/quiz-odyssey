@@ -1,29 +1,33 @@
 import React, { useState, useContext, useEffect } from "react";
-import BlueButton from "../components/BlueButton";
 import AuthContext from "../utils/AuthContext";
 import {
   Text,
-  Button,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Alert,
   View,
   Pressable,
-  Image,
-  Parse,
-  Dimensions,
   ScrollView,
+  StatusBar,
 } from 'react-native';
+import Slider from '@react-native-community/slider'
 import styles from '../styles';
-
-// Import GetCategories.js to fetch the list of categories
 import GetCategories from '../utils/GetCategories';
 
-const ChoseCategoryPage = () => {
+
+
+const GameQuizPage = () => {
+  const checkedButtonColor = "#aec5d1";
+  const uncheckedButtonColor = "#8ea4d2";
+
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedCategoryText, setSelectedCategoryText] = useState(null); // New state variable
+  const [categoryNames, setCategoryNames] = useState([]);
+
+  const [selectedCategoryName, setSelectedCategoryName] = useState(null);
+  
+
+  const minQuestions = 5;
+  const maxQuestions = 25;
+  const initialNumberOfQuestion = 10;
+  const sliderStep = 1;
+  const [currentSliderValue, setCurrentSliderValue] = useState(initialNumberOfQuestion);
 
   useEffect(() => {
     // Fetch the list of categories
@@ -32,8 +36,8 @@ const ChoseCategoryPage = () => {
         const categories = await GetCategories();
         // Extract the name from each category element
         const categoryNames = categories.map(category => category[1]);
-        console.log("Names:", categoryNames);
-        setCategories(categoryNames);
+        setCategoryNames(categoryNames);
+        setCategories(categories);
       } catch (error) {
         console.error(error);
       }
@@ -42,45 +46,88 @@ const ChoseCategoryPage = () => {
     fetchCategories();
   }, []);
 
+
   const handleCategoryPress = (category) => {
-    // Toggle the selection of a category
-    console.log("Category:", category);
-    if (selectedCategory === category) {
-      setSelectedCategory(null);
-      setSelectedCategoryText(null); // Reset the selected category text
-    } else {
-      setSelectedCategoryText(category); // Update the selected category text first
-      setSelectedCategory(category);
+    if (selectedCategoryName === category) {
+      setSelectedCategoryName(null);
     }
-    console.log("Selected category:", selectedCategory);
+    else {
+      setSelectedCategoryName(category);
+    }
   };
 
-  const handleStartQuiz = () => {
-    // Proceed to GameQuiz.js with the selected category
-    // You can pass the selected category as props to the GameQuiz component
-    // For example: navigation.navigate('GameQuiz', { category: selectedCategory });
+  const isCategoryChecked = (category) => {
+    return selectedCategoryName === category;
   };
+
+  const handleSliderChange = (value) => {
+    setCurrentSliderValue(value);
+  }
+
+  const handleStartQuiz = () => {
+    if (selectedCategoryName !== null) {
+      const selectedCategory = categories.find(category => category[1] === selectedCategoryName);
+      const categoryId = selectedCategory[0];
+      console.log("Selected category ID :", categoryId);
+    }
+    else {
+      console.log("No category selected");
+    }
+  };
+
 
   return (
     <View style={styles.containerCenter}>
-      <ScrollView>
-        {categories.map((category, index) => (
-          <View key={category.id} style={{ marginBottom: 10 }}>
-            <Pressable
-              style={[
-                styles.categoryButton,
-                { backgroundColor: selectedCategory === category ? '#33FF57' : '#000000' },
-              ]}
-              onPress={() => handleCategoryPress(category)}
-            >
-              <Text style={styles.categoryButtonText}>{category}</Text>
-            </Pressable>
-          </View>
-        ))}
-      </ScrollView>
-      <BlueButton title="START QUIZ" onPress={handleStartQuiz} />
+      <View style={styles.paddedContainer}>
+
+        <View style={styles.startGameButton}>
+          <Pressable onPress={() => handleStartQuiz()}>
+            <Text style={styles.textStartQuiz}>START{'\n'}QUIZ</Text>
+          </Pressable>
+        </View>
+
+
+        <Slider
+          style={styles.questionsNumberSlider}
+          minimumValue={minQuestions}
+          maximumValue={maxQuestions}
+          step ={sliderStep}          
+          minimumTrackTintColor="#FFFFFF"
+          maximumTrackTintColor="#000000"
+          thumbTintColor="#6fa3f7"
+          value={initialNumberOfQuestion}
+          onValueChange={(value) => {
+            handleSliderChange(value);
+          }}
+          />
+      
+        <View style={styles.questionsNumberText}>
+          <Text style={styles.textStartQuiz}>Number of questions:</Text>
+          <Text style={styles.textStartQuiz}>{currentSliderValue}</Text>
+        </View>
+
+        <View style={styles.scrollViewContainer}>
+          <StatusBar barStyle="default" />
+          <ScrollView  
+            showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+            {categoryNames.map((category, index) => (
+              <View key={category.id} style={{ marginBottom: 10 }}>
+                <Pressable
+                  style={[styles.categoryButton,
+                    { backgroundColor: isCategoryChecked(category) ? checkedButtonColor : uncheckedButtonColor },
+                  ]}
+                  onPress={() => handleCategoryPress(category)}
+                >
+                  <Text style={styles.categoryButtonText}>{category}</Text>
+                </Pressable>
+              </View>
+            ))}
+        </ScrollView>
+        </View>
+
+      </View>
     </View>
   );
 };
 
-export default ChoseCategoryPage;
+export default GameQuizPage;

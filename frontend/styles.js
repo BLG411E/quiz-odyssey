@@ -3,6 +3,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
     containerCenter: {
         flex: 1,
@@ -10,6 +11,74 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+
+
+    // ChoseCategoryPage.js:
+    paddedContainer: {
+      flex: 1,
+      backgroundColor: '#3E4C5E',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: screenHeight * 0.03,
+      marginBottom: screenHeight * 0.015,
+    },
+    scrollViewContainer: {
+      flex: 1,
+      marginTop: screenHeight * 0.03,
+    },
+    startGameButton: {
+      alignItems: "center", // Arrange children in a row
+      justifyContent: "center",
+      paddingVertical: screenHeight * 25 * 3 / 10000,
+      paddingHorizontal: screenWidth * 73 * 2 / 10000,
+      borderRadius: 10,
+      width: screenWidth * 50 / 100,
+      height: screenHeight * 10 / 100,
+      backgroundColor: '#9bc29b',
+      flexDirection: 'row',
+    },
+    categoryButton: {
+      alignItems: "center", // Arrange children in a row
+      justifyContent: "center",
+      paddingVertical: screenHeight * 25 * 3 / 10000,
+      paddingHorizontal: screenWidth * 73 * 2 / 10000,
+      borderRadius: 10,
+      width: screenWidth * 50 / 100,
+      height: screenHeight * 5 / 100,
+      backgroundColor: '#8ea4d2',
+      flexDirection: 'row',
+    },
+    categoryButtonText: {
+      fontWeight: 'bold',
+      letterSpacing: 0.25,
+      color: 'white',
+      textShadowColor: 'rgba(0, 0, 0, 0.75)',
+      textShadowOffset: {width: -1, height: 1},
+      textShadowRadius: 3,
+    },
+    textStartQuiz: {
+      alignContent: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      fontSize: screenHeight * 0.03,
+      lineHeight: 35,
+      fontWeight: 'bold',
+      letterSpacing: 0.25,
+      color: 'white',
+      textShadowColor: 'rgba(0, 0, 0, 0.75)',
+       textShadowOffset: {width: -1, height: 1},
+       textShadowRadius: 3
+    },
+    questionsNumberSlider: {
+      marginTop: screenHeight * 0.02,
+      width: screenWidth * 80 / 100,
+      height: screenHeight * 5 / 100,
+    },
+    //-------------------------
+
+
+
+
     baseText: {
         fontFamily: 'Inter_400Regular',
         fontSize: 18,
@@ -198,27 +267,7 @@ const styles = StyleSheet.create({
             backgroundColor: '#a9e190'
       },
       
-      categoryButton: {
-        alignItems: 'center',
-        paddingVertical: 0,//screenHeight * 73 * 3 / 10000,
-        paddingHorizontal: 0,//screenWidth * 25 * 2 / 10000,
-        borderRadius: 10,
-        width: 250,//(screenWidth * 73) / 100,
-        height: 50,//(screenWidth * 25) / 100,
-        backgroundColor: 'black',
-        flexDirection: 'row', // Arrange children in a row
-      },
-      categoryButtonImage: {
-        width: screenWidth * 25 * 98 / 10000,
-        height: 80,
-        marginRight: 0,
-      },
-      categoryButtonText: {
-        color: "white",
-        fontSize: 30,
-        fontWeight: "bold",
-
-      },
+      
 });
 
 export default styles;
