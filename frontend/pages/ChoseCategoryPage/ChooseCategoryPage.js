@@ -1,15 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
-import AuthContext from "../utils/AuthContext";
+import AuthContext from "../../utils/AuthContext";
 import {
   Text,
   View,
   Pressable,
   ScrollView,
   StatusBar,
+  Modal,
 } from 'react-native';
 import Slider from '@react-native-community/slider'
-import styles from '../styles';
-import GetCategories from '../utils/GetCategories';
+import styles from "./styles";
+import GetCategories from '../../utils/GetCategories';
 
 
 
@@ -21,7 +22,6 @@ const ChooseCategoryPage = () => {
   const [categoryNames, setCategoryNames] = useState([]);
 
   const [selectedCategoryName, setSelectedCategoryName] = useState(null);
-
 
   const minQuestions = 5;
   const maxQuestions = 25;
@@ -46,12 +46,10 @@ const ChooseCategoryPage = () => {
     fetchCategories();
   }, []);
 
-
   const handleCategoryPress = (category) => {
     if (selectedCategoryName === category) {
       setSelectedCategoryName(null);
-    }
-    else {
+    } else {
       setSelectedCategoryName(category);
     }
   };
@@ -62,36 +60,41 @@ const ChooseCategoryPage = () => {
 
   const handleSliderChange = (value) => {
     setCurrentSliderValue(value);
-  }
+  };
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleStartQuiz = () => {
     if (selectedCategoryName !== null) {
       const selectedCategory = categories.find(category => category[1] === selectedCategoryName);
       const categoryId = selectedCategory[0];
       console.log("Selected category ID :", categoryId);
-    }
-    else {
-      console.log("No category selected");
+    } else {
+      setModalVisible(true); // Show error message if no category is selected
     }
   };
 
+  const handleOKButton = () => {
+    setShowErrorMessage(false); // Hide error message when OK button is pressed
+  };
 
   return (
     <View style={styles.containerCenter}>
-      <View style={styles.paddedContainer}>
+      <View style={styles.marginContainer}>
 
-        <View style={styles.startGameButton}>
+      <View style={styles.startGameButton}>
           <Pressable onPress={() => handleStartQuiz()}>
             <Text style={styles.textStartQuiz}>START{'\n'}QUIZ</Text>
           </Pressable>
         </View>
 
-
+        
+        
         <Slider
           style={styles.questionsNumberSlider}
           minimumValue={minQuestions}
           maximumValue={maxQuestions}
-          step ={sliderStep}
+          step={sliderStep}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#000000"
           thumbTintColor="#6fa3f7"
@@ -99,19 +102,21 @@ const ChooseCategoryPage = () => {
           onValueChange={(value) => {
             handleSliderChange(value);
           }}
-          />
+        />
 
         <View style={styles.questionsNumberText}>
           <Text style={styles.textStartQuiz}>Number of questions:</Text>
           <Text style={styles.textStartQuiz}>{currentSliderValue}</Text>
         </View>
 
+
+
         <View style={styles.scrollViewContainer}>
           <StatusBar barStyle="default" />
           <ScrollView
             showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
             {categoryNames.map((category, index) => (
-              <View key={category.id} style={{ marginBottom: 10 }}>
+              <View key={category.id}>
                 <Pressable
                   style={[styles.categoryButton,
                     { backgroundColor: isCategoryChecked(category) ? checkedButtonColor : uncheckedButtonColor },
@@ -125,9 +130,30 @@ const ChooseCategoryPage = () => {
         </ScrollView>
         </View>
 
+
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+        setModalVisible(false);
+        }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Select category first!</Text>
+              <Pressable
+                style={[styles.modalButton]}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.modalButtonText}>OK</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
       </View>
     </View>
   );
 };
+
 
 export default ChooseCategoryPage;
