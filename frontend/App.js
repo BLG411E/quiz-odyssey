@@ -15,7 +15,7 @@ import ProfileSettingsPage from './pages/ProfileSettingsPage';
 import ProfileChangePage from './pages/ProfileChangePage';
 import SubmitQuestionPage from './pages/SubmitQuestionPage';
 import LeaderboardPage from './pages/LeaderboardPage';
-import ChooseCategoryPage from "./pages/ChooseCategoryPage";
+import ChooseCategoryPage from './pages/ChoseCategoryPage/ChooseCategoryPage';
 
 const Stack = createNativeStackNavigator();
 
