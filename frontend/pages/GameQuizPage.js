@@ -1,29 +1,31 @@
 import React, { useState, useContext, useEffect } from "react";
-import BlueButton from "../components/BlueButton";
 import AuthContext from "../utils/AuthContext";
 import {
   Text,
-  Button,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Alert,
   View,
   Pressable,
-  Image,
-  Parse,
-  Dimensions,
   ScrollView,
+  StatusBar,
 } from 'react-native';
+import Slider from '@react-native-community/slider'
 import styles from '../styles';
-
-// Import GetCategories.js to fetch the list of categories
 import GetCategories from '../utils/GetCategories';
 
-const ChoseCategoryPage = () => {
+
+
+const GameQuizPage = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryText, setSelectedCategoryText] = useState(null); // New state variable
+
+  const checkedButtonColor = "#aec5d1";
+  const uncheckedButtonColor = "#8ea4d2";
+
+  const minQuestions = 5;
+  const maxQuestions = 25;
+  const initialNumberOfQuestion = 10
+  const sliderStep = 1;
+  const [currentSliderValue, setCurrentSliderValue] = useState(initialNumberOfQuestion);
 
   useEffect(() => {
     // Fetch the list of categories
@@ -32,7 +34,6 @@ const ChoseCategoryPage = () => {
         const categories = await GetCategories();
         // Extract the name from each category element
         const categoryNames = categories.map(category => category[1]);
-        console.log("Names:", categoryNames);
         setCategories(categoryNames);
       } catch (error) {
         console.error(error);
@@ -41,6 +42,7 @@ const ChoseCategoryPage = () => {
 
     fetchCategories();
   }, []);
+
 
   const handleCategoryPress = (category) => {
     // Toggle the selection of a category
@@ -61,26 +63,20 @@ const ChoseCategoryPage = () => {
     // For example: navigation.navigate('GameQuiz', { category: selectedCategory });
   };
 
+  const handleSliderChange = (value) => {
+    setCurrentSliderValue(value);
+  }
+
+
   return (
     <View style={styles.containerCenter}>
-      <ScrollView>
-        {categories.map((category, index) => (
-          <View key={category.id} style={{ marginBottom: 10 }}>
-            <Pressable
-              style={[
-                styles.categoryButton,
-                { backgroundColor: selectedCategory === category ? '#33FF57' : '#000000' },
-              ]}
-              onPress={() => handleCategoryPress(category)}
-            >
-              <Text style={styles.categoryButtonText}>{category}</Text>
-            </Pressable>
-          </View>
-        ))}
-      </ScrollView>
-      <BlueButton title="START QUIZ" onPress={handleStartQuiz} />
+      <View style={styles.paddedContainer}>
+
+        <Text style={styles.textStartQuiz}>{}</Text>
+
+      </View>
     </View>
   );
 };
 
-export default ChoseCategoryPage;
+export default GameQuizPage;
