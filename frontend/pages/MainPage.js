@@ -64,10 +64,10 @@ const MainPage = ({ navigation, route }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.headerButton} onPress={() => {
-                    navigation.navigate('ProfileSettingsPage');
+                    navigation.navigate('ProfilePage');
                 }}>
                     <View style={styles.headerButtonContent}>
-                        <Text style={styles.headerButtonText}>{"Profile\n" + username}</Text>
+                        <Text style={styles.headerButtonText}>{"Profile" }</Text>
                         <Image source={require('../assets/profileicon.png')} style={styles.headerImage} />
 
                     </View>
