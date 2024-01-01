@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, route } from "react";
 import AuthContext from "../../utils/AuthContext";
 import {
   Text,
@@ -14,7 +14,7 @@ import GetCategories from '../../utils/GetCategories';
 
 
 
-const ChooseCategoryPage = () => {
+const ChooseCategoryPage = ({navigation}) => {
   const checkedButtonColor = "#aec5d1";
   const uncheckedButtonColor = "#8ea4d2";
 
@@ -28,6 +28,11 @@ const ChooseCategoryPage = () => {
   const initialNumberOfQuestion = 10;
   const sliderStep = 1;
   const [currentSliderValue, setCurrentSliderValue] = useState(initialNumberOfQuestion);
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [categoryId, setCategoryId] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     // Fetch the list of categories
@@ -62,13 +67,12 @@ const ChooseCategoryPage = () => {
     setCurrentSliderValue(value);
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
 
   const handleStartQuiz = () => {
     if (selectedCategoryName !== null) {
-      const selectedCategory = categories.find(category => category[1] === selectedCategoryName);
-      const categoryId = selectedCategory[0];
-      console.log("Selected category ID :", categoryId);
+      setSelectedCategoryName(null);
+      const category = categories.find(category => category[1] === selectedCategoryName);
+      navigation.navigate('GameQuizPage', { categoryId: category[0], numberOfQuestions: currentSliderValue });
     } else {
       setModalVisible(true); // Show error message if no category is selected
     }

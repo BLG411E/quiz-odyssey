@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
       marginTop: screenHeight * 0.03,
     },
     startGameButton: {
-      alignItems: "center", // Arrange children in a row
+      alignItems: "center", 
       justifyContent: "center",
       paddingVertical: screenHeight * 25 * 3 / 10000,
       paddingHorizontal: screenWidth * 73 * 2 / 10000,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
     },
     categoryButton: {
-      alignItems: "center", // Arrange children in a row
+      alignItems: "center", 
       justifyContent: "center",
       paddingVertical: screenHeight * 25 * 3 / 10000,
       paddingHorizontal: screenWidth * 73 * 2 / 10000,
@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
       marginVertical: screenHeight * 0.009,
     },
     categoryButtonText: {
+      alignContent: 'center',
       fontWeight: 'bold',
       letterSpacing: 0.25,
       color: 'white',
