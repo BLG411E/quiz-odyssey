@@ -14,7 +14,8 @@ import GetCategories from '../../utils/GetCategories';
 
 
 
-const ChooseCategoryPage = ({navigation}) => {
+const ChooseCategoryPage = ({route, navigation}) => {
+  const { token } = route.params;
   const checkedButtonColor = "#aec5d1";
   const uncheckedButtonColor = "#8ea4d2";
 
@@ -31,7 +32,7 @@ const ChooseCategoryPage = ({navigation}) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [categoryId, setCategoryId] = useState(null);
+  const [categoryID, setCategoryID] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
@@ -72,7 +73,7 @@ const ChooseCategoryPage = ({navigation}) => {
     if (selectedCategoryName !== null) {
       setSelectedCategoryName(null);
       const category = categories.find(category => category[1] === selectedCategoryName);
-      navigation.navigate('GameQuizPage', { categoryId: category[0], numberOfQuestions: currentSliderValue });
+      navigation.navigate('GameQuizPage', { token: token, categoryID: category[0], numberOfQuestions: currentSliderValue });
     } else {
       setModalVisible(true); // Show error message if no category is selected
     }
