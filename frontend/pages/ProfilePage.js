@@ -102,7 +102,7 @@ const ProfilePage = ({ navigation, route }) => {
                             style={{ flex: 1, backgroundColor: selectedTab === 'points' ? '#7e8793' : '#3e4c5e', padding: 10, borderRadius:10, justifyContent:"center", alignItems:'center' }}
                             onPress={() => setSelectedTab('points')}
                         >
-                            <Text style={{ color: 'white' }}>{points} points</Text>
+                            <Text style={{ color: 'white',  textAlign: 'center', textAlignVertical: 'center'  }}>{points+"\n points"}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{ flex: 1, backgroundColor: selectedTab === 'followers' ? '#7e8793' : '#3e4c5e', padding: 10, borderRadius:10, justifyContent:"center", alignItems:'center' }}
