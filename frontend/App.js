@@ -11,6 +11,7 @@ import Login from './utils/Login';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
+import ProfilePage from './pages/ProfilePage';
 import ProfileSettingsPage from './pages/ProfileSettingsPage';
 import ProfileChangePage from './pages/ProfileChangePage';
 import SubmitQuestionPage from './pages/SubmitQuestionPage';
@@ -104,6 +105,7 @@ export default function App() {
                                     headerShown: false,
                                 }}>
                                     <Stack.Screen name="MainPage" component={MainPage} initialParams={{token: state.userToken}} />
+                                    <Stack.Screen name="ProfilePage" component={ProfilePage} initialParams={{token: state.userToken}}/>
                                     <Stack.Screen name="ProfileSettingsPage" component={ProfileSettingsPage} initialParams={{token: state.userToken}} />
                                     <Stack.Screen name="ProfileChangePage" component={ProfileChangePage}/>
                                     <Stack.Screen name="SubmitQuestionPage" component={SubmitQuestionPage} />
