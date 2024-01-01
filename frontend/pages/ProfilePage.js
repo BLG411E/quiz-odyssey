@@ -14,6 +14,9 @@ const ProfilePage = ({ navigation, route }) => {
 
     const [userData, setUserData] = useState(null);
     const [username, setUsername] = useState(null);
+    const [points, setPoints] = useState(null);
+    const [followers, setFollowers] = useState(null);
+    const [following, setFollowing] = useState(null);
     const [email, setEmail] = useState(null);
     const { token } = route.params
 
@@ -31,6 +34,7 @@ const ProfilePage = ({ navigation, route }) => {
                         setUserData(data);
                         setUsername(data["username"]);
                         setEmail(data["email"]);
+                        setPoints(data["totalScore"]);
                     }
                 }
             } catch (error) {
@@ -40,6 +44,29 @@ const ProfilePage = ({ navigation, route }) => {
 
         fetchData();
     }, []);
+
+    const [selectedTab, setSelectedTab] = useState('points');
+
+    const renderPointsView = () => (
+        <View style={{backgroundColor:"white", flex:1,}}>
+          {/* Your Points View Content */}
+          <Text>Points View</Text>
+        </View>
+      );
+    
+      const renderFollowersView = () => (
+        <View style={{backgroundColor:"white", flex:1,}}>
+          {/* Your Followers View Content */}
+          <Text>Followers View</Text>
+        </View>
+      );
+    
+      const renderFollowingView = () => (
+        <View style={{backgroundColor:"white", flex:1,}}>
+
+          <Text>Following View</Text>
+        </View>
+      );
 
     return (
         <View style={styles.container}>
@@ -56,55 +83,48 @@ const ProfilePage = ({ navigation, route }) => {
 
                     <Text style={styles.profileHeaderText}>{"Profile"}</Text>
                 </View>
-                <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: 10 }}>
                     <Image source={require('../assets/profileicon2.png')} style={styles.profileSettingsImage} />
+                    <Text style={{ color: 'white', fontSize: 20, paddingBottom: 15 }}>{username}</Text>
+
+                    <TouchableOpacity style={{ backgroundColor: '#8ea4d2', width: 200, height: 50, alignItems: "center", justifyContent: 'center', borderRadius: 10 }} onPress={() => {
+                        navigation.navigate('ProfileSettingsPage', { type: "password", token: token });
+                    }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', }}>{"Edit"}</Text>
+                    </TouchableOpacity>
+
                 </View>
 
-                <View style={styles.settingsPageTitleRow}>
-                    <Text style={{ color: 'white', }}>{"PROFILE"}</Text>
+                <View>
+                    {/* Buttons Row */}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 10, height:60 }}>
+                        <TouchableOpacity
+                            style={{ flex: 1, backgroundColor: selectedTab === 'points' ? '#7e8793' : '#3e4c5e', padding: 10, borderRadius:10, justifyContent:"center", alignItems:'center' }}
+                            onPress={() => setSelectedTab('points')}
+                        >
+                            <Text style={{ color: 'white' }}>{points} points</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ flex: 1, backgroundColor: selectedTab === 'followers' ? '#7e8793' : '#3e4c5e', padding: 10, borderRadius:10, justifyContent:"center", alignItems:'center' }}
+                            onPress={() => setSelectedTab('followers')}
+                        >
+                            <Text style={{ color: 'white' }}>Followers</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ flex: 1, backgroundColor: selectedTab === 'following' ? '#7e8793' : '#3e4c5e', padding: 10, borderRadius:10, justifyContent:"center", alignItems:'center' }}
+                            onPress={() => setSelectedTab('following')}
+                        >
+                            <Text style={{ color: 'white' }}>Following</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    
                 </View>
+                    {selectedTab === 'points' && renderPointsView()}
+                    {selectedTab === 'followers' && renderFollowersView()}
+                    {selectedTab === 'following' && renderFollowingView()}
 
-                <View style={styles.settingsPageContentRow}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', }}>{"Username"}</Text>
-                    <Text style={{ color: 'black', }}>{username}</Text>
-                </View>
 
-                <View style={styles.separator} />
-
-                <View style={styles.settingsPageContentRow}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', }}>{"Email"}</Text>
-                    <Text style={{ color: 'black', }}>{email}</Text>
-                </View>
-
-                <View style={styles.settingsPageTitleRow}>
-                    <Text style={{ color: 'white', }}>{"ACCOUNT"}</Text>
-                </View>
-
-                <TouchableOpacity style={styles.settingsPageChangeContentRow} onPress={() => {
-                    navigation.navigate('ProfileChangePage', { type: "username", token: token });
-                }}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', }}>{"Change username"}</Text>
-                </TouchableOpacity>
-
-                <View style={styles.separator} />
-
-                <TouchableOpacity style={styles.settingsPageChangeContentRow} onPress={() => {
-                    navigation.navigate('ProfileChangePage', { type: "password", token: token });
-                }}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', }}>{"Change password"}</Text>
-                </TouchableOpacity>
-
-                <View style={{
-                    backgroundColor: '#fd564d', // Customize the background color
-                    padding: 10,
-                    position: 'absolute',
-                    bottom: 40, // Adjust this value as needed
-                    left: 0,
-                    right: 0,
-                    alignItems: 'center',
-                }}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', }}>{"Delete account"}</Text>
-                </View>
 
 
 
