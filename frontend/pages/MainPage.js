@@ -126,7 +126,9 @@ const MainPage = ({ navigation, route }) => {
                         justifyContent: "center",
                         backgroundColor: '#8ea4d2',
                         boxShadow: '1px 2px 9px #F4AAB9',
-                    }} onPress={onPress}>
+                    }} onPress={() => {
+                    navigation.navigate('ProfilePage');
+                }}>
                         <Text style={styles.textMainMenu}>{'SETTINGS '}</Text>
                     </Pressable>
 
