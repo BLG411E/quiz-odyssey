@@ -116,7 +116,7 @@ const GameQuizPage = ({ route, navigation }) => {
       </View>
 
       <View style={styles.circleTimer}>
-        <Text style={styles.textTimer}>{timeLeft}</Text>
+        <Text style={styles.textTimer}>{timeLeft >= 0 ? timeLeft : 0}</Text>
       </View>
 
         
