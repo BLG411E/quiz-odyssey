@@ -28,5 +28,6 @@ def create_app():
     app.register_blueprint(users, url_prefix="/users")
     app.register_blueprint(category, url_prefix="/category")
     app.register_blueprint(score, url_prefix="/score")
+    app.register_blueprint(stats, url_prefix='/stats')
 
     return app
