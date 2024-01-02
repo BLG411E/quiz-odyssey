@@ -1,9 +1,15 @@
 import os
 
-from flask import Flask 
+from flask import Flask
 
 from .extensions import db
 from .routes.auth import auth
+from .routes.question import question
+from .routes.social import social
+from .routes.users import users
+from .routes.category import category
+from .routes.score import score
+
 
 def create_app():
     app = Flask(__name__)
@@ -16,7 +22,12 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(auth, url_prefix="/auth")
+    app.register_blueprint(question, url_prefix="/question")
+    app.register_blueprint(social, url_prefix="/social")
+    app.register_blueprint(users, url_prefix="/users")
+    app.register_blueprint(category, url_prefix="/category")
+    app.register_blueprint(score, url_prefix="/score")
     app.register_blueprint(stats, url_prefix='/stats')
 
     return app

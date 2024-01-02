@@ -5,10 +5,19 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as SecureStore from 'expo-secure-store';
 
 import AuthContext from './utils/AuthContext';
+import Register from './utils/Register';
 import Login from './utils/Login';
 
+import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
+import ProfilePage from './pages/ProfilePage';
+import ProfileSettingsPage from './pages/ProfileSettingsPage';
+import ProfileChangePage from './pages/ProfileChangePage';
+import SubmitQuestionPage from './pages/SubmitQuestionPage';
+import LeaderboardPage from './pages/LeaderboardPage';
+import ChooseCategoryPage from './pages/ChooseCategoryPage/ChooseCategoryPage';
+import GameQuizPage from './pages/GameQuizPage/GameQuizPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -70,7 +79,7 @@ export default function App() {
                 dispatch({ type: "LOGOUT" });
             },
             SignUp: async (data) => {
-                const token = null // await Register(data); // TODO: Register function
+                const token = await Register(data);
                 dispatch({ type: "LOGIN", token: token });
             },
         }),
@@ -95,13 +104,20 @@ export default function App() {
                                 <Stack.Navigator initialRouteName="MainPage" screenOptions={{
                                     headerShown: false,
                                 }}>
-                                    <Stack.Screen name="MainPage" component={MainPage} />
+                                    <Stack.Screen name="MainPage" component={MainPage} initialParams={{token: state.userToken}} />
+                                    <Stack.Screen name="ProfilePage" component={ProfilePage} initialParams={{token: state.userToken}}/>
+                                    <Stack.Screen name="ProfileSettingsPage" component={ProfileSettingsPage} initialParams={{token: state.userToken}} />
+                                    <Stack.Screen name="ProfileChangePage" component={ProfileChangePage}/>
+                                    <Stack.Screen name="SubmitQuestionPage" component={SubmitQuestionPage} />
+                                    <Stack.Screen name="LeaderboardPage" component={LeaderboardPage} />
+                                    <Stack.Screen name="ChooseCategoryPage" component={ChooseCategoryPage}/>
+                                    <Stack.Screen name="GameQuizPage" component={GameQuizPage}/>
                                 </Stack.Navigator>
                             ) : (
                                 <Stack.Navigator initialRouteName="LoginPage" screenOptions={{
                                     headerShown: false,
                                 }}>
-                                    {/* <Stack.Screen name="RegisterPage" component={RegisterPage} /> */}
+                                    <Stack.Screen name="RegisterPage" component={RegisterPage} />
                                     <Stack.Screen name="LoginPage" component={LoginPage} />
                                 </Stack.Navigator>
                             )}
