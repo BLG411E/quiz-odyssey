@@ -73,7 +73,8 @@ const ChooseCategoryPage = ({route, navigation}) => {
     if (selectedCategoryName !== null) {
       setSelectedCategoryName(null);
       const category = categories.find(category => category[1] === selectedCategoryName);
-      navigation.navigate('GameQuizPage', { token: token, categoryID: category[0], numberOfQuestions: currentSliderValue });
+      navigation.navigate('GameQuizPage', { token: token, categoryID: category[0], numberOfQuestions: currentSliderValue,
+                                            currentQuestionNumber: 1});
     } else {
       setModalVisible(true); // Show error message if no category is selected
     }

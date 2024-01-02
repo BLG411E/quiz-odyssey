@@ -1,11 +1,93 @@
 import { StyleSheet, Dimensions } from 'react-native';
-
+/// game
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
+    questionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      verticalAlign: 'center',
+      paddingHorizontal:20,
+      backgroundColor: '#8ea4d2',
+      paddingVertical: screenHeight*0.02, 
+    },
+    textHeader: {
+        fontSize: (screenHeight + screenWidth)*0.03,
+        textAlign: 'center',
+        color: "#fff",
+        fontWeight: 'bold',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 3
+    },
+    questionHolder: {
+      width: screenWidth * 0.75,
+      height: screenHeight * 0.2,
+      alignSelf: 'center',
+      borderRadius: (screenHeight + screenWidth) / 40,
+      backgroundColor: 'white',
+      marginTop: screenHeight*0.06,
+      paddingVertical: screenHeight*0.012,
+      paddingHorizontal: screenWidth*0.045,
+    },
+    textQuestion: {
+      fontSize: (screenHeight + screenWidth)*0.014,
+      flex: 1,
+      justifyContent: 'center',
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      flexWrap: 'wrap',
+      fontWeight: 'bold',
+    },
+    circleTimer: {
+      marginTop: screenHeight*0.15,
+      marginLeft: screenWidth*0.767,
+      position: 'absolute',
+      alignItems: 'center',
+      borderRadius: screenWidth * 0.2,
+      width: screenWidth * 0.15,
+      height: screenWidth * 0.15,
+      backgroundColor: 'white',
+      justifyContent: 'center',
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: screenHeight*0.01,
+      },
+      shadowOpacity: 0.46,
+      shadowRadius: 11.14,
+      
+      elevation: 17,
+    },
+    textTimer: {
+      color: "red",
+
+      fontSize: (screenHeight + screenWidth)*0.019,
+      fontWeight: 'bold',
+    },
+
+    answerButton: {
+      width: screenWidth * 0.70,
+      height: screenHeight * 0.1,
+      alignSelf: 'center',
+      borderRadius: (screenHeight + screenWidth) / 70,
+      backgroundColor: 'white',
+      marginTop: screenHeight*0.038,
+      paddingVertical: screenHeight*0.02,
+      paddingHorizontal: screenWidth*0.05,
+      justifyContent: 'center',
+      alignItems: 'center',
+      
+    },
+    textAnswer: {
+      fontSize: (screenHeight + screenWidth)*0.013,
+      fontWeight: 'bold',
+    },
+
     containerCenter: {
+      fontFamily: 'Inter_400Regular',
         flex: 1,
         backgroundColor: '#3E4C5E',
         alignItems: 'center',
