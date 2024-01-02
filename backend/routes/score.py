@@ -13,7 +13,6 @@ score = Blueprint("score", __name__)
 @require_token
 def add_points(username):
     try: 
-        print("IM HERE")
         request_parameters = request.get_json()
         points_to_add = request_parameters["pointsToAdd"]
         category_id = request_parameters["categoryID"]
@@ -27,6 +26,7 @@ def add_points(username):
                 totalScore=models.User.totalScore + points_to_add
             )
         )
+        
         db.session.execute(
             db.insert(models.Score),
             [
