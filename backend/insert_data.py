@@ -36,17 +36,19 @@ def insert_questions():
     # Create a dummy staff member and user to use for adding and approving questions
     automation_staff = session.execute(
         select(Staff.id).where(Staff.username == "automation")
-    ).fetchone()[0]
+    ).fetchone()
     if not automation_staff:
         automation_staff = Staff(username="automation", passwordHash="INVALID")
         session.add(automation_staff)
         session.commit()
         session.refresh(automation_staff)
         automation_staff = automation_staff.id
+    else:
+        automation_staff = automation_staff[0]
 
     automation_user = session.execute(
         select(User.id).where(User.username == "automation")
-    ).fetchone()[0]
+    ).fetchone()
     if not automation_user:
         automation_user = User(
             username="automation",
@@ -57,6 +59,8 @@ def insert_questions():
         session.commit()
         session.refresh(automation_user)
         automation_user = automation_user.id
+    else:
+        automation_user = automation_user[0]
 
     lines_to_read = 141
     lines_read = 0
