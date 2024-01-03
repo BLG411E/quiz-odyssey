@@ -5,47 +5,12 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-  modalView: {
-    marginTop: screenHeight * 0.4,
-    width: screenWidth * 60 / 100,
-    backgroundColor: 'white',
-    borderRadius: 15,
-    alignItems: 'center',
-    alignSelf: 'center',
-    padding: "8%",
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalButton: {
-    borderRadius: 10,
-    backgroundColor: '#2196F3',
-    width: screenWidth * 40 / 100,
-    height: screenHeight * 4 / 100,
-    textAlign: 'center',
-    alignContent: 'center',
-    padding: screenHeight * 0.007,
-    marginTop: screenHeight * 0.01,
-  },
-  modalButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: screenHeight*0.01,
-    textAlign: 'center',
-  },
+    
     questionHeader: {
       flexDirection: 'row',
       justifyContent: 'center',
       verticalAlign: 'center',
-      paddingHorizontal:20,
+      paddingHorizontal:screenHeight*0.02,
       backgroundColor: '#8ea4d2',
       paddingVertical: screenHeight*0.02, 
     },
@@ -58,7 +23,7 @@ const styles = StyleSheet.create({
         textShadowOffset: {width: -1, height: 1},
         textShadowRadius: 3
     },
-    questionHolder: {
+    resultsHolder: {
       width: screenWidth * 0.75,
       height: screenHeight * 0.2,
       alignSelf: 'center',
@@ -68,6 +33,24 @@ const styles = StyleSheet.create({
       paddingVertical: screenHeight*0.012,
       paddingHorizontal: screenWidth*0.045,
     },
+    sliderHolder: {
+      width: screenWidth * 0.75,
+      height: screenHeight * 0.52,
+      alignSelf: 'center',
+      alignItems: 'center',
+      borderRadius: (screenHeight + screenWidth) / 40,
+      backgroundColor: 'white',
+      marginTop: screenHeight*0.06,
+    },
+    questionHolder: {
+      backgroundColor: '#8ea4d2',
+      width: screenWidth * 0.63,
+      height: screenHeight * 0.08,
+      borderRadius: (screenHeight + screenWidth) / 40,
+      marginTop: screenHeight*0.01,
+      marginBottom: screenHeight*0.01,
+    },
+
     textQuestion: {
       fontSize: (screenHeight + screenWidth)*0.014,
       flex: 1,
@@ -77,48 +60,13 @@ const styles = StyleSheet.create({
       flexWrap: 'wrap',
       fontWeight: 'bold',
     },
-    circleTimer: {
-      marginTop: screenHeight*0.15,
-      marginLeft: screenWidth*0.767,
-      position: 'absolute',
-      alignItems: 'center',
-      borderRadius: screenWidth * 0.2,
-      width: screenWidth * 0.15,
-      height: screenWidth * 0.15,
-      backgroundColor: 'white',
-      justifyContent: 'center',
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: screenHeight*0.01,
-      },
-      shadowOpacity: 0.46,
-      shadowRadius: 11.14,
-      
-      elevation: 17,
-    },
-    textTimer: {
-      color: "red",
-
-      fontSize: (screenHeight + screenWidth)*0.019,
-      fontWeight: 'bold',
-    },
-
-    answerButton: {
-      width: screenWidth * 0.70,
-      height: screenHeight * 0.1,
-      alignSelf: 'center',
-      borderRadius: (screenHeight + screenWidth) / 70,
-      backgroundColor: 'white',
-      marginTop: screenHeight*0.038,
-      paddingVertical: screenHeight*0.02,
-      paddingHorizontal: screenWidth*0.05,
-      justifyContent: 'center',
-      alignItems: 'center',
-      
-    },
     textAnswer: {
-      fontSize: (screenHeight + screenWidth)*0.013,
+      fontSize: (screenHeight + screenWidth)*0.012,
+      flex: 1,
+      justifyContent: 'center',
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      flexWrap: 'wrap',
       fontWeight: 'bold',
     },
 
