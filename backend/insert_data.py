@@ -9,7 +9,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def insert_questions():
-    file_path = os.path.join(os.path.dirname(__file__), 'data/music')
+    file_path = os.path.join(os.path.dirname(__file__), 'music')
 
     category_mapping = {
         "music": 1,  # Map file names to category IDs
