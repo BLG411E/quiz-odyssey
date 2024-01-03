@@ -18,6 +18,7 @@ import SubmitQuestionPage from './pages/SubmitQuestionPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ChooseCategoryPage from './pages/ChooseCategoryPage/ChooseCategoryPage';
 import GameQuizPage from './pages/GameQuizPage/GameQuizPage';
+import QuizSummaryPage from './pages/QuizSummaryPage/QuizSummaryPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -112,6 +113,7 @@ export default function App() {
                                     <Stack.Screen name="LeaderboardPage" component={LeaderboardPage} />
                                     <Stack.Screen name="ChooseCategoryPage" component={ChooseCategoryPage}/>
                                     <Stack.Screen name="GameQuizPage" component={GameQuizPage}/>
+                                    <Stack.Screen name="QuizSummaryPage" component={QuizSummaryPage}/>
                                 </Stack.Navigator>
                             ) : (
                                 <Stack.Navigator initialRouteName="LoginPage" screenOptions={{

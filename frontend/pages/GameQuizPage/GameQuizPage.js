@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useReducer } from "react";
+import styles from "./styles";
+import { io } from "socket.io-client";
+import { API_URL } from "../../utils/AuthContext";
+import QuizSummaryPage from "../QuizSummaryPage/QuizSummaryPage";
 import {
+    BackHandler,
+    Modal,
     Pressable,
     StatusBar,
     Text,
     View
 } from 'react-native';
-import styles from "./styles";
-import { io } from "socket.io-client";
-import { API_URL } from "../../utils/AuthContext";
 
 
 const GameQuizPage = ({ route, navigation }) => {
@@ -22,11 +25,24 @@ const GameQuizPage = ({ route, navigation }) => {
     });
     const [answerIndex, setAnswerIndex] = useState(0);
     const [score, setScore] = useState(0);
+    const [answeredCorrectly, setAnsweredCorrectly] = useState(0);
     const [currentQuestionNumber, setCurrentQuestionNumber] = useState(1);
     const [userAnswer, setUserAnswer] = useState(0);
     const [timer, setTimer] = useState(null);
 
     const breakAfterQuestion = 2000; // 2 seconds (2000ms)
+
+    const [ resultArray, setResultArray ] = useState(
+        Array.from({ length: numberOfQuestions }, () => "unanswered")
+    );
+
+    const changeResultArray = (index, result) => {
+        setResultArray((prevResults) => {
+            const newResults = [...prevResults];
+            newResults[index - 1] = result;
+            return newResults;
+        });
+    };
 
     const changeButtonColor = (index, color) => {
         setButtonColors((prevColors) => {
@@ -44,17 +60,22 @@ const GameQuizPage = ({ route, navigation }) => {
                 socket.emit("answer", {
                     answer: userAnswer,
                 });
-                changeButtonColor(userAnswer, "#F7F583");
+                //changeButtonColor(userAnswer, "#F7F583");
                 clearInterval(timer);
                 return "PENDING_RESULT";
             case "RECEIVED_RESULT":
                 if (userAnswer !== 0 && userAnswer !== answerIndex) {
                     changeButtonColor(userAnswer, "#FF7F7F");
+                    changeResultArray(currentQuestionNumber - 1, "incorrect");
                 }
 
                 if (userAnswer === 0) {
                     changeButtonColor(answerIndex, "#F7F583");
                 } else {
+                    if (userAnswer == answerIndex) {
+                        setAnsweredCorrectly(answeredCorrectly + 1);
+                        changeResultArray(currentQuestionNumber - 1, "correct");                        
+                    }
                     changeButtonColor(answerIndex, "#BFF783");
                 }
 
@@ -63,10 +84,12 @@ const GameQuizPage = ({ route, navigation }) => {
                 }, breakAfterQuestion);
                 return "SHOWING_RESULT";
             case "NEXT_QUESTION":
-                setButtonColors(["white", "white", "white", "white"]);
-                setCurrentQuestionNumber(currentQuestionNumber + 1);
-                socket.emit("next_question");
-                return "PENDING_QUESTION";
+                if (currentQuestionNumber < numberOfQuestions) {
+                    setButtonColors(["white", "white", "white", "white"]);
+                    setCurrentQuestionNumber(currentQuestionNumber + 1);
+                    socket.emit("next_question");
+                    return "PENDING_QUESTION";
+                }
             case "RECEIVED_QUESTION":
                 setTimeLeft(questionTime);
                 setUserAnswer(0);
@@ -90,7 +113,8 @@ const GameQuizPage = ({ route, navigation }) => {
                 // Score is available at the "score" variable to display on the results page
                 // TODO: Change with results page
                 setTimeout(() => {
-                    navigation.navigate("MainPage", { token: token });
+                    navigation.navigate("QuizSummaryPage", { token: token, score: score, answeredCorrectly: answeredCorrectly
+                                                            , resultArray: resultArray});
                 }, breakAfterQuestion);
                 return "DISCONNECTED";
         }
@@ -112,6 +136,11 @@ const GameQuizPage = ({ route, navigation }) => {
     });
 
     useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', function () {
+            setShowConfirmation(true);
+            return true;
+          });
+
         socket.on("error", (error) => {
             console.log("Error: ", error);
         });
@@ -143,14 +172,60 @@ const GameQuizPage = ({ route, navigation }) => {
     }, []);
 
     const handleAnswerSelection = async (index, isTimeUp = false) => {
-        if (quizState !== "PENDING_ANSWER") return;
+        if (quizState !== "PENDING_ANSWER") 
+            return;
+
         setTimeLeft(0);
         setUserAnswer(index);
         dispatch({ type: "ANSWER" });
     }
 
+    const [showConfirmation, setShowConfirmation] = useState(false);
+
+    
+
+    const handleCloseConfirmation = () => {
+        setShowConfirmation(false);
+    }
+    const handleGoBack = () => {
+        navigation.navigate("MainPage", {token: token});
+    }
+
     return (
         <View style={styles.container}>
+
+        
+        <Modal
+                visible={showConfirmation}
+                animationType="slide"
+                transparent={true}
+            >
+                <View style={styles.modalView}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>
+                            Do you want to end quiz?
+                        </Text>
+                        <View style={styles.modalButtons}>
+                            <Pressable
+                                style={styles.modalButton}
+                                onPress={handleGoBack}
+                            >
+                                <Text style={styles.modalButtonText}>Yes</Text>
+                            </Pressable>
+                            <Pressable
+                                style={styles.modalButton}
+                                onPress={handleCloseConfirmation}
+                            >
+                                <Text style={styles.modalButtonText}>No</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+
+
+
             <StatusBar barStyle="default" />
             <View style={styles.questionHeader}>
                 <Text style={styles.textHeader}>Question {currentQuestionNumber}/{numberOfQuestions}</Text>
@@ -165,28 +240,32 @@ const GameQuizPage = ({ route, navigation }) => {
             </View>
 
 
-            {currentQuestion["options"] && currentQuestion["options"].length >= 1 && (
+            {currentQuestion["options"] && currentQuestion["options"].length >= 1 && currentQuestion["options"][0] != null 
+            && (
                 <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[0] }]}
                     onPress={() => handleAnswerSelection(1)}>
                     <Text style={styles.textAnswer}>{currentQuestion["options"][0]}</Text>
                 </Pressable>
             )}
 
-            {currentQuestion["options"] && currentQuestion["options"].length >= 2 && (
+            {currentQuestion["options"] && currentQuestion["options"].length >= 2 && currentQuestion["options"][1] != null
+            && (
                 <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[1] }]}
                     onPress={() => handleAnswerSelection(2)}>
                     <Text style={styles.textAnswer}>{currentQuestion["options"][1]}</Text>
                 </Pressable>
             )}
 
-            {currentQuestion["options"] && currentQuestion["options"].length >= 3 && (
+            {currentQuestion["options"] && currentQuestion["options"].length >= 3 && currentQuestion["options"][2] != null 
+            && (
                 <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[2] }]}
                     onPress={() => handleAnswerSelection(3)}>
                     <Text style={styles.textAnswer}>{currentQuestion["options"][2]}</Text>
                 </Pressable>
             )}
 
-            {currentQuestion["options"] && currentQuestion["options"].length === 4 && (
+            {currentQuestion["options"] && currentQuestion["options"].length === 4 && currentQuestion["options"][3] != null 
+            && (
                 <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[3] }]}
                     onPress={() => handleAnswerSelection(4)}>
                     <Text style={styles.textAnswer}>{currentQuestion["options"][3]}</Text>

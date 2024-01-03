@@ -16,7 +16,6 @@ const MainPage = ({ navigation, route }) => {
 
     const onPressPlay = () => {
         navigation.navigate('ChooseCategoryPage', { token: token });
-        console.log("main page token: " + token);
     };
 
     const [userData, setUserData] = useState(null);
