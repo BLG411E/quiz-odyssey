@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-
+from .insert_data import insert_questions
 from .extensions import db
 from .routes.auth import auth
 from .routes.question import question
@@ -9,6 +9,7 @@ from .routes.social import social
 from .routes.users import users
 from .routes.category import category
 from .routes.score import score
+from .routes.stats import stats
 
 
 def create_app():
@@ -21,6 +22,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        insert_questions()
 
     app.register_blueprint(auth, url_prefix="/auth")
     app.register_blueprint(question, url_prefix="/question")
