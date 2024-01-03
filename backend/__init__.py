@@ -1,14 +1,16 @@
 import os
 
+import socketio
 from flask import Flask
 
 from .extensions import db
 from .routes.auth import auth
+from .routes.category import category
 from .routes.question import question
+from .routes.quiz import QuizSession
+from .routes.score import score
 from .routes.social import social
 from .routes.users import users
-from .routes.category import category
-from .routes.score import score
 
 
 def create_app():
@@ -30,4 +32,8 @@ def create_app():
     app.register_blueprint(score, url_prefix="/score")
     app.register_blueprint(stats, url_prefix='/stats')
 
+    sio = socketio.Server(cors_allowed_origins="*")
+    sio.register_namespace(QuizSession(app=app, namespace="/quiz"))
+
+    app = socketio.WSGIApp(sio, app)
     return app
