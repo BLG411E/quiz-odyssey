@@ -24,13 +24,16 @@ const styles = StyleSheet.create({
     },
     resultsHolder: {
       width: screenWidth * 0.75,
-      height: screenHeight * 0.2,
+      height: screenHeight * 0.15,
       alignSelf: 'center',
       borderRadius: (screenHeight + screenWidth) / 40,
       backgroundColor: 'white',
       marginTop: screenHeight*0.03,
       paddingVertical: screenHeight*0.012,
       paddingHorizontal: screenWidth*0.045,
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
     },
     sliderHolder: {
       width: screenWidth * 0.75,
@@ -47,8 +50,12 @@ const styles = StyleSheet.create({
       height: screenHeight * 0.08,
       borderRadius: (screenHeight + screenWidth) / 40,
       marginTop: screenHeight*0.02,
+      justifyContent: 'center',
     },
-
+    scrollViewMarginer: {
+      backgroundColor: "rgba(0,0,0,0)",
+      height: screenHeight*0.02,
+    },
     textQuestion: {
       fontSize: (screenHeight + screenWidth)*0.014,
       flex: 1,
@@ -60,7 +67,6 @@ const styles = StyleSheet.create({
     },
     textAnswer: {
       fontSize: (screenHeight + screenWidth)*0.012,
-      flex: 1,
       justifyContent: 'center',
       textAlign: 'center',
       textAlignVertical: 'center',

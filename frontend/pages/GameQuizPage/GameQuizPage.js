@@ -60,7 +60,7 @@ const GameQuizPage = ({ route, navigation }) => {
                 socket.emit("answer", {
                     answer: userAnswer,
                 });
-                //changeButtonColor(userAnswer, "#F7F583");
+                changeButtonColor(userAnswer, "#F7F583");
                 clearInterval(timer);
                 return "PENDING_RESULT";
             case "RECEIVED_RESULT":
@@ -85,7 +85,6 @@ const GameQuizPage = ({ route, navigation }) => {
                 return "SHOWING_RESULT";
             case "NEXT_QUESTION":
                 if (currentQuestionNumber < numberOfQuestions) {
-                    setButtonColors(["white", "white", "white", "white"]);
                     setCurrentQuestionNumber(currentQuestionNumber + 1);
                     socket.emit("next_question");
                     return "PENDING_QUESTION";
@@ -149,6 +148,7 @@ const GameQuizPage = ({ route, navigation }) => {
 
         socket.on("new_question", (question) => {
             setCurrentQuestion(question);
+            setButtonColors(["white", "white", "white", "white"]);
             dispatch({ type: "RECEIVED_QUESTION" });
         });
 
@@ -173,7 +173,7 @@ const GameQuizPage = ({ route, navigation }) => {
         }
     }, []);
 
-    const handleAnswerSelection = async (index) => {
+    const handleAnswerSelection = (index) => {
         if (quizState !== "PENDING_ANSWER")
             return;
 
