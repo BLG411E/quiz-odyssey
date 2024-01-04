@@ -24,7 +24,6 @@ def create_app():
 
     with app.app_context():
         db.create_all()
-        insert_questions()
 
     app.register_blueprint(auth, url_prefix="/auth")
     app.register_blueprint(question, url_prefix="/question")

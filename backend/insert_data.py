@@ -4,14 +4,14 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from .models import Category, Question, Staff, User
-
-engine = create_engine(os.getenv("QUIZODYSSEY_DATABASE_URI"))
-Session = sessionmaker(bind=engine)
-session = Session()
+from models import Category, Question, Staff, User
 
 
 def insert_questions():
+    engine = create_engine(os.getenv("QUIZODYSSEY_DATABASE_URI", "postgresql://quizodyssey:odyssey@db:5432"))
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
     files = os.listdir(os.path.join(os.path.dirname(__file__), "questions/"))
     file_paths = [os.path.join(os.path.dirname(__file__), "questions/", file) for file in files]
 
@@ -85,8 +85,6 @@ def insert_questions():
                 elif line.startswith("D "):
                     current_question["option4"] = line[2:]
 
-                lines_read += 1
-
         for question_data in questions:
             _, file_name = os.path.split(
                 file_path
@@ -107,10 +105,10 @@ def insert_questions():
 
             new_question = Question(
                 text=question_data["text"],
-                option1=question_data["option1"],
-                option2=question_data["option2"],
-                option3=question_data["option3"],
-                option4=question_data["option4"],
+                option1=question_data.get("option1", None),
+                option2=question_data.get("option2", None),
+                option3=question_data.get("option3", None),
+                option4=question_data.get("option4", None),
                 correctAnswer=correctAnswer,
                 addedBy=automation_user,
                 category=category_id,
@@ -122,4 +120,7 @@ def insert_questions():
             session.add(new_question)
             session.commit()
 
-session.close()
+    session.close()
+
+if __name__ == "__main__":
+    insert_questions()
