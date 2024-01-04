@@ -21,32 +21,9 @@ const MainPage = ({ navigation, route }) => {
             currentQuestionNumber: 1});
     };
 
-    const [userData, setUserData] = useState(null);
-
-    useEffect(() => {
-
-        const fetchData = async () => {
-            try {
-
-                if (token) {
-                    // Use the token to fetch user data
-                    const data = await GetUserInfo(token);
 
 
-                    if (data) {
-                        // Handle the user data
-                        setUserData(data);
-                        setUsername(data["username"])
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
+   
 
 
     return (
