@@ -10,6 +10,42 @@ from ..extensions import db
 
 question = Blueprint("question", __name__)
 
+@question.route("/edit", methods=["POST"])
+def edit_question():
+    request_params = request.get_json()
+    question_id = request_params["questionID"]
+    question_text = request_params["questionText"]
+    option1 = request_params["option1"]
+    option2 = request_params["option2"]
+    option3 = request_params["option3"]
+    option4 = request_params["option4"]
+    correct_answer = request_params["correctAnswer"]
+    explanation = request_params["explanation"]
+    difficulty = request_params["difficulty"]
+    isValid = request_params["isValid"]
+
+    try:
+        db.session.execute(
+            db.update(models.Question)
+            .where(models.Question.id == question_id)
+            .values(
+                text=question_text,
+                option1=option1,
+                option2=option2,
+                option3=option3,
+                option4=option4,
+                correctAnswer=correct_answer,
+                explanation=explanation,
+                difficulty=difficulty,
+                isValid=isValid,
+            )
+        )
+        db.session.commit()
+              
+        return jsonify({"msg": "Question updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+    
 
 @question.route("/submit", methods=["POST"])
 @require_token
