@@ -3,7 +3,6 @@ import os
 import socketio
 from flask import Flask
 from flask_cors import CORS
-from .insert_data import insert_questions
 from .extensions import db
 from .routes.auth import auth
 from .routes.category import category

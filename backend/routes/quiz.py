@@ -26,7 +26,7 @@ class QuizSession(socketio.Namespace):
             session["username"] = tokenData["username"]
 
     # def on_disconnect(self, sid):
-        # print(f"Session ended, sid={sid}")
+    # print(f"Session ended, sid={sid}")
 
     def on_start(self, sid, data):
         # print("Starting quiz")
@@ -118,6 +118,11 @@ class QuizSession(socketio.Namespace):
                         category=category,
                         score=score,
                     )
+                )
+                db.session.execute(
+                    db.update(models.User)
+                    .where(models.User.username == session["username"])
+                    .values(totalScore=models.User.totalScore + score)
                 )
                 db.session.commit()
 
