@@ -113,7 +113,7 @@ export default function App() {
                                     <Stack.Screen name="LeaderboardPage" component={LeaderboardPage} />
                                     <Stack.Screen name="ChooseCategoryPage" component={ChooseCategoryPage}/>
                                     <Stack.Screen name="GameQuizPage" component={GameQuizPage}/>
-                                    <Stack.Screen name="QuizSummaryPage" component={QuizSummaryPage}/>
+                                    <Stack.Screen name="QuizSummaryPage" component={QuizSummaryPage} options={{gestureEnabled: false}}/>
                                 </Stack.Navigator>
                             ) : (
                                 <Stack.Navigator initialRouteName="LoginPage" screenOptions={{
