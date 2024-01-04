@@ -120,13 +120,6 @@ const ProfilePage = ({ navigation, route }) => {
     //   }
     // }, [userStats]);
 
-    // useEffect(() => {
-    //   if (weeklyStats) {
-    //     const categoryScore = weeklyStats.total_category_score/points * 100; 
-    //     setWeeklyFill(categoryScore);
-    //   }
-    // }, [weeklyStats]);
-
 
     const [selectedTab, setSelectedTab] = useState('points');
     const toggleAllTimeDropdown = () => {
