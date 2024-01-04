@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import BlueButton from "../components/BlueButton";
 import AuthContext from "../utils/AuthContext";
 import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image } from 'react-native';
@@ -6,17 +6,25 @@ import styles from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../components/DismissKeyboard';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+import { SelectList } from 'react-native-dropdown-select-list'
+import GetCategories from '../utils/GetCategories';
+import SubmitAQuestion from '../utils/SubmitAQuestion';
 
 
 const SubmitQuestionPage = ({ route, navigation }) => {
 
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
+    const [selected, setSelected] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
 
 
     const [question, setQuestion] = useState('');
     const [answers, setAnswers] = useState(['', '', '', '']);
     const [checkedAnswers, setCheckedAnswers] = useState([false, false, false, false]);
+    const [data,setData] = React.useState([]);
+    const [checkedAnswer, setCheckedAnswer] = useState('');
+    const { token } = route.params
+
 
 
     const handleInputChange = (text, index) => {
@@ -54,12 +62,24 @@ const SubmitQuestionPage = ({ route, navigation }) => {
 
         if (question.length > 10) {
             if (areAllAnswersFilled) {
-                if (numberOfCheckedAnswers === 1 || numberOfCheckedAnswers === 2) {
+                if (numberOfCheckedAnswers === 1) {
+                    const checkedQuestionIndex = checkedAnswers.findIndex((isChecked) => isChecked);
+                    const selectedCategoryIndex = data.findIndex(category => category.value === selected);
 
+                    const submitData = {
+                        category: selectedCategoryIndex+1,
+                        questionText: question,
+                        answers: answers,
+                        correctAnswerIndex: checkedAnswers.findIndex((isChecked) => isChecked)+1,
+                        difficulty:1,
+                        explanation:question
+                      };
+
+                    SubmitAQuestion(token, submitData);
                     Alert.alert('Submission Successful', 'Answers submitted successfully!');
                 } else {
 
-                    Alert.alert('Error', 'Please select 1 or 2 answers before submitting.');
+                    Alert.alert('Error', 'Please select 1 correct answers.');
                 }
             }
             else {
@@ -74,6 +94,30 @@ const SubmitQuestionPage = ({ route, navigation }) => {
     };
 
 
+
+      useEffect(() => {
+        const fetchCategories = async () => {
+          try {
+            const categories = await GetCategories();
+
+            let newArray = categories.map((item) => {
+                return {key: item[0], value: item[1]}
+              })
+
+              setData(newArray);
+
+          } catch (error) {
+            console.error(error);
+          }
+          
+          
+        };
+    
+        fetchCategories();
+      }, []);
+    
+    
+  
     return (
 
         <DismissKeyboard>
@@ -103,8 +147,19 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                                 value={question}
                             />
                             <View style={{ paddingTop: 15 }}>
-                                <Text style={{ fontSize: 15, color: "white" }}>{"Write your question and select one or two answers"}</Text>
+                                <Text style={{ fontSize: 15, color: "white" }}>{"Write your question select category and one or two answers"}</Text>
                             </View>
+                        </View>
+
+                        <View style={{ paddingBottom: 10 }}>
+
+                            <SelectList style={{ backgroundColor: "#000", textColor: 'white' }}
+                                textColor="white"
+                                setSelected={(val) => setSelected(val)}
+                                data={data}
+                                save="value"
+                                defaultOption={{ key:'1', value:'All' }}
+                            />
                         </View>
 
 
