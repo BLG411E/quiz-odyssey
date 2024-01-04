@@ -4,16 +4,22 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from '../styles';
 import GetAllUserScoreData from '../utils/GetAllUserScoreData';
+import GetUserInfo from '../utils/GetUserInfo';
 import GetCategories from '../utils/GetCategories';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const LeaderboardPage = ({ route, navigation }) => {
     const [userList, setUserList] = useState([]);
     const [data,setData] = React.useState([]);
+    const [userData,setUserData] = React.useState([]);
     const [selected, setSelected] = useState("");
+    const { token } = route.params
     const getUserDataFromDatabase = async () => {
         const users = await GetAllUserScoreData();
+        const userData = await GetUserInfo(token);
+ 
         setUserList(users["results"])
+        setUserData(userData);
     };
     useEffect(() => {
         const fetchData = async () => {
@@ -35,6 +41,7 @@ const LeaderboardPage = ({ route, navigation }) => {
                 return {key: item[0], value: item[1]}
               })
               setData(newArray);
+   
           } catch (error) {
             console.error(error);
           }
@@ -43,8 +50,23 @@ const LeaderboardPage = ({ route, navigation }) => {
         fetchCategories();
       }, []);
 
+      const fetchLeaderboardData = async (category) => {
+        // const leaderboardData = await GetLeaderboardData(category);
+        // setUserList(leaderboardData.results);
+        console.log(category);
+    };
+
+      useEffect(() => {
+        // Fetch leaderboard data when the selected category changes
+        if (selected) {
+            const selectedCategoryIndex =  data.find(item => item.value === selected);
+            fetchLeaderboardData(selectedCategoryIndex["key"]);
+        }
+    }, [selected]);
+
     const renderUser = ({ item, index }) => (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: 'white' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: 'white',
+         backgroundColor: item.username === userData["username"] ? '#ffc15e' : 'white', }}>
             <Text style={{ fontSize: 18 }}>{`${index + 1}. ${item.username}`}</Text>
             <Text style={{ fontSize: 18 }}>{`Score: ${item.score}`}</Text>
         </View>

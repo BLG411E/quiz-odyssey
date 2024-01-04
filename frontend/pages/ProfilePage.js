@@ -38,7 +38,7 @@ const ProfilePage = ({ navigation, route }) => {
                         // Handle the user data
                         setUsername(data["username"]);
                         setPoints(data["totalScore"]);
-                        setDailyStreak[data["streakCount"]]
+                        setDailyStreak(data["streakCount"])
                     }
                     if(followers){
                         setFollowers(followers);
@@ -133,7 +133,6 @@ const ProfilePage = ({ navigation, route }) => {
                 backgroundColor: 'green',
                 padding: 10,
                 marginVertical: 5,
-                borderRadius: 10,
             }}
             >
             <Text style={{ color: 'white', fontSize: 16 }}>
