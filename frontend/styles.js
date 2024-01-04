@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         flex: 1,
         textAlign: 'center',
-        marginLeft: -24,
+        marginLeft: -36,
       },
       profileSettingsImage:{
         width: 100, // Adjust the width as needed
