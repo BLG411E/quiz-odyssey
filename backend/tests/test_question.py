@@ -82,3 +82,25 @@ def test_submit(client, users):
     assert response.status_code == 401
 
 
+def test_edit(client, users):
+    # Test submitting a question with no priviliges
+    response = client.post(
+        "/question/edit",
+        headers={"Token": f"{users[0]['token']}"},
+        json={
+            "username": f"tester_{tester_id}",
+            "password": "testpassword",
+            "email": f"tester_{tester_id}@test.com",
+
+            "category": 16,
+            "text": "text",
+            "option1": "option1",
+            "option2": "option2",
+            "correctAnswer": 1,
+            "explanation": "explanation",
+            "difficulty": 1,
+        },
+    )
+    assert response.status_code == 403
+
+
