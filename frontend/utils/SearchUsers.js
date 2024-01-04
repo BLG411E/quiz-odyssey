@@ -1,6 +1,4 @@
-import { Alert } from 'react-native';
 import { API_URL } from './AuthContext';
-
 
 const SearchUsers = async (term) => {
     try {

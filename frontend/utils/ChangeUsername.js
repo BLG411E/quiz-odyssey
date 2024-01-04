@@ -1,10 +1,8 @@
 import { Alert } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
 import { API_URL } from './AuthContext';
 
 const ChangeUsername = async (token,new_username) => {
     try {
-
         const response = await fetch(
             `${API_URL}/users/updateusername`,
             {
@@ -22,12 +20,10 @@ const ChangeUsername = async (token,new_username) => {
         );
         const json = await response.json();
 
-        if (response.status != 201) {
+        if (response.status != 200) {
             Alert.alert('Error', `${json.msg}`);
         } else {
-
-            SecureStore.setItemAsync("token", json.token);
-            return json.token;
+            Alert.alert('Username updated successfully');
         }
     } catch (error) {
         console.error(error);

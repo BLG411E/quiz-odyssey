@@ -1,9 +1,7 @@
 import { Alert } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
 import { API_URL } from './AuthContext';
 
 const ChangePassword = async (token,old_password,new_password) => {
-
     try {
         const response = await fetch(
             `${API_URL}/users/updatepassword`,
@@ -16,8 +14,7 @@ const ChangePassword = async (token,old_password,new_password) => {
                 },
                 body: JSON.stringify({
                     newpassword: new_password,
-                    oldpassword: old_password
-                    
+                    oldpassword: old_password 
                 }),
             }
         );

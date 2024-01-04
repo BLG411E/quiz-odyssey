@@ -1,32 +1,22 @@
-import React, { useContext, useState, useEffect } from "react";
-import BlueButton from "../components/BlueButton";
-import AuthContext from "../utils/AuthContext";
-import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image } from 'react-native';
-import styles from '../styles';
+import React, { useEffect, useState } from "react";
+import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SelectList } from 'react-native-dropdown-select-list';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../components/DismissKeyboard';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { SelectList } from 'react-native-dropdown-select-list'
+import styles from '../styles';
 import GetCategories from '../utils/GetCategories';
 import SubmitAQuestion from '../utils/SubmitAQuestion';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const SubmitQuestionPage = ({ route, navigation }) => {
-
-    const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
     const [selected, setSelected] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("");
-
-
     const [question, setQuestion] = useState('');
     const [answers, setAnswers] = useState(['', '', '', '']);
     const [checkedAnswers, setCheckedAnswers] = useState([false, false, false, false]);
     const [data,setData] = React.useState([]);
-    const [checkedAnswer, setCheckedAnswer] = useState('');
     const { token } = route.params
-
-
 
     const handleInputChange = (text, index) => {
         const updatedAnswers = [...answers];
@@ -43,19 +33,14 @@ const SubmitQuestionPage = ({ route, navigation }) => {
         const numberOfCheckedAnswers = checkedAnswers.filter((isChecked) => isChecked).length;
         const updatedCheckedAnswers = [...checkedAnswers];
         if (numberOfCheckedAnswers < 2) {
-
             updatedCheckedAnswers[index] = !updatedCheckedAnswers[index];
             setCheckedAnswers(updatedCheckedAnswers);
         }
         else if (updatedCheckedAnswers[index]) {
-
             updatedCheckedAnswers[index] = !updatedCheckedAnswers[index];
             setCheckedAnswers(updatedCheckedAnswers);
         }
     };
-
-
-
 
     const handleSubmit = () => {
         const numberOfCheckedAnswers = checkedAnswers.filter((isChecked) => isChecked).length;
@@ -64,7 +49,7 @@ const SubmitQuestionPage = ({ route, navigation }) => {
         if (question.length > 10) {
             if (areAllAnswersFilled) {
                 if (numberOfCheckedAnswers === 1) {
-                    const checkedQuestionIndex = checkedAnswers.findIndex((isChecked) => isChecked);
+                    checkedAnswers.findIndex((isChecked) => isChecked);
                     const selectedCategoryIndex = data.findIndex(category => category.value === selected);
 
                     const submitData = {
@@ -86,15 +71,11 @@ const SubmitQuestionPage = ({ route, navigation }) => {
             else {
                 Alert.alert('Error', 'All answer fields must be filled.');
             }
-
         }
         else {
             Alert.alert('Error', 'Question must be at least 10 characters long');
         }
-
     };
-
-
 
       useEffect(() => {
         const fetchCategories = async () => {
@@ -104,33 +85,24 @@ const SubmitQuestionPage = ({ route, navigation }) => {
             let newArray = categories.map((item) => {
                 return {key: item[0], value: item[1]}
               })
-
               setData(newArray);
 
           } catch (error) {
             console.error(error);
           }
-          
-          
         };
-    
         fetchCategories();
       }, []);
-    
-    
   
     return (
-
         <DismissKeyboard>
             <SafeAreaView style={styles.containerCenter}>
                 <KeyboardAwareScrollView behavior="position">
-
                     <View style={styles.container}>
                         <View style={styles.profileHeader}>
                         <Icon.Button backgroundColor="rgba(0,0,0,0)" name="chevron-back-outline" size={30} color="white" iconStyle={{marginRight: 0}} onPress={() => {
                             navigation.navigate('MainPage');
                         }}/>
-
                             <Text style={styles.profileHeaderText}>{"Submit a question"}</Text>
                         </View>
                         <View style={{ padding: 15 }}>
@@ -146,9 +118,7 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                                 <Text style={{ fontSize: 15, color: "white" }}>{"Write your question select category and one or two answers"}</Text>
                             </View>
                         </View>
-
                         <View style={{ paddingBottom: 10 }}>
-
                             <SelectList style={{ backgroundColor: "#000", textColor: 'white' }}
                                 textColor="white"
                                 setSelected={(val) => setSelected(val)}
@@ -157,8 +127,6 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                                 defaultOption={{ key:'1', value:'All' }}
                             />
                         </View>
-
-
                         {answers.map((answer, index) => (
                             <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, paddingLeft: 15 }}>
                                 <TextInput
@@ -167,8 +135,6 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                                     onChangeText={(text) => handleInputChange(text, index)}
                                     value={answer}
                                 />
-
-
                                 {checkedAnswers[index] && (
                                     <TouchableOpacity onPress={() => handleCheckmarkPress(index)} style={{ padding: 10, backgroundColor: "white", height: 40, borderRadius: 4 }}>
                                         <Icon name="checkmark-outline" size={24} color="green" />
@@ -178,27 +144,18 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                                     <TouchableOpacity onPress={() => handleCheckmarkPress(index)} style={{ padding: 10, backgroundColor: "white", height: 40, borderRadius: 4 }}>
                                         <Icon name="checkmark-outline" size={24} color="transparent" />
                                     </TouchableOpacity>
-
                                 )}
                             </View>
                         ))}
-
-
                         <View style={{ padding: 15, alignItems: 'center' }}>
                             <TouchableOpacity style={{ fontSize: 5, backgroundColor: "#8ea4d2", width: 200, height: 50, alignItems: 'center', justifyContent: 'center' }} title="Submit" onPress={handleSubmit}>
                                 <Text style={{ fontSize: 15, color: "white", }}>{"SUBMIT"}</Text>
-
                             </TouchableOpacity>
                         </View>
                     </View>
-
-
                 </KeyboardAwareScrollView>
             </SafeAreaView>
         </DismissKeyboard>
-
-
-
     )
 };
 
