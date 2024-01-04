@@ -1,9 +1,11 @@
-import socketio
+import datetime
+
 import jwt
+import socketio
 from sqlalchemy.sql import func
 
-from ..extensions import db
 from .. import models
+from ..extensions import db
 
 
 class QuizSession(socketio.Namespace):
@@ -119,11 +121,31 @@ class QuizSession(socketio.Namespace):
                         score=score,
                     )
                 )
+
+                today = datetime.date.today()
+
                 db.session.execute(
                     db.update(models.User)
                     .where(models.User.username == session["username"])
                     .values(totalScore=models.User.totalScore + score)
                 )
+
+                respone = db.session.execute(
+                    db.update(models.User)
+                    .where(models.User.username == session["username"])
+                    .where(models.User.lastQuizTakenAt < today)
+                    .values(
+                        streakCount=models.User.streakCount + 1, lastQuizTakenAt=today
+                    )
+                )
+
+                if respone.rowcount == 1:
+                    db.session.execute(
+                        db.update(models.User)
+                        .where(models.User.username == session["username"])
+                        .values(lastQuizTakenAt=today)
+                    )
+
                 db.session.commit()
 
             self.emit(
