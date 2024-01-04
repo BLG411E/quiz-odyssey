@@ -9,6 +9,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { SelectList } from 'react-native-dropdown-select-list'
 import GetCategories from '../utils/GetCategories';
 import SubmitAQuestion from '../utils/SubmitAQuestion';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const SubmitQuestionPage = ({ route, navigation }) => {
@@ -121,19 +122,14 @@ const SubmitQuestionPage = ({ route, navigation }) => {
     return (
 
         <DismissKeyboard>
-            <View style={styles.containerCenter}>
+            <SafeAreaView style={styles.containerCenter}>
                 <KeyboardAwareScrollView behavior="position">
 
                     <View style={styles.container}>
                         <View style={styles.profileHeader}>
-                            <TouchableOpacity hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }} onPress={() => {
-                                navigation.navigate('MainPage');
-                            }}>
-                                <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
-                                    navigation.navigate('MainPage');
-                                }} />
-
-                            </TouchableOpacity>
+                        <Icon.Button backgroundColor="rgba(0,0,0,0)" name="chevron-back-outline" size={30} color="white" iconStyle={{marginRight: 0}} onPress={() => {
+                            navigation.navigate('MainPage');
+                        }}/>
 
                             <Text style={styles.profileHeaderText}>{"Submit a question"}</Text>
                         </View>
@@ -198,7 +194,7 @@ const SubmitQuestionPage = ({ route, navigation }) => {
 
 
                 </KeyboardAwareScrollView>
-            </View>
+            </SafeAreaView>
         </DismissKeyboard>
 
 

@@ -11,12 +11,13 @@ import {
     Text,
     View
 } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const GameQuizPage = ({ route, navigation }) => {
     const { token, categoryID, numberOfQuestions } = route.params;
 
-    const questionTime = 5; // 5 seconds
+    const questionTime = 15; // seconds
     const [timeLeft, setTimeLeft] = useState(questionTime);
     const [buttonColors, setButtonColors] = useState(["white", "white", "white", "white"]);
     const [currentQuestion, setCurrentQuestion] = useState({
@@ -192,7 +193,9 @@ const GameQuizPage = ({ route, navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
+        <>
+        <SafeAreaView style={{flex: 0, backgroundColor:'#8ea4d2'}} edges={['right', 'top', 'left']}></SafeAreaView>
+        <SafeAreaView style={styles.container} edges={['right', 'bottom', 'left']}>
 
         
         <Modal
@@ -272,7 +275,8 @@ const GameQuizPage = ({ route, navigation }) => {
                 </Pressable>
             )}
 
-        </View>
+        </SafeAreaView>
+        </>
     );
 };
 

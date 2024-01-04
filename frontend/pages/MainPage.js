@@ -4,6 +4,7 @@ import AuthContext from "../utils/AuthContext";
 import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image, Parse } from 'react-native';
 import styles from '../styles';
 import GetUserInfo from '../utils/GetUserInfo';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 
@@ -50,7 +51,7 @@ const MainPage = ({ navigation, route }) => {
 
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.headerWrapper}>
                 <TouchableOpacity style={styles.headerButton} onPress={() => {
                     navigation.navigate('MainPage');
@@ -174,7 +175,7 @@ const MainPage = ({ navigation, route }) => {
 
 
 
-        </View>
+        </SafeAreaView>
 
     )
 };

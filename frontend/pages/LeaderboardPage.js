@@ -9,6 +9,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { SelectList } from 'react-native-dropdown-select-list'
 import GetAllUserScoreData from '../utils/GetAllUserScoreData';
 import GetCategories from '../utils/GetCategories';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const LeaderboardPage = ({ route, navigation }) => {
     const [userList, setUserList] = useState([]);
@@ -69,16 +70,11 @@ const LeaderboardPage = ({ route, navigation }) => {
     );
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.profileHeader}>
-                <TouchableOpacity hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }} onPress={() => {
+                <Icon.Button backgroundColor="rgba(0,0,0,0)" name="chevron-back-outline" size={30} color="white" iconStyle={{marginRight: 0}} onPress={() => {
                     navigation.navigate('MainPage');
-                }}>
-                    <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
-                        navigation.navigate('MainPage');
-                    }} />
-
-                </TouchableOpacity>
+                }}/>
 
                 <Text style={styles.profileHeaderText}>{"Leaderboards"}</Text>
             </View>
@@ -103,7 +99,7 @@ const LeaderboardPage = ({ route, navigation }) => {
             </View>
 
 
-        </View>
+        </SafeAreaView>
 
     )
 };

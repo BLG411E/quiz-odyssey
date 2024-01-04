@@ -5,6 +5,7 @@ import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert,
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import GetUserInfo from '../utils/GetUserInfo';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 
@@ -42,17 +43,13 @@ const ProfileSettingsPage = ({ navigation, route }) => {
     }, []);
 
     return (
-        <View style={styles.container}>
+        <>
+        <SafeAreaView style={styles.container}>
             <View style={styles.container}>
                 <View style={styles.profileHeader}>
-                    <TouchableOpacity hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }} onPress={() => {
-                        navigation.navigate('ProfilePage');
-                    }}>
-                        <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
+                    <Icon.Button backgroundColor="rgba(0,0,0,0)" name="chevron-back-outline" size={30} color="white" iconStyle={{marginRight: 0}} onPress={() => {
                             navigation.navigate('ProfilePage');
-                        }} />
-
-                    </TouchableOpacity>
+                    }}/>
 
                     <Text style={styles.profileHeaderText}>{"Settings"}</Text>
                 </View>
@@ -98,7 +95,7 @@ const ProfileSettingsPage = ({ navigation, route }) => {
                     backgroundColor: '#fd564d', // Customize the background color
                     padding: 10,
                     position: 'absolute',
-                    bottom: 40, // Adjust this value as needed
+                    bottom: 0, // Adjust this value as needed
                     left: 0,
                     right: 0,
                     alignItems: 'center',
@@ -118,7 +115,9 @@ const ProfileSettingsPage = ({ navigation, route }) => {
 
 
 
-        </View>
+        </SafeAreaView>
+        <SafeAreaView style={{flex:0, backgroundColor: "#3e4c5e"}} edges={['right', 'bottom', 'left']}></SafeAreaView>
+        </>
 
     )
 };

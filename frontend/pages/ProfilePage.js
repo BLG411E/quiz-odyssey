@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import GetUserInfo from '../utils/GetUserInfo';
 import GetFollowers from '../utils/GetFollowers';
 import GetFollowing from '../utils/GetFollowing';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 
@@ -116,17 +117,13 @@ const ProfilePage = ({ navigation, route }) => {
       };
 
     return (
-        <View style={styles.container}>
+        <>
+        <SafeAreaView style={styles.container} edges={['right', 'top', 'left']}>
             <View style={styles.container}>
                 <View style={styles.profileHeader}>
-                    <TouchableOpacity hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }} onPress={() => {
+                    <Icon.Button backgroundColor="rgba(0,0,0,0)" name="chevron-back-outline" size={30} color="white" iconStyle={{marginRight: 0}} onPress={() => {
                         navigation.navigate('MainPage');
-                    }}>
-                        <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
-                            navigation.navigate('MainPage');
-                        }} />
-
-                    </TouchableOpacity>
+                    }}/>
 
                     <Text style={styles.profileHeaderText}>{"Profile"}</Text>
                 </View>
@@ -185,7 +182,9 @@ const ProfilePage = ({ navigation, route }) => {
 
 
 
-        </View>
+        </SafeAreaView>
+        <SafeAreaView style={{flex:0, backgroundColor: "#fff"}} edges={['right', 'bottom', 'left']}></SafeAreaView>
+        </>
 
     )
 };
