@@ -11,7 +11,8 @@ from ..extensions import db
 question = Blueprint("question", __name__)
 
 @question.route("/edit", methods=["POST"])
-def edit_question():
+@require_moderator
+def edit_question(username, isStaff):
     request_params = request.get_json()
     question_id = request_params["questionID"]
     question_text = request_params["questionText"]
