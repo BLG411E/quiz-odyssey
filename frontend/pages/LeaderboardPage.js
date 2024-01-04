@@ -1,42 +1,27 @@
-import React, { useContext, useState, useEffect } from "react";
-import BlueButton from "../components/BlueButton";
-import AuthContext from "../utils/AuthContext";
-import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image, FlatList } from 'react-native';
-import styles from '../styles';
+import React, { useEffect, useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { SelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/Ionicons';
-import DismissKeyboard from '../components/DismissKeyboard';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { SelectList } from 'react-native-dropdown-select-list'
+import styles from '../styles';
 import GetAllUserScoreData from '../utils/GetAllUserScoreData';
 import GetCategories from '../utils/GetCategories';
 
 const LeaderboardPage = ({ route, navigation }) => {
     const [userList, setUserList] = useState([]);
-    const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
-    const [selected, setSelected] = useState("");
-
-    const [question, setQuestion] = useState('');
-    const [answers, setAnswers] = useState(['', '', '', '']);
-    const [checkedAnswers, setCheckedAnswers] = useState([false, false, false, false]);
     const [data,setData] = React.useState([]);
+    const [selected, setSelected] = useState("");
     const getUserDataFromDatabase = async () => {
-
         const users = await GetAllUserScoreData();
-
         setUserList(users["results"])
-
     };
     useEffect(() => {
-
         const fetchData = async () => {
             try {
-                const data = await getUserDataFromDatabase();
-
+                await getUserDataFromDatabase();
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-
         fetchData();
     }, []);
 
@@ -48,14 +33,10 @@ const LeaderboardPage = ({ route, navigation }) => {
             let newArray = categories.map((item) => {
                 return {key: item[0], value: item[1]}
               })
-
               setData(newArray);
-
           } catch (error) {
             console.error(error);
           }
-          
-          
         };
     
         fetchCategories();
@@ -77,15 +58,12 @@ const LeaderboardPage = ({ route, navigation }) => {
                     <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
                         navigation.navigate('MainPage');
                     }} />
-
                 </TouchableOpacity>
-
                 <Text style={styles.profileHeaderText}>{"Leaderboards"}</Text>
             </View>
 
             <View style={{ padding: 10 }}>
                 <View style={{ paddingBottom: 10 }}>
-
                     <SelectList style={{ backgroundColor: "#000", textColor: 'white' }}
                         textColor="white"
                         setSelected={(val) => setSelected(val)}
@@ -93,18 +71,13 @@ const LeaderboardPage = ({ route, navigation }) => {
                         save="value"
                     />
                 </View>
-
-
                 <FlatList
                     data={userList}
                     keyExtractor={(item) => item.username}
                     renderItem={renderUser}
                 />
             </View>
-
-
         </View>
-
     )
 };
 
