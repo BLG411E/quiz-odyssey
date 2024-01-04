@@ -39,7 +39,7 @@ const GameQuizPage = ({ route, navigation }) => {
     const changeResultArray = (index, result) => {
         setResultArray((prevResults) => {
             const newResults = [...prevResults];
-            newResults[index - 1] = result;
+            newResults[index] = result;
             return newResults;
         });
     };
@@ -159,9 +159,9 @@ const GameQuizPage = ({ route, navigation }) => {
             dispatch({ type: "RECEIVED_RESULT" });
         });
 
-        socket.on("end", (data) => {
+        socket.on("end", (score, question_count) => {
             // Display score on frontend
-            setScore(data.score);
+            setScore(score);
             dispatch({ type: "END" });
         });
 
@@ -195,8 +195,6 @@ const GameQuizPage = ({ route, navigation }) => {
         <>
         <SafeAreaView style={{flex: 0, backgroundColor:'#8ea4d2'}} edges={['right', 'top', 'left']}></SafeAreaView>
         <SafeAreaView style={styles.container} edges={['right', 'bottom', 'left']}>
-
-        
         <Modal
                 visible={showConfirmation}
                 animationType="slide"
@@ -269,7 +267,6 @@ const GameQuizPage = ({ route, navigation }) => {
                         <Text style={styles.textAnswer}>{currentQuestion["options"][3]}</Text>
                     </Pressable>
                 )}
-
         </SafeAreaView>
         </>
     );
