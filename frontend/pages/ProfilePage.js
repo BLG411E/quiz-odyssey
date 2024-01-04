@@ -238,8 +238,6 @@ const ProfilePage = ({ navigation, route }) => {
                 />
               </View>
             )}
-            
-          <Text>Points View</Text>
         </View>
       );
     
