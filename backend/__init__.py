@@ -2,6 +2,7 @@ import os
 
 import socketio
 from flask import Flask
+from flask_cors import CORS
 from .insert_data import insert_questions
 from .extensions import db
 from .routes.auth import auth
@@ -18,7 +19,7 @@ def create_app():
     app.secret_key = os.getenv("QUIZODYSSEY_SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("QUIZODYSSEY_DATABASE_URI")
     app.config["SQLALCHEMY_ECHO"] = False
-
+    CORS(app)
     db.init_app(app)
 
     with app.app_context():
