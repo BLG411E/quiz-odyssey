@@ -6,9 +6,9 @@ from ..authutils import require_token
 from ..extensions import db
 stats = Blueprint("stats", __name__)
 
-@stats.route('/user_stats/<username>', methods=['GET'])
+@stats.route('/<username>', methods=['GET'])
 @require_token
-def get_user_stats(userAuthorization, username):
+def get_user_stats(username):
     if not username:
         return jsonify({'error': 'Username is required'}), 400
 
@@ -40,9 +40,9 @@ def get_user_stats(userAuthorization, username):
 
     return jsonify(user_stat_dict), 200
 
-@stats.route('/user_weekly_stats/<username>', methods=['GET'])
+@stats.route('/weekly/<username>', methods=['GET'])
 @require_token
-def get_user_weekly_stats(userasas, username):
+def get_user_weekly_stats(username):
     if not username:
         return jsonify({'error': 'Username is required'}), 400
     

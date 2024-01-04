@@ -1,21 +1,30 @@
 import { Alert } from 'react-native';
 import { API_URL } from './AuthContext';
 
-const GetCategories = async () =>{
+const GetFollowers = async (token) =>{
     let categories = [];
     try {
-        let response = await fetch(API_URL + '/category/list', {
+        let response = await fetch(API_URL + '/social/followers', {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
+                "Token": token,
             },
         });
-        let json = await response.json();
-        categories = json.map(category => [category.id, category.name, category.description]);
+        const json = await response.json();
+   
+
+        if (response.status !== 200) {
+            Alert.alert('Error', json.msg);
+            return null;
+        }
+
+        return json;
+        
     } catch (error) {
         Alert.alert(error);
     }
     return categories;
 }
-export default GetCategories;
+export default GetFollowers;

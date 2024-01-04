@@ -1,76 +1,59 @@
-import React, { useContext, useState } from "react";
-import BlueButton from "../components/BlueButton";
-import AuthContext from "../utils/AuthContext";
-import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image } from 'react-native';
-import styles from '../styles';
+import React, { useState } from "react";
+import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import BlueButton from "../components/BlueButton";
+import styles from '../styles';
 
-import ChangeUsername from '../utils/ChangeUsername';
 import ChangePassword from "../utils/ChangePassword";
+import ChangeUsername from '../utils/ChangeUsername';
 
 const ProfileChangePage = ({ route, navigation }) => {
     const [username, setUsername] = useState('');
     const [old_password, setOldPassword] = useState('');
     const [new_password, setNewPassword] = useState('');
     const [retype_password, setRetypePassword] = useState('');
-    const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
     const { type, token } = route.params
     const [usernameValid, setUsernameValid] = useState(true);
     const [passwordValid, setPasswordValid] = useState(true);
 
-    const handleSave = () => {
-
-       
-        if(type=='username'){
-            
-            changeusername()
+    const handleSave = () => {       
+        if(type === 'username'){
+            if (username.length > 0) {
+                setUsernameValid(true);
+                changeusername();
+            }
+            else {
+                setUsernameValid(false);
+            }
         }
         else{
-            if(new_password.length>0 && new_password==retype_password){
-                changepassword()
+            if(new_password.length > 0 && new_password === retype_password){
+                setPasswordValid(true);
+                changepassword();
             }
             else{
+                setPasswordValid(false);
                 Alert.alert('Error', 'Invalid password');
-            }
-            
+            }   
         }
-
-
     };
-
-    const validate = () => {
-        setUsernameValid(username.length > 0);
-        setPasswordValid(new_password.length > 0);
-        setEmailValid(email.length != 0 && (String(email).toLowerCase().match(
-            /^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$/
-        )));
-
-        return usernameValid && passwordValid && new_password == retypePassword && emailValid;
-    }
-    const changeusername =async () => {
+    const changeusername = async () => {
         try {
-            
-
             if (token) {
-                const data = await ChangeUsername(token, username);
+                await ChangeUsername(token, username);
             }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
-    const changepassword =async () => {
-
+    const changepassword = async () => {
         try {
             if (token) {
-                const data = await ChangePassword(token,old_password, new_password);
-                
-                
+                await ChangePassword(token,old_password, new_password);
             }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-        
-
     };
 
     return (
@@ -89,7 +72,6 @@ const ProfileChangePage = ({ route, navigation }) => {
                     <Text style={styles.profileHeaderText}>{"Change " + type}</Text>
                 </View>
 
-
                 {type === 'password' ? (
                     // Change Password Window
                     <View style={{ paddingTop: 20, flex: 1, alignItems: 'center' }}>
@@ -105,16 +87,9 @@ const ProfileChangePage = ({ route, navigation }) => {
                         <BlueButton onPress={handleSave} text="Save" />
                     </View>
                 )}
-
-
-
             </View>
-
-
         </View>
-
     )
 };
 
 export default ProfileChangePage;
-{/* <BlueButton onPress={() => { Logout(); }} Text="LOGOUT"  />  */ }

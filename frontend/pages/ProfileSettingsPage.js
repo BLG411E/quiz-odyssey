@@ -1,18 +1,12 @@
-import React, { useContext, useState, useEffect } from "react";
-import BlueButton from "../components/BlueButton";
-import AuthContext from "../utils/AuthContext";
-import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image } from 'react-native';
-import styles from '../styles';
+import React, { useEffect, useState } from "react";
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import styles from '../styles';
 import GetUserInfo from '../utils/GetUserInfo';
-
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const ProfileSettingsPage = ({ navigation, route }) => {
-    const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
-
-
-    const [userData, setUserData] = useState(null);
     const [username, setUsername] = useState(null);
     const [email, setEmail] = useState(null);
     const { token } = route.params
@@ -20,39 +14,31 @@ const ProfileSettingsPage = ({ navigation, route }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-
                 if (token) {
                     // Use the token to fetch user data
                     const data = await GetUserInfo(token);
 
-
                     if (data) {
                         // Handle the user data
-                        setUserData(data);
                         setUsername(data["username"]);
                         setEmail(data["email"]);
                     }
                 }
             } catch (error) {
-
+                console.error('Error fetching data:', error);
             }
         };
-
         fetchData();
     }, []);
 
     return (
-        <View style={styles.container}>
+        <>
+        <SafeAreaView style={styles.container}>
             <View style={styles.container}>
                 <View style={styles.profileHeader}>
-                    <TouchableOpacity hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }} onPress={() => {
-                        navigation.navigate('ProfilePage');
-                    }}>
-                        <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
+                    <Icon.Button backgroundColor="rgba(0,0,0,0)" name="chevron-back-outline" size={30} color="white" iconStyle={{marginRight: 0}} onPress={() => {
                             navigation.navigate('ProfilePage');
-                        }} />
-
-                    </TouchableOpacity>
+                    }}/>
 
                     <Text style={styles.profileHeaderText}>{"Settings"}</Text>
                 </View>
@@ -98,30 +84,18 @@ const ProfileSettingsPage = ({ navigation, route }) => {
                     backgroundColor: '#fd564d', // Customize the background color
                     padding: 10,
                     position: 'absolute',
-                    bottom: 40, // Adjust this value as needed
+                    bottom: 0, // Adjust this value as needed
                     left: 0,
                     right: 0,
                     alignItems: 'center',
                 }}>
                     <Text style={{ color: 'white', fontWeight: 'bold', }}>{"Delete account"}</Text>
                 </View>
-
-
-
-
-
-
-
             </View>
-
-
-
-
-
-        </View>
-
+        </SafeAreaView>
+        <SafeAreaView style={{flex:0, backgroundColor: "#3e4c5e"}} edges={['right', 'bottom', 'left']}></SafeAreaView>
+        </>
     )
 };
 
 export default ProfileSettingsPage;
-{/* <BlueButton onPress={() => { Logout(); }} Text="LOGOUT"  />  */ }

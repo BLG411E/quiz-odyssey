@@ -1,17 +1,16 @@
-import React, { useState, useContext, useEffect, route } from "react";
-import AuthContext from "../../utils/AuthContext";
+import Slider from '@react-native-community/slider';
+import React, { useEffect, useState } from "react";
 import {
-  Text,
-  View,
+  Modal,
   Pressable,
   ScrollView,
   StatusBar,
-  Modal,
+  Text,
+  View,
 } from 'react-native';
-import Slider from '@react-native-community/slider'
-import styles from "./styles";
 import GetCategories from '../../utils/GetCategories';
-
+import styles from "./styles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const ChooseCategoryPage = ({route, navigation}) => {
@@ -31,9 +30,6 @@ const ChooseCategoryPage = ({route, navigation}) => {
   const [currentSliderValue, setCurrentSliderValue] = useState(initialNumberOfQuestion);
 
   const [modalVisible, setModalVisible] = useState(false);
-
-  const [categoryID, setCategoryID] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     // Fetch the list of categories
@@ -85,7 +81,7 @@ const ChooseCategoryPage = ({route, navigation}) => {
   };
 
   return (
-    <View style={styles.containerCenter}>
+    <SafeAreaView style={styles.containerCenter}>
       <View style={styles.marginContainer}>
 
       <View style={styles.startGameButton}>
@@ -122,7 +118,7 @@ const ChooseCategoryPage = ({route, navigation}) => {
           <ScrollView
             showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
             {categoryNames.map((category, index) => (
-              <View key={category.id}>
+              <View  key={category}>
                 <Pressable
                   style={[styles.categoryButton,
                     { backgroundColor: isCategoryChecked(category) ? checkedButtonColor : uncheckedButtonColor },
@@ -157,7 +153,7 @@ const ChooseCategoryPage = ({route, navigation}) => {
         </Modal>
 
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
