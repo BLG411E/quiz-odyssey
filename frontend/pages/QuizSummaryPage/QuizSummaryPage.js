@@ -1,18 +1,18 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect } from "react";
 import {
-    Pressable,
-    StatusBar,
-    Text,
-    View,
     BackHandler,
     ScrollView,
+    StatusBar,
+    Text,
+    View
 } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
+import BlueButton from "../../components/BlueButton";
 import styles from "./styles";
 
 
 const QuizSummaryPage = ({ route, navigation }) => {
     const {  token, score, answeredCorrectly, resultArray } = route.params;
-    console.log("result arary: ", resultArray);
 
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', function () {
@@ -26,29 +26,33 @@ const QuizSummaryPage = ({ route, navigation }) => {
 
 
     return (
-        <View style={styles.container}>
-            <StatusBar barStyle="default" />
-
+        <>
+        <SafeAreaView style={{flex: 0, backgroundColor:'#8ea4d2'}} edges={['right', 'top', 'left']}></SafeAreaView>
+        <SafeAreaView style={styles.container} edges={['right', 'bottom', 'left']}>
+            <StatusBar barStyle="default"/>
+        
             <View style={styles.questionHeader}>
                 <Text style={styles.textHeader}>SUMMARY</Text>
             </View>
 
             <View style={styles.resultsHolder}>
                 <Text style={styles.textQuestion}>Your score: {score.score}
-                {"\n"}Answered correctly: {answeredCorrectly}/{score.question_count}</Text>
+                {"\n"}Correct Answers: {answeredCorrectly}/{score.question_count}</Text>
             </View>
 
             <View style={styles.sliderHolder}>
                 <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                     {resultArray.map((result, index) => (
-                        <View key={index} style={styles.questionHolder}>
-                            <Text style={styles.textAnswer}>Question {index + 1}: {resultArray[index]}</Text>
+                        <View key={index} style={[styles.questionHolder, {backgroundColor: resultArray[index] === "correct" ? "#BFF783" : resultArray[index] === "incorrect" ? "#FF7F7F" : "#F7F583"}]}>
+                            <Text style={styles.textAnswer}>Question {index + 1}</Text>
                         </View>
                     ))}
                 </ScrollView>
+                <View style={styles.scrollViewMarginer}></View>
             </View>
-
-        </View>
+            <BlueButton style={{marginTop: 25}} onPress={() => {navigation.navigate('MainPage', { token: token });}} text={"BACK"} />
+        </SafeAreaView>
+        </>
     );
 };
 

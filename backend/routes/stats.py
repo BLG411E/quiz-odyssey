@@ -6,13 +6,13 @@ from ..authutils import require_token
 from ..extensions import db
 stats = Blueprint("stats", __name__)
 
-@stats.route('/user_stats/<username>', methods=['GET'])
+@stats.route('/<user_name>', methods=['GET'])
 @require_token
-def get_user_stats(userAuthorization, username):
-    if not username:
+def get_user_stats(username, user_name):
+    if not user_name:
         return jsonify({'error': 'Username is required'}), 400
 
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=user_name).first()
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
@@ -40,13 +40,13 @@ def get_user_stats(userAuthorization, username):
 
     return jsonify(user_stat_dict), 200
 
-@stats.route('/user_weekly_stats/<username>', methods=['GET'])
+@stats.route('/weekly/<user_name>', methods=['GET'])
 @require_token
-def get_user_weekly_stats(userasas, username):
-    if not username:
+def get_user_weekly_stats(username, user_name):
+    if not user_name:
         return jsonify({'error': 'Username is required'}), 400
     
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=user_name).first()
     if not user:
         return jsonify({'error': 'User not found'}), 404
     

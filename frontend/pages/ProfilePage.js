@@ -1,46 +1,34 @@
-import React, { useContext, useState, useEffect } from "react";
-import BlueButton from "../components/BlueButton";
-import AuthContext from "../utils/AuthContext";
-import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image,FlatList } from 'react-native';
-import styles from '../styles';
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import GetUserInfo from '../utils/GetUserInfo';
+import styles from '../styles';
 import GetFollowers from '../utils/GetFollowers';
 import GetFollowing from '../utils/GetFollowing';
+import GetUserInfo from '../utils/GetUserInfo';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 
 const ProfilePage = ({ navigation, route }) => {
-    const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
-
-
-    const [userData, setUserData] = useState(null);
     const [username, setUsername] = useState(null);
     const [points, setPoints] = useState(null);
     const [followers, setFollowers] = useState(null);
     const [followersCount, setFollowersCount] = useState(null);
     const [followingCount, setFollowingCount] = useState(null);
     const [following, setFollowing] = useState(null);
-    const [email, setEmail] = useState(null);
     const { token } = route.params
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-
                 if (token) {
                     // Use the token to fetch user data
                     const data = await GetUserInfo(token);
                     const followers =await GetFollowers(token);
                     const following =await GetFollowing(token);
-     
-
-
                     if (data) {
                         // Handle the user data
-                        setUserData(data);
                         setUsername(data["username"]);
-                        setEmail(data["email"]);
                         setPoints(data["totalScore"]);
                     }
                     if(followers){
@@ -48,11 +36,10 @@ const ProfilePage = ({ navigation, route }) => {
                         setFollowing(following);
                         setFollowersCount(followers["total"])
                         setFollowingCount(following["total"])
-
                     }
                 }
             } catch (error) {
-
+                console.error('Error fetching data:', error);
             }
         };
 
@@ -103,9 +90,6 @@ const ProfilePage = ({ navigation, route }) => {
 
     const handleUnfollow = async (usernameToUnfollow) => {
         try {
-          
-        
-
           const updatedFollowers = await UnfollowUser(currentUser, usernameToUnfollow);
       
           // Update the followers state with the updated list
@@ -116,17 +100,13 @@ const ProfilePage = ({ navigation, route }) => {
       };
 
     return (
-        <View style={styles.container}>
+        <>
+        <SafeAreaView style={styles.container} edges={['right', 'top', 'left']}>
             <View style={styles.container}>
                 <View style={styles.profileHeader}>
-                    <TouchableOpacity hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }} onPress={() => {
+                    <Icon.Button backgroundColor="rgba(0,0,0,0)" name="chevron-back-outline" size={30} color="white" iconStyle={{marginRight: 0}} onPress={() => {
                         navigation.navigate('MainPage');
-                    }}>
-                        <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
-                            navigation.navigate('MainPage');
-                        }} />
-
-                    </TouchableOpacity>
+                    }}/>
 
                     <Text style={styles.profileHeaderText}>{"Profile"}</Text>
                 </View>
@@ -170,25 +150,11 @@ const ProfilePage = ({ navigation, route }) => {
                     {selectedTab === 'points' && renderPointsView()}
                     {selectedTab === 'followers' && renderFollowersView()}
                     {selectedTab === 'following' && renderFollowingView()}
-
-
-
-
-
-
-
-
-
             </View>
-
-
-
-
-
-        </View>
-
+        </SafeAreaView>
+        <SafeAreaView style={{flex:0, backgroundColor: "#fff"}} edges={['right', 'bottom', 'left']}></SafeAreaView>
+        </>
     )
 };
 
 export default ProfilePage;
-{/* <BlueButton onPress={() => { Logout(); }} Text="LOGOUT"  />  */ }

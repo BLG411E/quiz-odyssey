@@ -1,8 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
-import styles from "./styles";
-import { io } from "socket.io-client";
-import { API_URL } from "../../utils/AuthContext";
-import QuizSummaryPage from "../QuizSummaryPage/QuizSummaryPage";
+import React, { useEffect, useReducer, useState } from "react";
 import {
     BackHandler,
     Modal,
@@ -11,12 +7,16 @@ import {
     Text,
     View
 } from 'react-native';
+import { io } from "socket.io-client";
+import { API_URL } from "../../utils/AuthContext";
+import styles from "./styles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const GameQuizPage = ({ route, navigation }) => {
     const { token, categoryID, numberOfQuestions } = route.params;
 
-    const questionTime = 5; // 5 seconds
+    const questionTime = 15; // seconds
     const [timeLeft, setTimeLeft] = useState(questionTime);
     const [buttonColors, setButtonColors] = useState(["white", "white", "white", "white"]);
     const [currentQuestion, setCurrentQuestion] = useState({
@@ -32,14 +32,14 @@ const GameQuizPage = ({ route, navigation }) => {
 
     const breakAfterQuestion = 2000; // 2 seconds (2000ms)
 
-    const [ resultArray, setResultArray ] = useState(
+    const [resultArray, setResultArray] = useState(
         Array.from({ length: numberOfQuestions }, () => "unanswered")
     );
 
     const changeResultArray = (index, result) => {
         setResultArray((prevResults) => {
             const newResults = [...prevResults];
-            newResults[index - 1] = result;
+            newResults[index] = result;
             return newResults;
         });
     };
@@ -60,7 +60,7 @@ const GameQuizPage = ({ route, navigation }) => {
                 socket.emit("answer", {
                     answer: userAnswer,
                 });
-                //changeButtonColor(userAnswer, "#F7F583");
+                changeButtonColor(userAnswer, "#F7F583");
                 clearInterval(timer);
                 return "PENDING_RESULT";
             case "RECEIVED_RESULT":
@@ -74,7 +74,7 @@ const GameQuizPage = ({ route, navigation }) => {
                 } else {
                     if (userAnswer == answerIndex) {
                         setAnsweredCorrectly(answeredCorrectly + 1);
-                        changeResultArray(currentQuestionNumber - 1, "correct");                        
+                        changeResultArray(currentQuestionNumber - 1, "correct");
                     }
                     changeButtonColor(answerIndex, "#BFF783");
                 }
@@ -85,7 +85,6 @@ const GameQuizPage = ({ route, navigation }) => {
                 return "SHOWING_RESULT";
             case "NEXT_QUESTION":
                 if (currentQuestionNumber < numberOfQuestions) {
-                    setButtonColors(["white", "white", "white", "white"]);
                     setCurrentQuestionNumber(currentQuestionNumber + 1);
                     socket.emit("next_question");
                     return "PENDING_QUESTION";
@@ -113,8 +112,10 @@ const GameQuizPage = ({ route, navigation }) => {
                 // Score is available at the "score" variable to display on the results page
                 // TODO: Change with results page
                 setTimeout(() => {
-                    navigation.navigate("QuizSummaryPage", { token: token, score: score, answeredCorrectly: answeredCorrectly
-                                                            , resultArray: resultArray});
+                    navigation.navigate("QuizSummaryPage", {
+                        token: token, score: score, answeredCorrectly: answeredCorrectly
+                        , resultArray: resultArray
+                    });
                 }, breakAfterQuestion);
                 return "DISCONNECTED";
         }
@@ -125,7 +126,7 @@ const GameQuizPage = ({ route, navigation }) => {
                 "Token": token,
             },
         });
-        
+
         socket.emit("start", {
             category: categoryID,
             question_count: numberOfQuestions
@@ -139,7 +140,7 @@ const GameQuizPage = ({ route, navigation }) => {
         BackHandler.addEventListener('hardwareBackPress', function () {
             setShowConfirmation(true);
             return true;
-          });
+        });
 
         socket.on("error", (error) => {
             console.log("Error: ", error);
@@ -147,6 +148,7 @@ const GameQuizPage = ({ route, navigation }) => {
 
         socket.on("new_question", (question) => {
             setCurrentQuestion(question);
+            setButtonColors(["white", "white", "white", "white"]);
             dispatch({ type: "RECEIVED_QUESTION" });
         });
 
@@ -171,8 +173,8 @@ const GameQuizPage = ({ route, navigation }) => {
         }
     }, []);
 
-    const handleAnswerSelection = async (index, isTimeUp = false) => {
-        if (quizState !== "PENDING_ANSWER") 
+    const handleAnswerSelection = (index) => {
+        if (quizState !== "PENDING_ANSWER")
             return;
 
         setTimeLeft(0);
@@ -182,19 +184,17 @@ const GameQuizPage = ({ route, navigation }) => {
 
     const [showConfirmation, setShowConfirmation] = useState(false);
 
-    
-
     const handleCloseConfirmation = () => {
         setShowConfirmation(false);
     }
     const handleGoBack = () => {
-        navigation.navigate("MainPage", {token: token});
+        navigation.navigate("MainPage", { token: token });
     }
 
     return (
-        <View style={styles.container}>
-
-        
+        <>
+        <SafeAreaView style={{flex: 0, backgroundColor:'#8ea4d2'}} edges={['right', 'top', 'left']}></SafeAreaView>
+        <SafeAreaView style={styles.container} edges={['right', 'bottom', 'left']}>
         <Modal
                 visible={showConfirmation}
                 animationType="slide"
@@ -223,9 +223,6 @@ const GameQuizPage = ({ route, navigation }) => {
                 </View>
             </Modal>
 
-
-
-
             <StatusBar barStyle="default" />
             <View style={styles.questionHeader}>
                 <Text style={styles.textHeader}>Question {currentQuestionNumber}/{numberOfQuestions}</Text>
@@ -239,40 +236,39 @@ const GameQuizPage = ({ route, navigation }) => {
                 <Text style={styles.textTimer}>{timeLeft >= 0 ? timeLeft : 0}</Text>
             </View>
 
-
-            {currentQuestion["options"] && currentQuestion["options"].length >= 1 && currentQuestion["options"][0] != null 
-            && (
-                <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[0] }]}
-                    onPress={() => handleAnswerSelection(1)}>
-                    <Text style={styles.textAnswer}>{currentQuestion["options"][0]}</Text>
-                </Pressable>
-            )}
+            {currentQuestion["options"] && currentQuestion["options"].length >= 1 && currentQuestion["options"][0] != null
+                && (
+                    <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[0] }]}
+                        onPress={() => handleAnswerSelection(1)}>
+                        <Text style={styles.textAnswer}>{currentQuestion["options"][0]}</Text>
+                    </Pressable>
+                )}
 
             {currentQuestion["options"] && currentQuestion["options"].length >= 2 && currentQuestion["options"][1] != null
-            && (
-                <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[1] }]}
-                    onPress={() => handleAnswerSelection(2)}>
-                    <Text style={styles.textAnswer}>{currentQuestion["options"][1]}</Text>
-                </Pressable>
-            )}
+                && (
+                    <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[1] }]}
+                        onPress={() => handleAnswerSelection(2)}>
+                        <Text style={styles.textAnswer}>{currentQuestion["options"][1]}</Text>
+                    </Pressable>
+                )}
 
-            {currentQuestion["options"] && currentQuestion["options"].length >= 3 && currentQuestion["options"][2] != null 
-            && (
-                <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[2] }]}
-                    onPress={() => handleAnswerSelection(3)}>
-                    <Text style={styles.textAnswer}>{currentQuestion["options"][2]}</Text>
-                </Pressable>
-            )}
+            {currentQuestion["options"] && currentQuestion["options"].length >= 3 && currentQuestion["options"][2] != null
+                && (
+                    <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[2] }]}
+                        onPress={() => handleAnswerSelection(3)}>
+                        <Text style={styles.textAnswer}>{currentQuestion["options"][2]}</Text>
+                    </Pressable>
+                )}
 
-            {currentQuestion["options"] && currentQuestion["options"].length === 4 && currentQuestion["options"][3] != null 
-            && (
-                <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[3] }]}
-                    onPress={() => handleAnswerSelection(4)}>
-                    <Text style={styles.textAnswer}>{currentQuestion["options"][3]}</Text>
-                </Pressable>
-            )}
-
-        </View>
+            {currentQuestion["options"] && currentQuestion["options"].length === 4 && currentQuestion["options"][3] != null
+                && (
+                    <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[3] }]}
+                        onPress={() => handleAnswerSelection(4)}>
+                        <Text style={styles.textAnswer}>{currentQuestion["options"][3]}</Text>
+                    </Pressable>
+                )}
+        </SafeAreaView>
+        </>
     );
 };
 

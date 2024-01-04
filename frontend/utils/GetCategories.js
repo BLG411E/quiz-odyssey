@@ -19,9 +19,3 @@ const GetCategories = async () =>{
     return categories;
 }
 export default GetCategories;
-
-
-
-
-
-

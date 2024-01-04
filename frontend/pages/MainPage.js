@@ -1,22 +1,18 @@
-import React, { useState, useContext, useEffect } from "react";
-import BlueButton from "../components/BlueButton";
-import AuthContext from "../utils/AuthContext";
-import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image, Parse } from 'react-native';
+import React, { useContext } from "react";
+import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../styles';
-import GetUserInfo from '../utils/GetUserInfo';
-
+import AuthContext from "../utils/AuthContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const MainPage = ({ navigation, route }) => {
-
-
-    const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
+    const { Logout } = useContext(AuthContext);
     const { token } = route.params
-    const [username, setUsername] = useState(null);
 
     const onPressPlay = () => {
         navigation.navigate('ChooseCategoryPage', { token: token });
     };
+
 
     const onPressDailyChallenge = () => {
         const category = 12;
@@ -53,11 +49,8 @@ const MainPage = ({ navigation, route }) => {
 
 
 
-
-
-
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.headerWrapper}>
                 <TouchableOpacity style={styles.headerButton} onPress={onPressDailyChallenge}>
                     <View style={styles.headerButtonContent}>
@@ -71,7 +64,7 @@ const MainPage = ({ navigation, route }) => {
                     navigation.navigate('ProfilePage');
                 }}>
                     <View style={styles.headerButtonContent}>
-                        <Text style={styles.headerButtonText}>{"Profile" }</Text>
+                        <Text style={styles.headerButtonText}>{"Profile"}</Text>
                         <Image source={require('../assets/profileicon.png')} style={styles.headerImage} />
 
                     </View>
@@ -131,58 +124,31 @@ const MainPage = ({ navigation, route }) => {
                         backgroundColor: '#8ea4d2',
                         boxShadow: '1px 2px 9px #F4AAB9',
                     }} onPress={() => {
-                    navigation.navigate('ProfilePage');
-                }}>
-                        <Text style={styles.textMainMenu}>{'SETTINGS '}</Text>
+                        navigation.navigate('ProfilePage');
+                    }}>
+                        <Text style={styles.textMainMenu}>{'SETTINGS'}</Text>
                     </Pressable>
-
-
                 </View>
-
                 <View style={styles.row}>
-
                     <Pressable style={{
                         paddingVertical: 10,
                         paddingHorizontal: 20,
                         borderRadius: 10,
-                        width: 150,
-                        height: 50,
+                        width: 200,
+                        height: 60,
                         alignItems: "center",
                         justifyContent: "center",
                         backgroundColor: '#8ea4d2',
                         boxShadow: '1px 2px 9px #F4AAB9',
-                    }} onPress={onPress}>
-                        <Text style={styles.textMainMenu}>{'QUIT '}</Text>
+                    }} onPress={() => {
+                        Logout();
+                    }}>
+                        <Text style={styles.textMainMenu}>{'LOGOUT'}</Text>
                     </Pressable>
-
-
                 </View>
-
-
             </View>
-            <View style={styles.footerWrapper}>
-                <Pressable style={{ paddingVertical: 15, borderRadius: 10, width: 100, alignItems: "center", backgroundColor: '#55627e', }} onPress={() => { Logout(); }}>
-                    <Text style={{
-                        fontSize: 15,
-                        lineHeight: 35,
-                        fontWeight: 'bold',
-                        letterSpacing: 0.25,
-                        color: 'white',
-                    }}>{'Log out '}</Text>
-                </Pressable>
-
-
-
-
-            </View>
-
-
-
-
-        </View>
-
+        </SafeAreaView>
     )
 };
 
 export default MainPage;
-{/* <BlueButton onPress={() => { Logout(); }} Text="LOGOUT"  />  */ }

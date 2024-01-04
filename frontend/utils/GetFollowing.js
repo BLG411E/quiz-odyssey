@@ -28,9 +28,3 @@ const GetFollowing = async (token) =>{
     return categories;
 }
 export default GetFollowing;
-
-
-
-
-
-
