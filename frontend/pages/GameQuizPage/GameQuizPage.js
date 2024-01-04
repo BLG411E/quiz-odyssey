@@ -1,8 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
-import styles from "./styles";
-import { io } from "socket.io-client";
-import { API_URL } from "../../utils/AuthContext";
-import QuizSummaryPage from "../QuizSummaryPage/QuizSummaryPage";
+import React, { useEffect, useReducer, useState } from "react";
 import {
     BackHandler,
     Modal,
@@ -11,6 +7,9 @@ import {
     Text,
     View
 } from 'react-native';
+import { io } from "socket.io-client";
+import { API_URL } from "../../utils/AuthContext";
+import styles from "./styles";
 
 
 const GameQuizPage = ({ route, navigation }) => {
@@ -32,7 +31,7 @@ const GameQuizPage = ({ route, navigation }) => {
 
     const breakAfterQuestion = 2000; // 2 seconds (2000ms)
 
-    const [ resultArray, setResultArray ] = useState(
+    const [resultArray, setResultArray] = useState(
         Array.from({ length: numberOfQuestions }, () => "unanswered")
     );
 
@@ -74,7 +73,7 @@ const GameQuizPage = ({ route, navigation }) => {
                 } else {
                     if (userAnswer == answerIndex) {
                         setAnsweredCorrectly(answeredCorrectly + 1);
-                        changeResultArray(currentQuestionNumber - 1, "correct");                        
+                        changeResultArray(currentQuestionNumber - 1, "correct");
                     }
                     changeButtonColor(answerIndex, "#BFF783");
                 }
@@ -113,8 +112,10 @@ const GameQuizPage = ({ route, navigation }) => {
                 // Score is available at the "score" variable to display on the results page
                 // TODO: Change with results page
                 setTimeout(() => {
-                    navigation.navigate("QuizSummaryPage", { token: token, score: score, answeredCorrectly: answeredCorrectly
-                                                            , resultArray: resultArray});
+                    navigation.navigate("QuizSummaryPage", {
+                        token: token, score: score, answeredCorrectly: answeredCorrectly
+                        , resultArray: resultArray
+                    });
                 }, breakAfterQuestion);
                 return "DISCONNECTED";
         }
@@ -125,7 +126,7 @@ const GameQuizPage = ({ route, navigation }) => {
                 "Token": token,
             },
         });
-        
+
         socket.emit("start", {
             category: categoryID,
             question_count: numberOfQuestions
@@ -139,7 +140,7 @@ const GameQuizPage = ({ route, navigation }) => {
         BackHandler.addEventListener('hardwareBackPress', function () {
             setShowConfirmation(true);
             return true;
-          });
+        });
 
         socket.on("error", (error) => {
             console.log("Error: ", error);
@@ -157,9 +158,9 @@ const GameQuizPage = ({ route, navigation }) => {
             dispatch({ type: "RECEIVED_RESULT" });
         });
 
-        socket.on("end", (score, question_count) => {
+        socket.on("end", (data) => {
             // Display score on frontend
-            setScore(score);
+            setScore(data.score);
             dispatch({ type: "END" });
         });
 
@@ -171,8 +172,8 @@ const GameQuizPage = ({ route, navigation }) => {
         }
     }, []);
 
-    const handleAnswerSelection = async (index, isTimeUp = false) => {
-        if (quizState !== "PENDING_ANSWER") 
+    const handleAnswerSelection = async (index) => {
+        if (quizState !== "PENDING_ANSWER")
             return;
 
         setTimeLeft(0);
@@ -182,20 +183,16 @@ const GameQuizPage = ({ route, navigation }) => {
 
     const [showConfirmation, setShowConfirmation] = useState(false);
 
-    
-
     const handleCloseConfirmation = () => {
         setShowConfirmation(false);
     }
     const handleGoBack = () => {
-        navigation.navigate("MainPage", {token: token});
+        navigation.navigate("MainPage", { token: token });
     }
 
     return (
         <View style={styles.container}>
-
-        
-        <Modal
+            <Modal
                 visible={showConfirmation}
                 animationType="slide"
                 transparent={true}
@@ -223,9 +220,6 @@ const GameQuizPage = ({ route, navigation }) => {
                 </View>
             </Modal>
 
-
-
-
             <StatusBar barStyle="default" />
             <View style={styles.questionHeader}>
                 <Text style={styles.textHeader}>Question {currentQuestionNumber}/{numberOfQuestions}</Text>
@@ -239,38 +233,37 @@ const GameQuizPage = ({ route, navigation }) => {
                 <Text style={styles.textTimer}>{timeLeft >= 0 ? timeLeft : 0}</Text>
             </View>
 
-
-            {currentQuestion["options"] && currentQuestion["options"].length >= 1 && currentQuestion["options"][0] != null 
-            && (
-                <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[0] }]}
-                    onPress={() => handleAnswerSelection(1)}>
-                    <Text style={styles.textAnswer}>{currentQuestion["options"][0]}</Text>
-                </Pressable>
-            )}
+            {currentQuestion["options"] && currentQuestion["options"].length >= 1 && currentQuestion["options"][0] != null
+                && (
+                    <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[0] }]}
+                        onPress={() => handleAnswerSelection(1)}>
+                        <Text style={styles.textAnswer}>{currentQuestion["options"][0]}</Text>
+                    </Pressable>
+                )}
 
             {currentQuestion["options"] && currentQuestion["options"].length >= 2 && currentQuestion["options"][1] != null
-            && (
-                <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[1] }]}
-                    onPress={() => handleAnswerSelection(2)}>
-                    <Text style={styles.textAnswer}>{currentQuestion["options"][1]}</Text>
-                </Pressable>
-            )}
+                && (
+                    <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[1] }]}
+                        onPress={() => handleAnswerSelection(2)}>
+                        <Text style={styles.textAnswer}>{currentQuestion["options"][1]}</Text>
+                    </Pressable>
+                )}
 
-            {currentQuestion["options"] && currentQuestion["options"].length >= 3 && currentQuestion["options"][2] != null 
-            && (
-                <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[2] }]}
-                    onPress={() => handleAnswerSelection(3)}>
-                    <Text style={styles.textAnswer}>{currentQuestion["options"][2]}</Text>
-                </Pressable>
-            )}
+            {currentQuestion["options"] && currentQuestion["options"].length >= 3 && currentQuestion["options"][2] != null
+                && (
+                    <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[2] }]}
+                        onPress={() => handleAnswerSelection(3)}>
+                        <Text style={styles.textAnswer}>{currentQuestion["options"][2]}</Text>
+                    </Pressable>
+                )}
 
-            {currentQuestion["options"] && currentQuestion["options"].length === 4 && currentQuestion["options"][3] != null 
-            && (
-                <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[3] }]}
-                    onPress={() => handleAnswerSelection(4)}>
-                    <Text style={styles.textAnswer}>{currentQuestion["options"][3]}</Text>
-                </Pressable>
-            )}
+            {currentQuestion["options"] && currentQuestion["options"].length === 4 && currentQuestion["options"][3] != null
+                && (
+                    <Pressable style={[styles.answerButton, { backgroundColor: buttonColors[3] }]}
+                        onPress={() => handleAnswerSelection(4)}>
+                        <Text style={styles.textAnswer}>{currentQuestion["options"][3]}</Text>
+                    </Pressable>
+                )}
 
         </View>
     );
