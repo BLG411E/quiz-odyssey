@@ -8,19 +8,31 @@ from models import Category, Question, Staff, User
 
 
 def insert_questions():
-    engine = create_engine(os.getenv("QUIZODYSSEY_DATABASE_URI", "postgresql://quizodyssey:odyssey@db:5432"))
+    engine = create_engine(
+        os.getenv(
+            "QUIZODYSSEY_DATABASE_URI", "postgresql://quizodyssey:odyssey@db:5432"
+        )
+    )
     Session = sessionmaker(bind=engine)
     session = Session()
 
+    # Create daily quiz category with id 1
+    daily_category = Category(name="Daily", description="Daily quiz questions")
+    session.add(daily_category)
+    try:
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+
     files = os.listdir(os.path.join(os.path.dirname(__file__), "questions/"))
-    file_paths = [os.path.join(os.path.dirname(__file__), "questions/", file) for file in files]
+    file_paths = [
+        os.path.join(os.path.dirname(__file__), "questions/", file) for file in files
+    ]
 
     category_mapping = {}
 
     for index, file_path in enumerate(file_paths):
-        category_mapping[files[index]] = Category(name=files[index].capitalize()) 
-
-    session.add_all(category_mapping.values())
+        category_mapping[files[index]] = Category(name=files[index].capitalize())
 
     for category in category_mapping.values():
         try:
@@ -67,6 +79,7 @@ def insert_questions():
     current_question = None
 
     for file_path in file_paths:
+        questions = []
         with open(file_path, "r", encoding="utf-8") as file:
             for line in file:
                 line = line.strip()
@@ -121,6 +134,7 @@ def insert_questions():
             session.commit()
 
     session.close()
+
 
 if __name__ == "__main__":
     insert_questions()

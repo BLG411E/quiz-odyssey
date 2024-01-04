@@ -15,16 +15,13 @@ const MainPage = ({ navigation, route }) => {
 
 
     const onPressDailyChallenge = () => {
-        const category = 12;
-        const numberOfQuestions = 5;
-        navigation.navigate('GameQuizPage', { token: token, categoryID: category, numberOfQuestions: numberOfQuestions,
-            currentQuestionNumber: 1});
+        const category = 1; // 1 is the id of the daily challenge category
+        const numberOfQuestions = 10;
+        navigation.navigate('GameQuizPage', {
+            token: token, categoryID: category, numberOfQuestions: numberOfQuestions,
+            currentQuestionNumber: 1
+        });
     };
-
-
-
-   
-
 
     return (
         <SafeAreaView style={styles.container}>

@@ -17,5 +17,5 @@ def list_categories():
 
     categories = db.session.query(models.Category).all()
     categories_list = [{"id": category.id, "name": category.name, "description": category.description}
-                       for category in categories]
+                       for category in categories if category.name != "Daily"]
     return jsonify(categories_list)
