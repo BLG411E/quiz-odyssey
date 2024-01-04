@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import BlueButton from "../components/BlueButton";
 import AuthContext from "../utils/AuthContext";
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image, FlatList } from 'react-native';
+import { ScrollView, Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image, FlatList } from 'react-native';
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import GetUserInfo from '../utils/GetUserInfo';
@@ -173,7 +173,7 @@ const ProfilePage = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
             {showWeeklyDropdown && (
-              <View>
+              <ScrollView style={styles.scrollView}>
                 <FlatList
                   data={weeklyStats.category_stats}
                   keyExtractor={(item) => item.category_name}
@@ -183,7 +183,7 @@ const ProfilePage = ({ navigation, route }) => {
                       <View>
                         <AnimatedCircularProgress
                           size={150}
-                          width={5}
+                          width={10}
                           fill={item.total_category_score/points * 100}
                           tintColor="#00e0ff"
                           backgroundColor="#3d5875">
@@ -199,7 +199,7 @@ const ProfilePage = ({ navigation, route }) => {
                     </View>
                   )}
                 />
-              </View>
+              </ScrollView>
             )}
 
             {/* All time Stats Dropdown */}
@@ -209,19 +209,18 @@ const ProfilePage = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
             {showAllTimeDropdown && (
-              <View>
+              <ScrollView style={styles.scrollView}>
                 <FlatList
                   data={userStats.category_stats}
                   keyExtractor={(item) => item.category_name}
                   renderItem={({ item }) => (
                     <View style={{ marginRight: 10 }}>
                       <Text>{item.category_name}</Text>
-                      <View>
                         <AnimatedCircularProgress
-                          size={100}
-                          width={5}
+                          size={150}
+                          width={10}
                           fill={item.total_category_score/points * 100}
-                          tintColor="#00e0ff"
+                          tintColor= '#8ea4d2'
                           backgroundColor="#3d5875">
                           {
                             (fill) => (
@@ -231,11 +230,10 @@ const ProfilePage = ({ navigation, route }) => {
                             )
                           }
                         </AnimatedCircularProgress>
-                      </View>
                     </View>
                   )}
                 />
-              </View>
+              </ScrollView>
             )}
         </View>
       );
