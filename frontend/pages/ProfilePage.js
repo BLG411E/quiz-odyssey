@@ -113,19 +113,19 @@ const ProfilePage = ({ navigation, route }) => {
       fetchWeeklyStats();
     }, [username]);
 
-    useEffect(() => {
-      if (userStats) {
-        const categoryScore = userStats.total_category_score/points * 100; 
-        setFill(categoryScore);
-      }
-    }, [userStats]);
+    // useEffect(() => {
+    //   if (userStats) {
+    //     const categoryScore = userStats.total_category_score/points * 100; 
+    //     setFill(categoryScore);
+    //   }
+    // }, [userStats]);
 
-    useEffect(() => {
-      if (weeklyStats) {
-        const categoryScore = weeklyStats.total_category_score/points * 100; 
-        setWeeklyFill(categoryScore);
-      }
-    }, [weeklyStats]);
+    // useEffect(() => {
+    //   if (weeklyStats) {
+    //     const categoryScore = weeklyStats.total_category_score/points * 100; 
+    //     setWeeklyFill(categoryScore);
+    //   }
+    // }, [weeklyStats]);
 
 
     const [selectedTab, setSelectedTab] = useState('points');
@@ -174,7 +174,6 @@ const ProfilePage = ({ navigation, route }) => {
             </TouchableOpacity>
             {showWeeklyDropdown && (
               <View>
-                <Text>Weekly Stats per Category:</Text>
                 <FlatList
                   data={weeklyStats.category_stats}
                   keyExtractor={(item) => item.category_name}
@@ -183,15 +182,15 @@ const ProfilePage = ({ navigation, route }) => {
                       <Text>{item.category_name}</Text>
                       <View>
                         <AnimatedCircularProgress
-                          size={200}
-                          width={3}
-                          fill={weeklyfill}
+                          size={150}
+                          width={5}
+                          fill={item.total_category_score/points * 100}
                           tintColor="#00e0ff"
                           backgroundColor="#3d5875">
                           {
                             (fill) => (
                               <Text>
-                                {weeklyfill}
+                                {item.total_category_score}
                               </Text>
                             )
                           }
@@ -215,19 +214,19 @@ const ProfilePage = ({ navigation, route }) => {
                   data={userStats.category_stats}
                   keyExtractor={(item) => item.category_name}
                   renderItem={({ item }) => (
-                    <View>
+                    <View style={{ marginRight: 10 }}>
                       <Text>{item.category_name}</Text>
                       <View>
                         <AnimatedCircularProgress
-                          size={200}
-                          width={3}
-                          fill={fill}
+                          size={100}
+                          width={5}
+                          fill={item.total_category_score/points * 100}
                           tintColor="#00e0ff"
                           backgroundColor="#3d5875">
                           {
                             (fill) => (
                               <Text>
-                                {fill}
+                                {item.total_category_score}
                               </Text>
                             )
                           }
@@ -321,11 +320,13 @@ const ProfilePage = ({ navigation, route }) => {
 
             </View>
 
-
+            
 
 
 
         </View>
+
+        
 
     )
 };
