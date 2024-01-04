@@ -32,7 +32,10 @@ const SubmitQuestionPage = ({ route, navigation }) => {
     const handleCheckmarkPress = (index) => {
         const numberOfCheckedAnswers = checkedAnswers.filter((isChecked) => isChecked).length;
         const updatedCheckedAnswers = [...checkedAnswers];
-        if (numberOfCheckedAnswers < 2) {
+
+        if (numberOfCheckedAnswers < 1) {
+
+
             updatedCheckedAnswers[index] = !updatedCheckedAnswers[index];
             setCheckedAnswers(updatedCheckedAnswers);
         }
@@ -45,17 +48,25 @@ const SubmitQuestionPage = ({ route, navigation }) => {
     const handleSubmit = () => {
         const numberOfCheckedAnswers = checkedAnswers.filter((isChecked) => isChecked).length;
         const areAllAnswersFilled = answers.every((answer) => answer.trim() !== '');
+        const filledAnswerCount = answers.filter((answer) => answer.trim() !== '').length;
+
 
         if (question.length > 10) {
-            if (areAllAnswersFilled) {
+            if (filledAnswerCount>=2) {
                 if (numberOfCheckedAnswers === 1) {
-                    checkedAnswers.findIndex((isChecked) => isChecked);
-                    const selectedCategoryIndex = data.findIndex(category => category.value === selected);
 
+                    if (selected) {
+                    const checkedQuestionIndex = checkedAnswers.findIndex((isChecked) => isChecked);
+                    const selectedCategoryIndex =  data.find(item => item.value === selected);
+                    const updatedAnswers = answers.map(answer => answer.trim() !== '' ? answer : null);
+
+
+
+                    console.log(selectedCategoryIndex["key"]);
                     const submitData = {
-                        category: selectedCategoryIndex+1,
+                        category: selectedCategoryIndex["key"],
                         questionText: question,
-                        answers: answers,
+                        answers: updatedAnswers,
                         correctAnswerIndex: checkedAnswers.findIndex((isChecked) => isChecked)+1,
                         difficulty:1,
                         explanation:question
@@ -63,13 +74,19 @@ const SubmitQuestionPage = ({ route, navigation }) => {
 
                     SubmitAQuestion(token, submitData);
                     Alert.alert('Submission Successful', 'Answers submitted successfully!');
+                    } 
+                    else {
+                        Alert.alert('Error', 'Please select a category');
+                    }
+                    
+                    
                 } else {
 
                     Alert.alert('Error', 'Please select 1 correct answers.');
                 }
             }
             else {
-                Alert.alert('Error', 'All answer fields must be filled.');
+                Alert.alert('Error', 'At least two answer fields must be filled.');
             }
         }
         else {
@@ -86,6 +103,7 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                 return {key: item[0], value: item[1]}
               })
               setData(newArray);
+
 
           } catch (error) {
             console.error(error);
@@ -130,21 +148,34 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                         {answers.map((answer, index) => (
                             <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, paddingLeft: 15 }}>
                                 <TextInput
-                                    style={[styles.answerInputField, checkedAnswers[index] && styles.selectedAnswerInputField]}
+                                   style={[
+                                        styles.answerInputField,
+                                        checkedAnswers[index] && styles.selectedAnswerInputField,
+                                        { backgroundColor: index > 0 && answers[index - 1].trim().length === 0 ? 'grey' : 'white' }
+                                    ]}
                                     placeholder={`Answer ${index + 1}`}
                                     onChangeText={(text) => handleInputChange(text, index)}
                                     value={answer}
+                                    editable={index === 0 || answers[index - 1].trim().length > 0}
+  
                                 />
-                                {checkedAnswers[index] && (
-                                    <TouchableOpacity onPress={() => handleCheckmarkPress(index)} style={{ padding: 10, backgroundColor: "white", height: 40, borderRadius: 4 }}>
-                                        <Icon name="checkmark-outline" size={24} color="green" />
-                                    </TouchableOpacity>
-                                )}
-                                {!checkedAnswers[index] && (
-                                    <TouchableOpacity onPress={() => handleCheckmarkPress(index)} style={{ padding: 10, backgroundColor: "white", height: 40, borderRadius: 4 }}>
-                                        <Icon name="checkmark-outline" size={24} color="transparent" />
-                                    </TouchableOpacity>
-                                )}
+
+
+                                {index === 0 || answers[index - 1].trim().length > 0 ? (
+                                    <>
+                                        {checkedAnswers[index] ? (
+                                            <TouchableOpacity onPress={() => handleCheckmarkPress(index)} style={{ padding: 10, backgroundColor: "white", height: 40, borderRadius: 4 }}>
+                                                <Icon name="checkmark-outline" size={24} color="green" />
+                                            </TouchableOpacity>
+                                        ) : (
+                                            <TouchableOpacity onPress={() => handleCheckmarkPress(index)} style={{ padding: 10, backgroundColor: "white", height: 40, borderRadius: 4 }}>
+                                                <Icon name="checkmark-outline" size={24} color="transparent" />
+                                            </TouchableOpacity>
+                                        )}
+                                    </>
+                                ) : null}
+                                
+
                             </View>
                         ))}
                         <View style={{ padding: 15, alignItems: 'center' }}>
