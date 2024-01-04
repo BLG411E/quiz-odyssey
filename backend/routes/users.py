@@ -120,6 +120,28 @@ def get_user_information(username):
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
     
+@users.route("/staffinfo", methods=["GET"])
+@require_token
+def get_staff_information(username):
+    try:
+        staff_member = db.session.execute(
+            db.select(
+                models.Staff.username,
+                models.Staff.hasAdminPriveleges,
+            ).where(models.Staff.username == username)
+        ).first()
+        return (
+            jsonify(
+                {
+                    "username": staff_member[0],
+                    "hasAdminPriveleges": staff_member[1],
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+    
 
 @users.route("/updateusername", methods=["PUT"])
 @require_token
@@ -245,4 +267,106 @@ def list_users_score():
             500,
         )
     
-   
+@users.route("/upgradeuser/<username>", methods=["POST"])
+@require_admin
+def upgrade_user_to_moderator(admin, isAdmin, username):
+    user_info = models.User.query.filter_by(username=username).first()
+    moderator = models.Staff(
+        username=user_info.username,
+        passwordHash=user_info.passwordHash,
+        hasAdminPriveleges=False
+    )
+
+    try:
+        db.session.add(moderator)
+        db.session.commit()
+        return jsonify({"msg": "User upgraded successfully!"}), 200
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+    
+
+@users.route("/downgrade/<moderator_username>", methods=["DELETE"])
+@require_admin
+def downgradeuser(admin, isAdmin, moderator_username):
+    try:
+        moderator = db.session.execute(
+            db.select(models.Staff).where(
+                models.Staff.username == moderator_username,
+                models.Staff.hasAdminPriveleges == False,
+            )
+        ).first()
+
+        if moderator is None:
+            return (
+                jsonify({"msg": "Invalid User ID"}),
+                400,
+            )
+
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
+
+    try:
+        db.session.execute(db.delete(models.Staff).where(models.Staff.username == moderator_username))
+        db.session.commit()
+        return jsonify({"msg": "User downgraded successfully!"}), 200
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+
+
+@users.route("/ismoderator", methods=["GET"])
+@require_admin
+def is_moderator(username):
+    try:
+        moderator = db.session.execute(
+            db.select(models.Staff).where(models.Staff.username == username, models.Staff.hasAdminPriveleges == False)
+        ).first()
+
+        if moderator is None:
+            return jsonify({"isModerator": False})
+
+        return jsonify({"isModerator": True}), 200
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
+
+@users.route("/listmoderators", methods=["GET"])
+@require_admin
+def list_moderators(username, isAdmin):
+    page = int(request.args.get("page", 0))
+    if page < 1:
+        page = 1
+
+    try:
+        moderators = db.paginate(
+            db.select(models.Staff).where(models.Staff.hasAdminPriveleges == False).order_by(models.Staff.username.asc()),
+            page=page,
+            per_page=200,
+        )
+        return (
+            jsonify(
+                {
+                    "total": moderators.total,
+                    "page": moderators.page,
+                    "per_page": 200,
+                    "has_prev": moderators.has_prev,
+                    "has_next": moderators.has_next,
+                    "results": [item.to_dict() for item in moderators.items],
+                }
+            ),
+            200,
+        )
+    except werkzeug.exceptions.NotFound:
+        return (
+            jsonify({"msg": "Page does not exist"}),
+            404,
+        )
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
