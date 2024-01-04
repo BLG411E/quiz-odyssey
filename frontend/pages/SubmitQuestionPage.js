@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import BlueButton from "../components/BlueButton";
 import AuthContext from "../utils/AuthContext";
 import { Text, Button, TouchableOpacity, TextInput, KeyboardAvoidingView, Alert, View, Pressable, Image } from 'react-native';
@@ -6,17 +6,21 @@ import styles from '../styles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DismissKeyboard from '../components/DismissKeyboard';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+import { SelectList } from 'react-native-dropdown-select-list'
+import GetCategories from '../utils/GetCategories';
 
 
 const SubmitQuestionPage = ({ route, navigation }) => {
 
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
+    const [selected, setSelected] = useState("");
 
 
     const [question, setQuestion] = useState('');
     const [answers, setAnswers] = useState(['', '', '', '']);
     const [checkedAnswers, setCheckedAnswers] = useState([false, false, false, false]);
+    const [data,setData] = React.useState([]);
+
 
 
     const handleInputChange = (text, index) => {
@@ -74,6 +78,32 @@ const SubmitQuestionPage = ({ route, navigation }) => {
     };
 
 
+
+      useEffect(() => {
+        // Fetch the list of categories
+        const fetchCategories = async () => {
+          try {
+            const categories = await GetCategories();
+            console.log(categories);
+            // Extract the name from each category element
+            let newArray = categories.map((item) => {
+                return {key: item[0], value: item[1]}
+              })
+              console.log(newArray);
+              setData(newArray);
+
+          } catch (error) {
+            console.error(error);
+          }
+          
+          
+        };
+    
+        fetchCategories();
+      }, []);
+    
+    
+  
     return (
 
         <DismissKeyboard>
@@ -103,8 +133,19 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                                 value={question}
                             />
                             <View style={{ paddingTop: 15 }}>
-                                <Text style={{ fontSize: 15, color: "white" }}>{"Write your question and select one or two answers"}</Text>
+                                <Text style={{ fontSize: 15, color: "white" }}>{"Write your question select category and one or two answers"}</Text>
                             </View>
+                        </View>
+
+                        <View style={{ paddingBottom: 10 }}>
+
+                            <SelectList style={{ backgroundColor: "#000", textColor: 'white' }}
+                                textColor="white"
+                                setSelected={(val) => setSelected(val)}
+                                data={data}
+                                save="value"
+                                defaultOption={{ key:'1', value:'All' }}
+                            />
                         </View>
 
 
