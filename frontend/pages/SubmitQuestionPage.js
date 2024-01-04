@@ -8,18 +8,22 @@ import DismissKeyboard from '../components/DismissKeyboard';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { SelectList } from 'react-native-dropdown-select-list'
 import GetCategories from '../utils/GetCategories';
+import SubmitAQuestion from '../utils/SubmitAQuestion';
 
 
 const SubmitQuestionPage = ({ route, navigation }) => {
 
     const { Logout, onPress, title = 'Save' } = useContext(AuthContext);
     const [selected, setSelected] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
 
 
     const [question, setQuestion] = useState('');
     const [answers, setAnswers] = useState(['', '', '', '']);
     const [checkedAnswers, setCheckedAnswers] = useState([false, false, false, false]);
     const [data,setData] = React.useState([]);
+    const [checkedAnswer, setCheckedAnswer] = useState('');
+    const { token } = route.params
 
 
 
@@ -58,12 +62,24 @@ const SubmitQuestionPage = ({ route, navigation }) => {
 
         if (question.length > 10) {
             if (areAllAnswersFilled) {
-                if (numberOfCheckedAnswers === 1 || numberOfCheckedAnswers === 2) {
+                if (numberOfCheckedAnswers === 1) {
+                    const checkedQuestionIndex = checkedAnswers.findIndex((isChecked) => isChecked);
+                    const selectedCategoryIndex = data.findIndex(category => category.value === selected);
 
+                    const submitData = {
+                        category: selectedCategoryIndex+1,
+                        questionText: question,
+                        answers: answers,
+                        correctAnswerIndex: checkedAnswers.findIndex((isChecked) => isChecked)+1,
+                        difficulty:1,
+                        explanation:question
+                      };
+                      console.log(submitData);
+                    SubmitAQuestion(token, submitData);
                     Alert.alert('Submission Successful', 'Answers submitted successfully!');
                 } else {
 
-                    Alert.alert('Error', 'Please select 1 or 2 answers before submitting.');
+                    Alert.alert('Error', 'Please select 1 correct answers.');
                 }
             }
             else {
