@@ -74,7 +74,7 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                         difficulty:1,
                         explanation:question
                       };
-                      console.log(submitData);
+
                     SubmitAQuestion(token, submitData);
                     Alert.alert('Submission Successful', 'Answers submitted successfully!');
                 } else {

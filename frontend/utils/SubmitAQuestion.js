@@ -4,7 +4,7 @@ import { API_URL } from './AuthContext';
 
 const SubmitAQuestion = async (token, data) => {
     try {
-        console.log(data.category);
+
         const response = await fetch(
             `${API_URL}/question/submit`,
             {
