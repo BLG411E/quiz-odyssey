@@ -18,6 +18,13 @@ const MainPage = ({ navigation, route }) => {
         navigation.navigate('ChooseCategoryPage', { token: token });
     };
 
+    const onPressDailyChallenge = () => {
+        const category = 12;
+        const numberOfQuestions = 5;
+        navigation.navigate('GameQuizPage', { token: token, categoryID: category, numberOfQuestions: numberOfQuestions,
+            currentQuestionNumber: 1});
+    };
+
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
@@ -52,9 +59,7 @@ const MainPage = ({ navigation, route }) => {
     return (
         <View style={styles.container}>
             <View style={styles.headerWrapper}>
-                <TouchableOpacity style={styles.headerButton} onPress={() => {
-                    navigation.navigate('MainPage');
-                }}>
+                <TouchableOpacity style={styles.headerButton} onPress={onPressDailyChallenge}>
                     <View style={styles.headerButtonContent}>
                         <Image source={require('../assets/dailychallenge.png')} style={styles.headerImage} />
                         <Text style={styles.headerButtonText}>{"Daily odyssey"}</Text>
