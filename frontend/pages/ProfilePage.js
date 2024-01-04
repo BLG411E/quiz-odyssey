@@ -10,7 +10,6 @@ import GetFollowing from '../utils/GetFollowing';
 import GetUserInfo from '../utils/GetUserInfo';
 
 
-
 const ProfilePage = ({ navigation, route }) => {
     const [username, setUsername] = useState(null);
     const [points, setPoints] = useState(null);
@@ -19,14 +18,11 @@ const ProfilePage = ({ navigation, route }) => {
     const [followingCount, setFollowingCount] = useState(null);
     const [following, setFollowing] = useState(null);
 
-    const [email, setEmail] = useState(null);
     const [userStats, setUserStats] = useState(null);
     const [weeklyStats, setWeeklystats] = useState(null);
-    const [dailyStreak, setDailyStreak] = useState(null);
+    const [dailyStreak, setDailyStreak] = useState(0);
     const [showAllTimeDropdown, setShowAtllTimeDropdown] = useState(false);
     const [showWeeklyDropdown, setShowWeeklyDropdown] = useState(false);
-    const [fill, setFill] = useState(0);
-    const [weeklyfill, setWeeklyFill] = useState(0);
   
     const { token } = route.params
 
@@ -36,8 +32,8 @@ const ProfilePage = ({ navigation, route }) => {
                 if (token) {
                     // Use the token to fetch user data
                     const data = await GetUserInfo(token);
-                    const followers =await GetFollowers(token);
-                    const following =await GetFollowing(token);
+                    const followers = await GetFollowers(token);
+                    const following = await GetFollowing(token);
                     if (data) {
                         // Handle the user data
                         setUsername(data["username"]);
@@ -64,17 +60,13 @@ const ProfilePage = ({ navigation, route }) => {
         // Make a request to the backend to fetch weekly statistics
         if (username) {
           try {
-            const response = await fetch(API_URL + '/stats/user_stats/' + username, {
+            const response = await fetch(API_URL + '/stats/' + username, {
               method: 'GET',
               headers: {
                 'Token': token,
                 'Content-Type': 'application/json',
               },
             });
-    
-            if (!response.ok) {
-              throw new Error('Failed to fetch user statistics');
-            }
     
             const data = await response.json();
             setUserStats(data);
@@ -93,17 +85,13 @@ const ProfilePage = ({ navigation, route }) => {
         // Make a request to the backend to fetch user statistics
         if (username) {
           try {
-            const response = await fetch(API_URL + '/stats/user_weekly_stats/' + username, {
+            const response = await fetch(API_URL + '/stats/weekly/' + username, {
               method: 'GET',
               headers: {
                 'Token': token,
                 'Content-Type': 'application/json',
               },
             });
-    
-            if (!response.ok) {
-              throw new Error('Failed to fetch user statistics');
-            }
     
             const data = await response.json();
             setWeeklystats(data);
@@ -116,21 +104,6 @@ const ProfilePage = ({ navigation, route }) => {
       // Call the fetchUserStats function
       fetchWeeklyStats();
     }, [username]);
-
-    useEffect(() => {
-      if (userStats) {
-        const categoryScore = userStats.total_category_score/points * 100; 
-        setFill(categoryScore);
-      }
-    }, [userStats]);
-
-    useEffect(() => {
-      if (weeklyStats) {
-        const categoryScore = weeklyStats.total_category_score/points * 100; 
-        setWeeklyFill(categoryScore);
-      }
-    }, [weeklyStats]);
-
 
     const [selectedTab, setSelectedTab] = useState('points');
     const toggleAllTimeDropdown = () => {
@@ -172,75 +145,70 @@ const ProfilePage = ({ navigation, route }) => {
             />
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleWeeklyDropdown}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', backgroundColor: "rgb(142,164,210)", color: "#FFFFFF", padding: 10 }}>
                 Weekly Stats
               </Text>
             </TouchableOpacity>
             {showWeeklyDropdown && (
-              <View>
-                <Text>Weekly Stats per Category:</Text>
                 <FlatList
-                  data={weeklyStats.category_stats}
+                  data={weeklyStats != null ? weeklyStats.category_stats : null}
+                  numColumns={3}
+                  contentContainerStyle={{alignSelf: "center"}}
                   keyExtractor={(item) => item.category_name}
                   renderItem={({ item }) => (
-                    <View>
-                      <Text>{item.category_name}</Text>
-                      <View>
+                    <View style={{width: 100, paddingVertical: 10, marginHorizontal: 10}}>
                         <AnimatedCircularProgress
-                          size={200}
-                          width={3}
-                          fill={weeklyfill}
+                          size={100}
+                          width={10}
+                          fill={item.total_category_score/points * 100}
                           tintColor="#00e0ff"
                           backgroundColor="#3d5875">
                           {
                             (fill) => (
-                              <Text>
-                                {weeklyfill}
+                              <Text style={{fontSize: 30}}>
+                                {item.total_category_score}
                               </Text>
                             )
                           }
                         </AnimatedCircularProgress>
-                      </View>
+                      <Text style={{fontSize: 16, fontWeight: "bold", textAlign: "center"}}>{item.category_name}</Text>
                     </View>
                   )}
                 />
-              </View>
             )}
 
             {/* All time Stats Dropdown */}
             <TouchableOpacity onPress={toggleAllTimeDropdown}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', backgroundColor: "rgb(142,164,210)", color: "#FFFFFF", padding: 10, marginTop: 2 }}>
                 All-time Stats
               </Text>
             </TouchableOpacity>
             {showAllTimeDropdown && (
-              <View>
                 <FlatList
-                  data={userStats.category_stats}
+                  data={userStats != null ? userStats.category_stats : null}
+                  numColumns={3}
+                  contentContainerStyle={{alignSelf: "center"}}
                   keyExtractor={(item) => item.category_name}
                   renderItem={({ item }) => (
-                    <View>
-                      <Text>{item.category_name}</Text>
-                      <View>
+                    <View style={{ paddingVertical: 10, width: 100, marginHorizontal: 10}}>
                         <AnimatedCircularProgress
-                          size={200}
-                          width={3}
-                          fill={fill}
-                          tintColor="#00e0ff"
+                          size={100}
+                          width={10}
+                          fill={item.total_category_score/points * 100}
+                          tintColor= '#8ea4d2'
                           backgroundColor="#3d5875">
                           {
-                            (fill) => (
-                              <Text>
-                                {fill}
+                              (fill) => (
+                                  <Text style={{fontSize: 30}}>
+                                {item.total_category_score}
                               </Text>
                             )
-                          }
+                        }
                         </AnimatedCircularProgress>
-                      </View>
+                        <Text style={{fontSize: 16, fontWeight: "bold", textAlign: "center"}}>{item.category_name}</Text>
                     </View>
                   )}
                 />
-              </View>
             )}
         </View>
       );
@@ -319,7 +287,7 @@ const ProfilePage = ({ navigation, route }) => {
                             style={{ flex: 1, backgroundColor: selectedTab === 'points' ? '#7e8793' : '#3e4c5e', padding: 10, borderRadius:10, justifyContent:"center", alignItems:'center' }}
                             onPress={() => setSelectedTab('points')}
                         >
-                            <Text style={{ color: 'white',  textAlign: 'center', textAlignVertical: 'center'  }}>{points+"\n points"}</Text>
+                            <Text style={{ color: 'white',  textAlign: 'center', textAlignVertical: 'center'  }}>{points+"\n Points"}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{ flex: 1, backgroundColor: selectedTab === 'followers' ? '#7e8793' : '#3e4c5e', padding: 10, borderRadius:10, justifyContent:"center", alignItems:'center' }}
