@@ -8,6 +8,7 @@ import DismissKeyboard from '../components/DismissKeyboard';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { SelectList } from 'react-native-dropdown-select-list'
 import GetAllUserScoreData from '../utils/GetAllUserScoreData';
+import GetCategories from '../utils/GetCategories';
 
 const LeaderboardPage = ({ route, navigation }) => {
     const [userList, setUserList] = useState([]);
@@ -17,13 +18,7 @@ const LeaderboardPage = ({ route, navigation }) => {
     const [question, setQuestion] = useState('');
     const [answers, setAnswers] = useState(['', '', '', '']);
     const [checkedAnswers, setCheckedAnswers] = useState([false, false, false, false]);
-    const data = [
-        { key: '1', value: 'All' },
-        { key: '2', value: 'Art' },
-        { key: '3', value: 'Geography' },
-        { key: '4', value: 'Science' },
-        { key: '5', value: 'History' },
-    ]
+    const [data,setData] = React.useState([]);
     const getUserDataFromDatabase = async () => {
 
         const users = await GetAllUserScoreData();
@@ -44,6 +39,27 @@ const LeaderboardPage = ({ route, navigation }) => {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+          try {
+            const categories = await GetCategories();
+
+            let newArray = categories.map((item) => {
+                return {key: item[0], value: item[1]}
+              })
+
+              setData(newArray);
+
+          } catch (error) {
+            console.error(error);
+          }
+          
+          
+        };
+    
+        fetchCategories();
+      }, []);
 
     const renderUser = ({ item, index }) => (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: 'white' }}>

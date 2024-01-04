@@ -80,16 +80,14 @@ const SubmitQuestionPage = ({ route, navigation }) => {
 
 
       useEffect(() => {
-        // Fetch the list of categories
         const fetchCategories = async () => {
           try {
             const categories = await GetCategories();
-            console.log(categories);
-            // Extract the name from each category element
+
             let newArray = categories.map((item) => {
                 return {key: item[0], value: item[1]}
               })
-              console.log(newArray);
+
               setData(newArray);
 
           } catch (error) {
