@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
-import { Text, TextInput, KeyboardAvoidingView, Alert, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { KeyboardAvoidingView, Text, TextInput, View } from 'react-native';
 
-import DismissKeyboard from '../components/DismissKeyboard';
 import BlueButton from '../components/BlueButton';
+import DismissKeyboard from '../components/DismissKeyboard';
 import styles from '../styles';
 import AuthContext from '../utils/AuthContext';
 
@@ -28,9 +28,9 @@ const LoginPage = ({ navigation }) => {
             <KeyboardAvoidingView behavior="position" keyboardVerticalOffset="-200" style={styles.containerCenter}>
                 <Text style={styles.titleText}>Login</Text>
                 <Text style={styles.baseText}>Username</Text>
-                <TextInput style={[styles.inputText, usernameValid ? styles.inputValid : styles.inputInvalid]} placeholder='JohnDoe12' value={username} onChangeText={setUsername} autoComplete='username'></TextInput>
+                <TextInput style={[styles.inputText, usernameValid ? styles.inputValid : styles.inputInvalid]} placeholder='JohnDoe12' value={username} onChangeText={setUsername} autoComplete='username' autoCapitalize='none'></TextInput>
                 <Text style={styles.baseText}>Password</Text>
-                <TextInput style={[styles.inputText, passwordValid ? styles.inputValid : styles.inputInvalid]} placeholder='***************' value={password} onChangeText={setPassword} autoComplete='current-password' secureTextEntry={true}></TextInput>
+                <TextInput style={[styles.inputText, passwordValid ? styles.inputValid : styles.inputInvalid]} placeholder='***************' value={password} onChangeText={setPassword} autoComplete='current-password' secureTextEntry={true} autoCapitalize='none'></TextInput>
                 <BlueButton style={{ "marginTop": 10, }} text="LOGIN" onPress={() => {
                     if (validate()) {
                         SignIn({ username, password })

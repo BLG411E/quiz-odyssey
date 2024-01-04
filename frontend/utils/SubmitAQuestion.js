@@ -1,5 +1,3 @@
-import { Alert } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
 import { API_URL } from './AuthContext';
 
 const SubmitAQuestion = async (token, data) => {
