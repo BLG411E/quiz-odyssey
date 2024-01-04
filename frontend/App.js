@@ -110,7 +110,7 @@ export default function App() {
                                     <Stack.Screen name="ProfileSettingsPage" component={ProfileSettingsPage} initialParams={{token: state.userToken}} />
                                     <Stack.Screen name="ProfileChangePage" component={ProfileChangePage}/>
                                     <Stack.Screen name="SubmitQuestionPage" component={SubmitQuestionPage}  initialParams={{token: state.userToken}}/>
-                                    <Stack.Screen name="LeaderboardPage" component={LeaderboardPage} />
+                                    <Stack.Screen name="LeaderboardPage" component={LeaderboardPage} initialParams={{token: state.userToken}}/>
                                     <Stack.Screen name="ChooseCategoryPage" component={ChooseCategoryPage}/>
                                     <Stack.Screen name="GameQuizPage" component={GameQuizPage}/>
                                     <Stack.Screen name="QuizSummaryPage" component={QuizSummaryPage} options={{gestureEnabled: false}}/>
