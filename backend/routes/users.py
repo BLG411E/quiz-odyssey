@@ -11,6 +11,23 @@ import jwt
 
 users = Blueprint("users", __name__)
 
+@users.route("/search", methods=["GET"])
+def search_users():
+    term = request.args.get("term", None)
+    
+    try:
+        users = db.session.query(models.User).filter(models.User.username.contains(term)).all()
+
+        user_list = [user.to_dict() for user in users]
+        return jsonify(user_list), 200
+        
+    
+    except Exception as e:
+        return (
+            jsonify({"error": str(e)}),
+            500,
+        )
+
 
 @users.route("/list", methods=["GET"])
 @require_admin
