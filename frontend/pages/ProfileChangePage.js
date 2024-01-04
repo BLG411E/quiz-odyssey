@@ -6,6 +6,7 @@ import styles from '../styles';
 
 import ChangePassword from "../utils/ChangePassword";
 import ChangeUsername from '../utils/ChangeUsername';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ProfileChangePage = ({ route, navigation }) => {
     const [username, setUsername] = useState('');
@@ -57,7 +58,7 @@ const ProfileChangePage = ({ route, navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.container}>
                 <View style={styles.profileHeader}>
                     <TouchableOpacity hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }} onPress={() => {
@@ -88,7 +89,7 @@ const ProfileChangePage = ({ route, navigation }) => {
                     </View>
                 )}
             </View>
-        </View>
+        </SafeAreaView>
     )
 };
 
