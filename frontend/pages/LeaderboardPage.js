@@ -9,6 +9,7 @@ import GetCategories from '../utils/GetCategories';
 const LeaderboardPage = ({ route, navigation }) => {
     const [userList, setUserList] = useState([]);
     const [data,setData] = React.useState([]);
+    const [selected, setSelected] = useState("");
     const getUserDataFromDatabase = async () => {
         const users = await GetAllUserScoreData();
         setUserList(users["results"])
