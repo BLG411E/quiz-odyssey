@@ -245,4 +245,3 @@ def list_users_score():
             500,
         )
     
-   

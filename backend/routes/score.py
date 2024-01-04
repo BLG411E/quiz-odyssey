@@ -1,11 +1,7 @@
-import datetime
-import werkzeug
-
 from flask import Blueprint, jsonify, request
-from sqlalchemy.exc import IntegrityError
 
 from .. import models
-from ..authutils import get_userID, get_staffID, require_token, require_moderator
+from ..authutils import (get_userID, require_token)
 from ..extensions import db
 
 score = Blueprint("score", __name__)
@@ -43,3 +39,4 @@ def add_points(username):
 
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
+    
