@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from '../styles';
+import { API_URL } from '../utils/AuthContext';
 import GetFollowers from '../utils/GetFollowers';
 import GetFollowing from '../utils/GetFollowing';
 import GetUserInfo from '../utils/GetUserInfo';
-import { SafeAreaView } from "react-native-safe-area-context";
 
 
 
@@ -16,6 +18,16 @@ const ProfilePage = ({ navigation, route }) => {
     const [followersCount, setFollowersCount] = useState(null);
     const [followingCount, setFollowingCount] = useState(null);
     const [following, setFollowing] = useState(null);
+
+    const [email, setEmail] = useState(null);
+    const [userStats, setUserStats] = useState(null);
+    const [weeklyStats, setWeeklystats] = useState(null);
+    const [dailyStreak, setDailyStreak] = useState(null);
+    const [showAllTimeDropdown, setShowAtllTimeDropdown] = useState(false);
+    const [showWeeklyDropdown, setShowWeeklyDropdown] = useState(false);
+    const [fill, setFill] = useState(0);
+    const [weeklyfill, setWeeklyFill] = useState(0);
+  
     const { token } = route.params
 
     useEffect(() => {
@@ -30,6 +42,7 @@ const ProfilePage = ({ navigation, route }) => {
                         // Handle the user data
                         setUsername(data["username"]);
                         setPoints(data["totalScore"]);
+                        setDailyStreak[data["streakCount"]]
                     }
                     if(followers){
                         setFollowers(followers);
@@ -46,12 +59,189 @@ const ProfilePage = ({ navigation, route }) => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+      const fetchUserStats = async () => {
+        // Make a request to the backend to fetch weekly statistics
+        if (username) {
+          try {
+            const response = await fetch(API_URL + '/stats/user_stats/' + username, {
+              method: 'GET',
+              headers: {
+                'Token': token,
+                'Content-Type': 'application/json',
+              },
+            });
+    
+            if (!response.ok) {
+              throw new Error('Failed to fetch user statistics');
+            }
+    
+            const data = await response.json();
+            setUserStats(data);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      };
+  
+      // Call the fetchUserStats function
+      fetchUserStats();
+    }, [username]);
+
+    useEffect(() => {
+      const fetchWeeklyStats = async () => {
+        // Make a request to the backend to fetch user statistics
+        if (username) {
+          try {
+            const response = await fetch(API_URL + '/stats/user_weekly_stats/' + username, {
+              method: 'GET',
+              headers: {
+                'Token': token,
+                'Content-Type': 'application/json',
+              },
+            });
+    
+            if (!response.ok) {
+              throw new Error('Failed to fetch user statistics');
+            }
+    
+            const data = await response.json();
+            setWeeklystats(data);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      };
+  
+      // Call the fetchUserStats function
+      fetchWeeklyStats();
+    }, [username]);
+
+    useEffect(() => {
+      if (userStats) {
+        const categoryScore = userStats.total_category_score/points * 100; 
+        setFill(categoryScore);
+      }
+    }, [userStats]);
+
+    useEffect(() => {
+      if (weeklyStats) {
+        const categoryScore = weeklyStats.total_category_score/points * 100; 
+        setWeeklyFill(categoryScore);
+      }
+    }, [weeklyStats]);
+
+
     const [selectedTab, setSelectedTab] = useState('points');
+    const toggleAllTimeDropdown = () => {
+      setShowAtllTimeDropdown(!showAllTimeDropdown);
+      // Hide the weekly dropdown when the all time dropdown is toggled
+      if (showWeeklyDropdown) {
+        setShowWeeklyDropdown(false);
+      }
+    };
+
+    const toggleWeeklyDropdown = () => {
+      setShowWeeklyDropdown(!showWeeklyDropdown);
+      // Hide the all time dropdown when the weekly dropdown is toggled
+      if (showAllTimeDropdown) {
+        setShowAtllTimeDropdown(false);
+      }
+    }
 
     const renderPointsView = () => (
         <View style={{backgroundColor:"white", flex:1,}}>
           {/* Your Points View Content */}
-          <Text>Points View</Text>
+          <TouchableOpacity
+            style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                backgroundColor: 'green',
+                padding: 10,
+                marginVertical: 5,
+                borderRadius: 10,
+            }}
+            >
+            <Text style={{ color: 'white', fontSize: 16 }}>
+                Daily Streak: {dailyStreak}
+            </Text>
+            <Image 
+                source={require('../assets/fire-icon.png')} 
+                style={{ width: 20, height: 20 }}
+            />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={toggleWeeklyDropdown}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>
+                Weekly Stats
+              </Text>
+            </TouchableOpacity>
+            {showWeeklyDropdown && (
+              <View>
+                <Text>Weekly Stats per Category:</Text>
+                <FlatList
+                  data={weeklyStats.category_stats}
+                  keyExtractor={(item) => item.category_name}
+                  renderItem={({ item }) => (
+                    <View>
+                      <Text>{item.category_name}</Text>
+                      <View>
+                        <AnimatedCircularProgress
+                          size={200}
+                          width={3}
+                          fill={weeklyfill}
+                          tintColor="#00e0ff"
+                          backgroundColor="#3d5875">
+                          {
+                            (fill) => (
+                              <Text>
+                                {weeklyfill}
+                              </Text>
+                            )
+                          }
+                        </AnimatedCircularProgress>
+                      </View>
+                    </View>
+                  )}
+                />
+              </View>
+            )}
+
+            {/* All time Stats Dropdown */}
+            <TouchableOpacity onPress={toggleAllTimeDropdown}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>
+                All-time Stats
+              </Text>
+            </TouchableOpacity>
+            {showAllTimeDropdown && (
+              <View>
+                <FlatList
+                  data={userStats.category_stats}
+                  keyExtractor={(item) => item.category_name}
+                  renderItem={({ item }) => (
+                    <View>
+                      <Text>{item.category_name}</Text>
+                      <View>
+                        <AnimatedCircularProgress
+                          size={200}
+                          width={3}
+                          fill={fill}
+                          tintColor="#00e0ff"
+                          backgroundColor="#3d5875">
+                          {
+                            (fill) => (
+                              <Text>
+                                {fill}
+                              </Text>
+                            )
+                          }
+                        </AnimatedCircularProgress>
+                      </View>
+                    </View>
+                  )}
+                />
+              </View>
+            )}
         </View>
       );
     
