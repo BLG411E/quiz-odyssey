@@ -8,6 +8,7 @@ import {
     ScrollView,
 } from 'react-native';
 import styles from "./styles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const QuizSummaryPage = ({ route, navigation }) => {
@@ -26,9 +27,11 @@ const QuizSummaryPage = ({ route, navigation }) => {
 
 
     return (
-        <View style={styles.container}>
-            <StatusBar barStyle="default" />
-
+        <>
+        <SafeAreaView style={{flex: 0, backgroundColor:'#8ea4d2'}} edges={['right', 'top', 'left']}></SafeAreaView>
+        <SafeAreaView style={styles.container} edges={['right', 'bottom', 'left']}>
+            <StatusBar barStyle="default"/>
+        
             <View style={styles.questionHeader}>
                 <Text style={styles.textHeader}>SUMMARY</Text>
             </View>
@@ -48,7 +51,8 @@ const QuizSummaryPage = ({ route, navigation }) => {
                 </ScrollView>
             </View>
 
-        </View>
+        </SafeAreaView>
+        </>
     );
 };
 

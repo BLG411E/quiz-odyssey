@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../styles';
 import AuthContext from "../utils/AuthContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const MainPage = ({ navigation, route }) => {
@@ -13,7 +14,7 @@ const MainPage = ({ navigation, route }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.headerWrapper}>
                 <TouchableOpacity style={styles.headerButton} onPress={() => {
                     navigation.navigate('MainPage');
@@ -112,7 +113,7 @@ const MainPage = ({ navigation, route }) => {
                     </Pressable>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     )
 };
 

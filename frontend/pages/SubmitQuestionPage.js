@@ -7,6 +7,7 @@ import DismissKeyboard from '../components/DismissKeyboard';
 import styles from '../styles';
 import GetCategories from '../utils/GetCategories';
 import SubmitAQuestion from '../utils/SubmitAQuestion';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const SubmitQuestionPage = ({ route, navigation }) => {
@@ -95,17 +96,13 @@ const SubmitQuestionPage = ({ route, navigation }) => {
   
     return (
         <DismissKeyboard>
-            <View style={styles.containerCenter}>
+            <SafeAreaView style={styles.containerCenter}>
                 <KeyboardAwareScrollView behavior="position">
                     <View style={styles.container}>
                         <View style={styles.profileHeader}>
-                            <TouchableOpacity hitSlop={{ top: 50, bottom: 50, left: 50, right: 50 }} onPress={() => {
-                                navigation.navigate('MainPage');
-                            }}>
-                                <Icon name="chevron-back-outline" size={30} color="white" onPress={() => {
-                                    navigation.navigate('MainPage');
-                                }} />
-                            </TouchableOpacity>
+                        <Icon.Button backgroundColor="rgba(0,0,0,0)" name="chevron-back-outline" size={30} color="white" iconStyle={{marginRight: 0}} onPress={() => {
+                            navigation.navigate('MainPage');
+                        }}/>
                             <Text style={styles.profileHeaderText}>{"Submit a question"}</Text>
                         </View>
                         <View style={{ padding: 15 }}>
@@ -147,19 +144,17 @@ const SubmitQuestionPage = ({ route, navigation }) => {
                                     <TouchableOpacity onPress={() => handleCheckmarkPress(index)} style={{ padding: 10, backgroundColor: "white", height: 40, borderRadius: 4 }}>
                                         <Icon name="checkmark-outline" size={24} color="transparent" />
                                     </TouchableOpacity>
-
                                 )}
                             </View>
                         ))}
                         <View style={{ padding: 15, alignItems: 'center' }}>
                             <TouchableOpacity style={{ fontSize: 5, backgroundColor: "#8ea4d2", width: 200, height: 50, alignItems: 'center', justifyContent: 'center' }} title="Submit" onPress={handleSubmit}>
                                 <Text style={{ fontSize: 15, color: "white", }}>{"SUBMIT"}</Text>
-
                             </TouchableOpacity>
                         </View>
                     </View>
                 </KeyboardAwareScrollView>
-            </View>
+            </SafeAreaView>
         </DismissKeyboard>
     )
 };

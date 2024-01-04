@@ -5,7 +5,6 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-    
     questionHeader: {
       flexDirection: 'row',
       justifyContent: 'center',
@@ -29,7 +28,7 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
       borderRadius: (screenHeight + screenWidth) / 40,
       backgroundColor: 'white',
-      marginTop: screenHeight*0.06,
+      marginTop: screenHeight*0.03,
       paddingVertical: screenHeight*0.012,
       paddingHorizontal: screenWidth*0.045,
     },
@@ -40,15 +39,14 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       borderRadius: (screenHeight + screenWidth) / 40,
       backgroundColor: 'white',
-      marginTop: screenHeight*0.06,
+      marginTop: screenHeight*0.03,
     },
     questionHolder: {
       backgroundColor: '#8ea4d2',
       width: screenWidth * 0.63,
       height: screenHeight * 0.08,
       borderRadius: (screenHeight + screenWidth) / 40,
-      marginTop: screenHeight*0.01,
-      marginBottom: screenHeight*0.01,
+      marginTop: screenHeight*0.02,
     },
 
     textQuestion: {

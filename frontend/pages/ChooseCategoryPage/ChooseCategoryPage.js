@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import GetCategories from '../../utils/GetCategories';
 import styles from "./styles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const ChooseCategoryPage = ({route, navigation}) => {
@@ -80,7 +81,7 @@ const ChooseCategoryPage = ({route, navigation}) => {
   };
 
   return (
-    <View style={styles.containerCenter}>
+    <SafeAreaView style={styles.containerCenter}>
       <View style={styles.marginContainer}>
 
       <View style={styles.startGameButton}>
@@ -152,7 +153,7 @@ const ChooseCategoryPage = ({route, navigation}) => {
         </Modal>
 
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
