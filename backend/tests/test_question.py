@@ -11,7 +11,7 @@ def test_submit(client, users):
             "password": "testpassword",
             "email": f"tester_{tester_id}@test.com",
 
-            "category": 16,
+            "category": 1,
             "text": "text",
             "option1": "option1",
             "option2": "option2",
