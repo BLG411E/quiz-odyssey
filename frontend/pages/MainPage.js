@@ -98,11 +98,9 @@ const MainPage = ({ navigation, route }) => {
                     const data = await IsDailyQuizCompleted(token);
                     setDailyQuizFinished(data["isFinished"])
 
-                    if (!data["isFinished"]) {
-                        startDailyChallengePulseAnimation();
-                    }
+                    
                     startPulseAnimation();
-                    // startDailyChallengePulseAnimation();
+
 
                     
                 }
