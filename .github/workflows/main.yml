@@ -1,0 +1,63 @@
+name: Run API unit-tests
+on: push
+
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Set up API container
+        uses: docker/setup-buildx-action@v2
+
+      - name : Build API container
+        uses: docker/build-push-action@v4
+        with:
+          context: "{{defaultContext}}:backend"
+          file: "Dockerfile"
+          tags: backend:latest
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: false  
+
+      - name: Initialize Database
+        uses: addnab/docker-run-action@v3
+        with:
+          image: backend:latest
+          options: -v ${{ github.workspace }}/backend/:/backend
+          run: |
+            cd /
+            python backend/insert_data.py        
+        env:
+          # The URI used to communicate with the PostgreSQL service container
+          QUIZODYSSEY_DATABASE_URI: "postgresql://postgres:postgres@postgres:5432"
+          # API Secret Key
+          QUIZODYSSEY_SECRET_KEY: "Growl-Curse-Hurt-Ibuprofen-Spleen-Untaxed"
+
+      - name: Run Pytest
+        uses: addnab/docker-run-action@v3
+        with:
+          image: backend:latest
+          options: -v ${{ github.workspace }}:/backend/:backend
+          run: |
+            cd backend/tests
+            pytest
+        env:
+          # The URI used to communicate with the PostgreSQL service container
+          QUIZODYSSEY_DATABASE_URI: "postgresql://postgres:postgres@postgres:5432"
+          # API Secret Key
+          QUIZODYSSEY_SECRET_KEY: "Growl-Curse-Hurt-Ibuprofen-Spleen-Untaxed"
