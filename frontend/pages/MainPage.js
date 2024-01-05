@@ -1,27 +1,60 @@
-import React, { useContext } from "react";
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useEffect, useState } from "react";
+import { Alert, Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../styles';
 import AuthContext from "../utils/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import IsDailyQuizCompleted from '../utils/IsDailyQuizCompleted';
 
 
 const MainPage = ({ navigation, route }) => {
     const { Logout } = useContext(AuthContext);
     const { token } = route.params
+    const [isDailyQuizFinished, setDailyQuizFinished] = useState('');
 
     const onPressPlay = () => {
         navigation.navigate('ChooseCategoryPage', { token: token });
     };
 
 
-    const onPressDailyChallenge = () => {
-        const category = 1; // 1 is the id of the daily challenge category
-        const numberOfQuestions = 10;
-        navigation.navigate('GameQuizPage', {
-            token: token, categoryID: category, numberOfQuestions: numberOfQuestions,
-            currentQuestionNumber: 1
-        });
+    const onPressDailyChallenge = async () => {
+        try {
+            const data = await IsDailyQuizCompleted(token);
+
+            if (data["isFinished"]) {
+   
+                Alert.alert("Daily quiz already finished");
+            } else {
+                const category = 1; // 1 is the id of the daily challenge category
+                const numberOfQuestions = 10;
+                navigation.navigate('GameQuizPage', {
+                    token: token,
+                    categoryID: category,
+                    numberOfQuestions: numberOfQuestions,
+                    currentQuestionNumber: 1,
+                });
+            }
+        } catch (error) {
+            console.error('Error checking daily quiz completion:', error);
+        }
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (token) {
+                    // Use the token to fetch user data
+                    const data = await IsDailyQuizCompleted(token);
+                    setDailyQuizFinished(data["isFinished"])
+
+                    
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
