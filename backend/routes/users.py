@@ -8,6 +8,7 @@ from .. import models
 from ..authutils import require_token, require_admin
 from ..extensions import db
 import jwt
+from ..authutils import get_userID, require_token
 
 users = Blueprint("users", __name__)
 
@@ -120,6 +121,41 @@ def get_user_information(username):
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
     
+@users.route("/daily_quiz_finished", methods=["GET"])
+@require_token
+def is_daily_quiz_finsihed(username):
+    user_id = get_userID(db, username)
+    try:
+        obtainedTime = db.session.execute(
+            db.select(
+                models.Score.obtainedAt,
+            ).where(models.Score.user == user_id)
+            .where(models.Score.category == 1)
+            .where(models.Score.obtainedAt >= datetime.date.today())
+        ).first()
+        if obtainedTime is None:  
+            return (
+                jsonify(
+                    {
+                        "isFinished": False,
+                    }
+                ),
+                200,
+            )
+        else:
+            return (
+                jsonify(
+                    {
+                        "isFinished": True,
+                        "timeFinished": obtainedTime[0],
+                    }
+                ),
+                200,
+            )
+
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
+    
 @users.route("/staffinfo", methods=["GET"])
 @require_token
 def get_staff_information(username):
@@ -142,6 +178,8 @@ def get_staff_information(username):
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
     
+
+
 
 @users.route("/updateusername", methods=["PUT"])
 @require_token
