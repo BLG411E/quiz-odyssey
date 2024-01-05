@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BlueButton from "../components/BlueButton";
 import styles from '../styles';
+import AuthContext from "../utils/AuthContext";
 
+import { SafeAreaView } from "react-native-safe-area-context";
 import ChangePassword from "../utils/ChangePassword";
 import ChangeUsername from '../utils/ChangeUsername';
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const ProfileChangePage = ({ route, navigation }) => {
     const [username, setUsername] = useState('');
@@ -16,12 +17,13 @@ const ProfileChangePage = ({ route, navigation }) => {
     const { type, token } = route.params
     const [usernameValid, setUsernameValid] = useState(true);
     const [passwordValid, setPasswordValid] = useState(true);
+    const { Logout } = useContext(AuthContext);
 
-    const handleSave = () => {       
+    const handleSave = async () => {       
         if(type === 'username'){
             if (username.length > 0) {
                 setUsernameValid(true);
-                changeusername();
+                await changeusername();
             }
             else {
                 setUsernameValid(false);
@@ -30,7 +32,7 @@ const ProfileChangePage = ({ route, navigation }) => {
         else{
             if(new_password.length > 0 && new_password === retype_password){
                 setPasswordValid(true);
-                changepassword();
+                await changepassword();
             }
             else{
                 setPasswordValid(false);
@@ -41,7 +43,7 @@ const ProfileChangePage = ({ route, navigation }) => {
     const changeusername = async () => {
         try {
             if (token) {
-                await ChangeUsername(token, username);
+                await ChangeUsername(token, username, Logout);
             }
         } catch (error) {
             console.error('Error fetching data:', error);
