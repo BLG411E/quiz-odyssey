@@ -82,9 +82,10 @@ const MainPage = ({ navigation, route }) => {
                     // Use the token to fetch user data
                     const data = await IsDailyQuizCompleted(token);
                     setDailyQuizFinished(data["isFinished"])
+                    startPulseAnimation();
 
                     
-                    startPulseAnimation();
+                    
 
 
                     
@@ -95,7 +96,7 @@ const MainPage = ({ navigation, route }) => {
         };
 
         fetchData();
-        startPulseAnimation();
+        
         
         
     }, []);
