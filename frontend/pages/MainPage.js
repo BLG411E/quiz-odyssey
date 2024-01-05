@@ -50,22 +50,7 @@ const MainPage = ({ navigation, route }) => {
         ).start();
     };
 
-    const startDailyChallengePulseAnimation = () => {
-        Animated.loop(
-            Animated.sequence([
-                Animated.timing(dailychallengePulseAnimation, {
-                    toValue: 1.2,
-                    duration: 500,
-                    useNativeDriver: true,
-                }),
-                Animated.timing(dailychallengePulseAnimation, {
-                    toValue: 1,
-                    duration: 500,
-                    useNativeDriver: true,
-                }),
-            ])
-        ).start();
-    };
+   
 
 
     const onPressDailyChallenge = async () => {
@@ -110,6 +95,7 @@ const MainPage = ({ navigation, route }) => {
         };
 
         fetchData();
+        startPulseAnimation();
         
         
     }, []);
