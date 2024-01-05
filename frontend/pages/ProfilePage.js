@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from '../styles';
 import { API_URL } from '../utils/AuthContext';
+import FollowUser from '../utils/FollowUser';
 import GetFollowers from '../utils/GetFollowers';
 import GetFollowing from '../utils/GetFollowing';
 import GetUserInfo from '../utils/GetUserInfo';
@@ -19,6 +20,7 @@ const ProfilePage = ({ navigation, route }) => {
     const [followersCount, setFollowersCount] = useState(null);
     const [followingCount, setFollowingCount] = useState(null);
     const [following, setFollowing] = useState(null);
+    const [buttonType, setButtonType] = useState(null);
 
     const [userStats, setUserStats] = useState(null);
     const [weeklyStats, setWeeklystats] = useState(null);
@@ -27,7 +29,6 @@ const ProfilePage = ({ navigation, route }) => {
     const [showWeeklyDropdown, setShowWeeklyDropdown] = useState(false);
 
     const { token, viewed_user } = route.params
-    console.log(viewed_user);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -47,6 +48,16 @@ const ProfilePage = ({ navigation, route }) => {
                         setFollowing(following);
                         setFollowersCount(followers["total"])
                         setFollowingCount(following["total"])
+                    }
+                    if ((await GetUserInfo(token))["username"] === viewed_user || !viewed_user) {
+                        setButtonType("edit")
+                    } else {
+                        const selfFollowing = await GetFollowing(token);
+                        if (selfFollowing["results"].includes(viewed_user)) {
+                            setButtonType("unfollow")
+                        } else {
+                            setButtonType("follow")
+                        }
                     }
                 }
             } catch (error) {
@@ -239,9 +250,9 @@ const ProfilePage = ({ navigation, route }) => {
             <Image source={require('../assets/profileicon2.png')} style={{ width: 40, height: 40, }} />
             <Text style={{ fontSize: 18, justifyContent: 'center' }}>{`${item}`}</Text>
 
-            <TouchableOpacity onPress={() => handleUnfollow(item)} style={{ backgroundColor: '#ff453a', borderRadius: 15, padding: 10, marginLeft: 'auto' }}>
+            {buttonType === "edit" ? <TouchableOpacity onPress={() => handleUnfollow(item)} style={{ backgroundColor: '#ff453a', borderRadius: 15, padding: 10, marginLeft: 'auto' }}>
                 <Text style={{ color: 'white', borderRadius: 10 }}>Remove</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> : <View style={{marginLeft: "auto"}}/>}
         </View>
     );
 
@@ -250,19 +261,53 @@ const ProfilePage = ({ navigation, route }) => {
             <Image source={require('../assets/profileicon2.png')} style={{ width: 40, height: 40, }} />
             <Text style={{ fontSize: 18, justifyContent: 'center' }}>{`${item}`}</Text>
 
-            <TouchableOpacity onPress={() => handleRemoveFollower(item)} style={{ backgroundColor: '#ff453a', borderRadius: 15, padding: 10, marginLeft: 'auto' }}>
+            {buttonType === "edit" ? <TouchableOpacity onPress={() => handleRemoveFollower(item)} style={{ backgroundColor: '#ff453a', borderRadius: 15, padding: 10, marginLeft: 'auto' }}>
                 <Text style={{ color: 'white', borderRadius: 10 }}>Remove</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> : <View style={{marginLeft: "auto"}}/>}
         </View>
     );
+
+    const handleFollow = async (usernameToFollow) => {
+        try {
+            await FollowUser(token, usernameToFollow);
+            if (buttonType !== "edit") {
+                const updatedFollowers = await GetFollowers(token, usernameToFollow);
+                // Update the followers state with the updated list
+                setFollowers(updatedFollowers);
+                setFollowersCount(updatedFollowers["total"]);
+            }
+            else {
+                const updatedFollowing = await GetFollowing(token);
+                // Update the followers state with the updated list
+                setFollowing(updatedFollowing["results"]);
+                setFollowingCount(updatedFollowing["total"]);
+            }
+            if (username == usernameToFollow) {
+                setButtonType("unfollow")
+            }
+        } catch (error) {
+            console.error('Error handling follow:', error);
+        }
+    };
 
     const handleUnfollow = async (usernameToUnfollow) => {
         try {
             await UnfollowUser(token, usernameToUnfollow);
-            const updatedFollowing = await GetFollowing(token);
-            // Update the followers state with the updated list
-            setFollowing(updatedFollowing["results"]);
-            setFollowingCount(updatedFollowing["total"]);
+            if (buttonType !== "edit") {
+                const updatedFollowers = await GetFollowers(token, usernameToUnfollow);
+                // Update the followers state with the updated list
+                setFollowers(updatedFollowers);
+                setFollowersCount(updatedFollowers["total"]);
+            }
+            else {
+                const updatedFollowing = await GetFollowing(token);
+                // Update the followers state with the updated list
+                setFollowing(updatedFollowing["results"]);
+                setFollowingCount(updatedFollowing["total"]);
+            }
+            if (username == usernameToUnfollow) {
+                setButtonType("follow")
+            }
         } catch (error) {
             console.error('Error handling unfollow:', error);
         }
@@ -273,7 +318,7 @@ const ProfilePage = ({ navigation, route }) => {
             await RemoveFollower(token, usernameToRemove);
             const updatedFollowers = await GetFollowers(token);
             // Update the followers state with the updated list
-            setFollowers(updatedFollowers["results"]);
+            setFollowers(updatedFollowers);
             setFollowersCount(updatedFollowers["total"]);
         } catch (error) {
             console.error('Error handling unfollow:', error);
@@ -295,11 +340,26 @@ const ProfilePage = ({ navigation, route }) => {
                         <Image source={require('../assets/profileicon2.png')} style={styles.profileSettingsImage} />
                         <Text style={{ color: 'white', fontSize: 20, paddingBottom: 15 }}>{username}</Text>
 
-                        <TouchableOpacity style={{ backgroundColor: '#8ea4d2', width: 200, height: 50, alignItems: "center", justifyContent: 'center', borderRadius: 10 }} onPress={() => {
-                            navigation.navigate('ProfileSettingsPage', { type: "password", token: token });
-                        }}>
-                            <Text style={{ color: 'white', fontWeight: 'bold', }}>{"Edit"}</Text>
-                        </TouchableOpacity>
+                        {
+                            buttonType === "edit" ?
+                                <TouchableOpacity style={{ backgroundColor: '#8ea4d2', width: 200, height: 50, alignItems: "center", justifyContent: 'center', borderRadius: 10 }} onPress={() => {
+                                    navigation.navigate('ProfileSettingsPage', { type: "password", token: token });
+                                }}>
+                                    <Text style={{ color: 'white', fontWeight: 'bold', }}>{"Edit"}</Text>
+                                </TouchableOpacity>
+                                : buttonType === "follow" ?
+                                    <TouchableOpacity style={{ backgroundColor: '#8ea4d2', width: 200, height: 50, alignItems: "center", justifyContent: 'center', borderRadius: 10 }} onPress={() => {
+                                        handleFollow(username);
+                                    }}>
+                                        <Text style={{ color: 'white', fontWeight: 'bold', }}>{"Follow"}</Text>
+                                    </TouchableOpacity>
+                                    : buttonType === "unfollow" &&
+                                    <TouchableOpacity style={{ backgroundColor: '#8ea4d2', width: 200, height: 50, alignItems: "center", justifyContent: 'center', borderRadius: 10 }} onPress={() => {
+                                        handleUnfollow(username);
+                                    }}>
+                                        <Text style={{ color: 'white', fontWeight: 'bold', }}>{"Unfollow"}</Text>
+                                    </TouchableOpacity>
+                        }
 
                     </View>
 
