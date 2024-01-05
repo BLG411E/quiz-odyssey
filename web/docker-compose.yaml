@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  webmgmt:
+    container_name: webmgmt
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ENV_VARIABLE: ${ENV_VARIABLE}
+        NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    restart: unless-stopped
+    ports:
+      - 8001:8001

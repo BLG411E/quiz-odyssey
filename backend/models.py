@@ -5,9 +5,12 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    UniqueConstraint,
+    CheckConstraint
 )
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.sql import func
 
 Base = declarative_base()
 
@@ -19,7 +22,7 @@ class User(Base):
     email = mapped_column(String, nullable=False, unique=True)
     phone = mapped_column(String, nullable=True, unique=True)
     passwordHash = mapped_column(String, nullable=False)
-    registeredAt = mapped_column(DateTime)
+    registeredAt = mapped_column(DateTime, server_default=func.now())
     totalScore = mapped_column(Integer, default=0)
     streakCount = mapped_column(Integer, default=0)
     lastQuizTakenAt = mapped_column(DateTime)
@@ -44,7 +47,7 @@ class Score(Base):
     user = mapped_column(Integer, ForeignKey("User.id", ondelete="CASCADE"))
     score = mapped_column(Integer)
     category = mapped_column(Integer, ForeignKey("Category.id"))
-    obtainedAt = mapped_column(DateTime)
+    obtainedAt = mapped_column(DateTime, server_default=func.now())
 
     def to_dict(self):
         return {
@@ -77,7 +80,10 @@ class Follow(Base):
     id = mapped_column(Integer, primary_key=True)
     follower = mapped_column(Integer, ForeignKey("User.id", ondelete="CASCADE"))
     followed = mapped_column(Integer, ForeignKey("User.id", ondelete="CASCADE"))
-    startedFollowingAt = mapped_column(DateTime)
+    startedFollowingAt = mapped_column(DateTime, server_default=func.now())
+
+    UniqueConstraint(follower, followed, name="Follow_follower_followed_key")
+    CheckConstraint(follower != followed, name="Follow_check")
 
     def to_dict(self):
         return {
@@ -99,7 +105,7 @@ class Question(Base):
     option3 = mapped_column(Text)
     option4 = mapped_column(Text)
     correctAnswer = mapped_column(Integer)
-    addedAt = mapped_column(DateTime)
+    addedAt = mapped_column(DateTime, server_default=func.now())
     addedBy = mapped_column(Integer, ForeignKey("User.id", ondelete="SET NULL"))
     isValid = mapped_column(Boolean, nullable=False, default=False)
     approvedBy = mapped_column(Integer, ForeignKey("Staff.id", ondelete="SET NULL"))
