@@ -1,10 +1,10 @@
 import { Alert } from 'react-native';
 import { API_URL } from './AuthContext';
 
-const GetUserInfo = async (token) => {
+const GetUserInfo = async (token, username=null) => {
     try {
         const response = await fetch(
-            `${API_URL}/users/info`,
+            `${API_URL}/users/info${username ? `/${username}` : ''}`,
             {
                 method: 'GET',
                 headers: {

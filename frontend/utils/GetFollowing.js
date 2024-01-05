@@ -1,10 +1,10 @@
 import { Alert } from 'react-native';
 import { API_URL } from './AuthContext';
 
-const GetFollowing = async (token) =>{
+const GetFollowing = async (token, username=null) =>{
     let categories = [];
     try {
-        let response = await fetch(API_URL + '/social/following', {
+        let response = await fetch(API_URL + `/social/following${username ? `/${username}` : ''}`, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',

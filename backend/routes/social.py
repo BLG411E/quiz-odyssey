@@ -104,6 +104,49 @@ def followers(username):
         )
 
 
+@social.route("/followers/<viewed_user>", methods=["GET"])
+@require_token
+def followers_username(username, viewed_user):
+    page = int(request.args.get("page", 1))
+    if page < 1:
+        page = 1
+
+    user_id = get_userID(db, viewed_user)
+
+    try:
+        followers = db.paginate(
+            db.select(models.User.username)
+            .join(models.Follow, models.User.id == models.Follow.follower)
+            .where(models.Follow.followed == user_id)
+            .order_by(models.User.username),
+            page=page,
+            per_page=20,
+        )
+        return (
+            jsonify(
+                {
+                    "total": followers.total,
+                    "page": followers.page,
+                    "per_page": 20,
+                    "has_prev": followers.has_prev,
+                    "has_next": followers.has_next,
+                    "results": followers.items,
+                }
+            ),
+            200,
+        )
+    except werkzeug.exceptions.NotFound:
+        return (
+            jsonify({"msg": "Page does not exist"}),
+            404,
+        )
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
+    
+
 @social.route("/followers/<follower_username>", methods=["DELETE"])
 @require_token
 def remove_follower(username, follower_username):
@@ -135,6 +178,49 @@ def following(username):
         page = 1
 
     user_id = get_userID(db, username)
+
+    try:
+        following = db.paginate(
+            db.select(models.User.username)
+            .join(models.Follow, models.User.id == models.Follow.followed)
+            .where(models.Follow.follower == user_id)
+            .order_by(models.User.username),
+            page=page,
+            per_page=20,
+        )
+        return (
+            jsonify(
+                {
+                    "total": following.total,
+                    "page": following.page,
+                    "per_page": 20,
+                    "has_prev": following.has_prev,
+                    "has_next": following.has_next,
+                    "results": following.items,
+                }
+            ),
+            200,
+        )
+    except werkzeug.exceptions.NotFound:
+        return (
+            jsonify({"msg": "Page does not exist"}),
+            404,
+        )
+    except Exception as e:
+        return (
+            jsonify({"msg": str(e)}),
+            500,
+        )
+
+
+@social.route("/following/<viewed_user>", methods=["GET"])
+@require_token
+def following_username(username, viewed_user):
+    page = int(request.args.get("page", 1))
+    if page < 1:
+        page = 1
+
+    user_id = get_userID(db, viewed_user)
 
     try:
         following = db.paginate(

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Text, TouchableOpacity, View, Button } from 'react-native';
+import { Button, FlatList, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from '../styles';
@@ -76,8 +76,10 @@ const LeaderboardPage = ({ route, navigation }) => {
     if (index >= startIndex && index < endIndex) {
       return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: 'white', backgroundColor: item.username === userData["username"] ? '#ffc15e' : 'white', }}>
-          <Text style={{ fontSize: 18 }}>{`${index + 1}. ${item.username}`}</Text>
-          <Text style={{ fontSize: 18 }}>{`Score: ${item.score}`}</Text>
+          <Pressable onPress={() => {navigation.navigate("ProfilePage", {viewed_user: item.username})}}>
+            <Text style={{ fontSize: 18 }}>{`${index + 1}. ${item.username}`}</Text>
+            <Text style={{ fontSize: 18 }}>{`Score: ${item.score}`}</Text>
+          </Pressable>
         </View>
       );
     }
