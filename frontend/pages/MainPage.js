@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Pressable, Text, TouchableOpacity, View, Animated } from 'react-native';
 import styles from '../styles';
 import AuthContext from "../utils/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +13,43 @@ const MainPage = ({ navigation, route }) => {
 
     const onPressPlay = () => {
         navigation.navigate('ChooseCategoryPage', { token: token });
+    };
+
+    const pulseAnimation = new Animated.Value(1);
+    const dailychallengePulseAnimation = new Animated.Value(1);
+
+    const startPulseAnimation = () => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(pulseAnimation, {
+                    toValue: 1.2,
+                    duration: 3000,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(pulseAnimation, {
+                    toValue: 1,
+                    duration: 3000,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    };
+
+    const startDailyChallengePulseAnimation = () => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(dailychallengePulseAnimation, {
+                    toValue: 1.2,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(dailychallengePulseAnimation, {
+                    toValue: 1,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
     };
 
 
@@ -46,6 +83,11 @@ const MainPage = ({ navigation, route }) => {
                     const data = await IsDailyQuizCompleted(token);
                     setDailyQuizFinished(data["isFinished"])
 
+                    if (!data["isFinished"]) {
+                        startDailyChallengePulseAnimation();
+                    }
+                    startPulseAnimation();
+
                     
                 }
             } catch (error) {
@@ -54,6 +96,8 @@ const MainPage = ({ navigation, route }) => {
         };
 
         fetchData();
+        
+        
     }, []);
 
     return (
@@ -61,7 +105,11 @@ const MainPage = ({ navigation, route }) => {
             <View style={styles.headerWrapper}>
                 <TouchableOpacity style={styles.headerButton} onPress={onPressDailyChallenge}>
                     <View style={styles.headerButtonContent}>
-                        <Image source={require('../assets/dailychallenge.png')} style={styles.headerImage} />
+                        <Animated.Image source={require('../assets/dailychallenge.png')} style={{width: 40,
+        height: 40,
+        marginRight: 8,
+        transform: [{ scale: dailychallengePulseAnimation }],
+        }} />
                         <Text style={styles.headerButtonText}>{"Daily odyssey"}</Text>
                     </View>
 
@@ -101,8 +149,9 @@ const MainPage = ({ navigation, route }) => {
                 </TouchableOpacity>
             </View>
             <View style={{flex:1, alignItems:"center"}}>
-            <Image source={require('../assets/Logomk1.png')} style={{ width: 250,
-        height: 200
+            <Animated.Image source={require('../assets/Logomk1.png')} style={{ width: 250,
+        height: 200,
+        transform: [{ scale: pulseAnimation }],
         }} />
         </View>
             
