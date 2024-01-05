@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from models import Category, Question, Staff, User
+from models import Base, Category, Question, Staff, User
 
 
 def insert_questions():
@@ -15,6 +15,8 @@ def insert_questions():
     )
     Session = sessionmaker(bind=engine)
     session = Session()
+
+    Base.metadata.create_all(engine)
 
     # Create daily quiz category with id 1
     daily_category = Category(name="Daily", description="Daily quiz questions")
