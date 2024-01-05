@@ -119,7 +119,35 @@ def get_user_information(username):
         )
     except Exception as e:
         return jsonify({"msg": str(e)}), 500
+
+
+@users.route("/info/<viewed_user>", methods=["GET"])
+@require_token
+def get_username_information(username, viewed_user):
+    try:
+        user = db.session.execute(
+            db.select(
+                models.User.username,
+                models.User.registeredAt,
+                models.User.streakCount,
+                models.User.totalScore,
+            ).where(models.User.username == viewed_user)
+        ).first()
+        return (
+            jsonify(
+                {
+                    "username": user[0],
+                    "registeredAt": user[1],
+                    "streakCount": user[2],
+                    "totalScore": user[3],
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        return jsonify({"msg": str(e)}), 500
     
+
 @users.route("/staffinfo", methods=["GET"])
 @require_token
 def get_staff_information(username):

@@ -8,8 +8,8 @@ import { API_URL } from '../utils/AuthContext';
 import GetFollowers from '../utils/GetFollowers';
 import GetFollowing from '../utils/GetFollowing';
 import GetUserInfo from '../utils/GetUserInfo';
-import UnfollowUser from '../utils/UnfollowUser';
 import RemoveFollower from '../utils/RemoveFollower';
+import UnfollowUser from '../utils/UnfollowUser';
 
 
 const ProfilePage = ({ navigation, route }) => {
@@ -26,16 +26,16 @@ const ProfilePage = ({ navigation, route }) => {
     const [showAllTimeDropdown, setShowAtllTimeDropdown] = useState(false);
     const [showWeeklyDropdown, setShowWeeklyDropdown] = useState(false);
 
-    const { token } = route.params
-
+    const { token, viewed_user } = route.params
+    console.log(viewed_user);
     useEffect(() => {
         const fetchData = async () => {
             try {
                 if (token) {
                     // Use the token to fetch user data
-                    const data = await GetUserInfo(token);
-                    const followers = await GetFollowers(token);
-                    const following = await GetFollowing(token);
+                    const data = await GetUserInfo(token, viewed_user);
+                    const followers = await GetFollowers(token, viewed_user);
+                    const following = await GetFollowing(token, viewed_user);
                     if (data) {
                         // Handle the user data
                         setUsername(data["username"]);
