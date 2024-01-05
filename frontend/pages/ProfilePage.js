@@ -8,6 +8,7 @@ import { API_URL } from '../utils/AuthContext';
 import GetFollowers from '../utils/GetFollowers';
 import GetFollowing from '../utils/GetFollowing';
 import GetUserInfo from '../utils/GetUserInfo';
+import UnfollowUser from '../utils/UnfollowUser';
 
 
 const ProfilePage = ({ navigation, route }) => {
@@ -214,7 +215,6 @@ const ProfilePage = ({ navigation, route }) => {
     
       const renderFollowersView = () => (
         <View style={{backgroundColor:"white", flex:1,}}>
-           
           <FlatList
                     data={followers["results"]}
                     keyExtractor={(item) => item}
@@ -239,7 +239,7 @@ const ProfilePage = ({ navigation, route }) => {
              <Image source={require('../assets/profileicon2.png')} style={{width: 40, height: 40,}} />
             <Text style={{ fontSize: 18,justifyContent:'center' }}>{`${item}`}</Text>   
 
-             <TouchableOpacity onPress={() => handleUnfollow(item.username)} style={{ backgroundColor: '#ff453a', borderRadius: 15, padding: 10, marginLeft: 'auto' }}>
+             <TouchableOpacity onPress={() => handleUnfollow(item)} style={{ backgroundColor: '#ff453a', borderRadius: 15, padding: 10, marginLeft: 'auto' }}>
                 <Text style={{ color: 'white',borderRadius:10 }}>Remove</Text>
               </TouchableOpacity>
         </View>
@@ -247,10 +247,11 @@ const ProfilePage = ({ navigation, route }) => {
 
     const handleUnfollow = async (usernameToUnfollow) => {
         try {
-          const updatedFollowers = await UnfollowUser(currentUser, usernameToUnfollow);
-      
+          await UnfollowUser(token, usernameToUnfollow);
+          const updatedFollowers = await GetFollowing(token);
           // Update the followers state with the updated list
-          setFollowers(updatedFollowers["results"]);
+          setFollowing(updatedFollowers["results"]);
+          setFollowingCount(updatedFollowers["total"]);
         } catch (error) {
           console.error('Error handling unfollow:', error);
         }
