@@ -67,8 +67,15 @@ const MainPage = ({ navigation, route }) => {
                     </View>
                 </TouchableOpacity>
             </View>
+            <View style={{flex:1, alignItems:"center"}}>
+            <Image source={require('../assets/Logomk1.png')} style={{ width: 250,
+        height: 200
+        }} />
+        </View>
+            
 
-            <View style={{ "paddingTop": 100, }}>
+            <View style={{ "paddingTop": 1, }}>
+            
 
                 <View style={styles.row}>
                     <Pressable style={{
@@ -100,7 +107,14 @@ const MainPage = ({ navigation, route }) => {
                     }} onPress={() => {
                         navigation.navigate('ProfilePage');
                     }}>
-                        <Text style={styles.textMainMenu}>{'SETTINGS'}</Text>
+                        <Text style={{fontSize: 20,
+        lineHeight: 35,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: 'white',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+         textShadowOffset: {width: -1, height: 1},
+         textShadowRadius: 3}}>{'SETTINGS'}</Text>
                     </Pressable>
                 </View>
                 <View style={styles.row}>
@@ -108,7 +122,7 @@ const MainPage = ({ navigation, route }) => {
                         paddingVertical: 10,
                         paddingHorizontal: 20,
                         borderRadius: 10,
-                        width: 200,
+                        width: 170,
                         height: 60,
                         alignItems: "center",
                         justifyContent: "center",
@@ -117,7 +131,14 @@ const MainPage = ({ navigation, route }) => {
                     }} onPress={() => {
                         Logout();
                     }}>
-                        <Text style={styles.textMainMenu}>{'LOGOUT'}</Text>
+                        <Text style={{fontSize: 18,
+        lineHeight: 35,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: 'white',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+         textShadowOffset: {width: -1, height: 1},
+         textShadowRadius: 3}}>{'LOGOUT'}</Text>
                     </Pressable>
                 </View>
             </View>
