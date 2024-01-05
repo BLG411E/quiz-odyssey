@@ -1,5 +1,6 @@
 import Slider from '@react-native-community/slider';
 import React, { useEffect, useState } from "react";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {
   Modal,
   Pressable,
@@ -82,6 +83,24 @@ const ChooseCategoryPage = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={styles.containerCenter}>
+    <View style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 16,
+      }}>
+                    <Icon.Button backgroundColor="rgba(0,0,0,0)" name="chevron-back-outline" size={30} color="white" iconStyle={{marginRight: 0}} onPress={() => {
+                        navigation.navigate('MainPage');
+                    }}/>
+
+                    <Text style={{
+        color: 'white',
+        fontSize: 18,
+        flex: 1,
+        textAlign: 'center',
+        marginLeft: -36,
+      }}>{"Choose a category"}</Text>
+                </View>
       <View style={styles.marginContainer}>
 
       <View style={styles.startGameButton}>

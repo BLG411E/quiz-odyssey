@@ -8,7 +8,7 @@ from sqlalchemy import (
     UniqueConstraint,
     CheckConstraint
 )
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.sql import func
 

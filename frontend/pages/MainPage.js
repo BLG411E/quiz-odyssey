@@ -1,34 +1,115 @@
-import React, { useContext } from "react";
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, useEffect, useState } from "react";
+import { Alert, Image, Pressable, Text, TouchableOpacity, View, Animated } from 'react-native';
 import styles from '../styles';
 import AuthContext from "../utils/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import IsDailyQuizCompleted from '../utils/IsDailyQuizCompleted';
 
 
 const MainPage = ({ navigation, route }) => {
     const { Logout } = useContext(AuthContext);
     const { token } = route.params
+    const [isDailyQuizFinished, setDailyQuizFinished] = useState('');
 
     const onPressPlay = () => {
         navigation.navigate('ChooseCategoryPage', { token: token });
     };
 
+    const pulseAnimation = new Animated.Value(1);
+    const dailychallengePulseAnimation = new Animated.Value(1);
 
-    const onPressDailyChallenge = () => {
-        const category = 1; // 1 is the id of the daily challenge category
-        const numberOfQuestions = 10;
-        navigation.navigate('GameQuizPage', {
-            token: token, categoryID: category, numberOfQuestions: numberOfQuestions,
-            currentQuestionNumber: 1
-        });
+    const startPulseAnimation = () => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(pulseAnimation, {
+                    toValue: 1.2,
+                    duration: 3000,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(pulseAnimation, {
+                    toValue: 1,
+                    duration: 3000,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
     };
+
+    const startDailyChallengePulseAnimation = () => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(dailychallengePulseAnimation, {
+                    toValue: 1.2,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(dailychallengePulseAnimation, {
+                    toValue: 1,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    };
+
+
+    const onPressDailyChallenge = async () => {
+        try {
+            const data = await IsDailyQuizCompleted(token);
+
+            if (data["isFinished"]) {
+   
+                Alert.alert("Daily quiz already finished");
+            } else {
+                const category = 1; // 1 is the id of the daily challenge category
+                const numberOfQuestions = 10;
+                navigation.navigate('GameQuizPage', {
+                    token: token,
+                    categoryID: category,
+                    numberOfQuestions: numberOfQuestions,
+                    currentQuestionNumber: 1,
+                });
+            }
+        } catch (error) {
+            console.error('Error checking daily quiz completion:', error);
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (token) {
+                    // Use the token to fetch user data
+                    const data = await IsDailyQuizCompleted(token);
+                    setDailyQuizFinished(data["isFinished"])
+
+                    if (!data["isFinished"]) {
+                        startDailyChallengePulseAnimation();
+                    }
+                    startPulseAnimation();
+
+                    
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+        
+        
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerWrapper}>
                 <TouchableOpacity style={styles.headerButton} onPress={onPressDailyChallenge}>
                     <View style={styles.headerButtonContent}>
-                        <Image source={require('../assets/dailychallenge.png')} style={styles.headerImage} />
+                        <Animated.Image source={require('../assets/dailychallenge.png')} style={{width: 40,
+        height: 40,
+        marginRight: 8,
+        transform: [{ scale: dailychallengePulseAnimation }],
+        }} />
                         <Text style={styles.headerButtonText}>{"Daily odyssey"}</Text>
                     </View>
 
@@ -68,8 +149,9 @@ const MainPage = ({ navigation, route }) => {
                 </TouchableOpacity>
             </View>
             <View style={{flex:1, alignItems:"center"}}>
-            <Image source={require('../assets/Logomk1.png')} style={{ width: 250,
-        height: 200
+            <Animated.Image source={require('../assets/Logomk1.png')} style={{ width: 250,
+        height: 200,
+        transform: [{ scale: pulseAnimation }],
         }} />
         </View>
             
