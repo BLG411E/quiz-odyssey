@@ -33,6 +33,21 @@ const MainPage = ({ navigation, route }) => {
                 }),
             ])
         ).start();
+
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(dailychallengePulseAnimation, {
+                    toValue: 1.2,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(dailychallengePulseAnimation, {
+                    toValue: 1,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
     };
 
     const startDailyChallengePulseAnimation = () => {
@@ -87,6 +102,7 @@ const MainPage = ({ navigation, route }) => {
                         startDailyChallengePulseAnimation();
                     }
                     startPulseAnimation();
+                    // startDailyChallengePulseAnimation();
 
                     
                 }
