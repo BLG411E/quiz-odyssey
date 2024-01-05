@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Button, FlatList, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Button, FlatList, Pressable, Text, View } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from '../styles';
 import GetAllUserScoreData from '../utils/GetAllUserScoreData';
-import GetUserInfo from '../utils/GetUserInfo';
 import GetCategories from '../utils/GetCategories';
-import { SafeAreaView } from "react-native-safe-area-context";
+import GetLeaderboardData from "../utils/GetLeaderboardData";
+import GetUserInfo from '../utils/GetUserInfo';
 
 const LeaderboardPage = ({ route, navigation }) => {
   const [userList, setUserList] = useState([]);
@@ -14,12 +15,13 @@ const LeaderboardPage = ({ route, navigation }) => {
   const [userData, setUserData] = useState([]);
   const [selected, setSelected] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10); // You can adjust the number of items per page
+
+  const itemsPerPage = 10;
 
   const { token } = route.params;
 
   const getUserDataFromDatabase = async () => {
-    const users = await GetAllUserScoreData();
+    const users = await GetAllUserScoreData(token);
     const userData = await GetUserInfo(token);
 
     setUserList(users["results"]);
@@ -56,16 +58,15 @@ const LeaderboardPage = ({ route, navigation }) => {
   }, []);
 
   const fetchLeaderboardData = async (category) => {
-    // const leaderboardData = await GetLeaderboardData(category);
-    // setUserList(leaderboardData.results);
-    console.log(category);
+    const leaderboardData = await GetLeaderboardData(token, category);
+    setUserList(leaderboardData.results);
   };
 
   useEffect(() => {
 
     if (selected) {
       const selectedCategoryIndex = data.find(item => item.value === selected);
-      fetchLeaderboardData(selectedCategoryIndex["key"]);
+      // fetchLeaderboardData(selectedCategoryIndex["key"]); // TODO: Endpoint
     }
   }, [selected]);
 
@@ -76,7 +77,7 @@ const LeaderboardPage = ({ route, navigation }) => {
     if (index >= startIndex && index < endIndex) {
       return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, backgroundColor: 'white', backgroundColor: item.username === userData["username"] ? '#ffc15e' : 'white', }}>
-          <Pressable onPress={() => {navigation.navigate("ProfilePage", {viewed_user: item.username})}}>
+          <Pressable onPress={() => { navigation.navigate("ProfilePage", { viewed_user: item.username }) }}>
             <Text style={{ fontSize: 18 }}>{`${index + 1}. ${item.username}`}</Text>
             <Text style={{ fontSize: 18 }}>{`Score: ${item.score}`}</Text>
           </Pressable>

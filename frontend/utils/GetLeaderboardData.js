@@ -1,10 +1,10 @@
 import { Alert } from 'react-native';
 import { API_URL } from './AuthContext';
 
-const GetAllUserScoreData = async (token) => {
+const GetLeaderboardData = async (token, category) => {
     try {
         const response = await fetch(
-            `${API_URL}/users/listscore`,
+            `${API_URL}/users/listscore/${category}`,
             {
                 method: 'GET',
                 headers: {
@@ -26,4 +26,4 @@ const GetAllUserScoreData = async (token) => {
     }
 };
 
-export default GetAllUserScoreData;
+export default GetLeaderboardData;
