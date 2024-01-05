@@ -108,7 +108,7 @@ const MainPage = ({ navigation, route }) => {
                         paddingVertical: 10,
                         paddingHorizontal: 20,
                         borderRadius: 10,
-                        width: 200,
+                        width: 170,
                         height: 60,
                         alignItems: "center",
                         justifyContent: "center",
