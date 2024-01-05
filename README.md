@@ -22,6 +22,10 @@ Inside of it, write `QUIZODYSSEY_SECRET_KEY = "<SECRET>"` where SECRET is a rand
 
 Execute `docker compose up --build` from the `backend` directory. This will run the backend on [http://localhost:8000](http://localhost:8000). Later on, you can configure a NGINX reverse proxy to funnel all requests through HTTPS, but that is outside of the scope of this guide. In the deployed version of Quiz Odyssey, that is done.
 
+### Filling with data
+
+Execute `docker compose exec web python backend/insert_data.py`, which will insert all the questions in the `questions` folder. You can check the examples there, and add as many questions as you like.
+
 ## Web Interface
 
 ### Prerequisites
